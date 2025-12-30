@@ -1,7 +1,7 @@
 import { httpRequest } from "../api/http-Client";
 import { HTTP_METHOD } from "../enums";
 import type { InviteAgentRequest } from "../interfaces";
-import type UpdateAgentRequest from "../interfaces/update-agent-request";
+import type UpdateAgentRequest from "../interfaces/agent/update-agent-request";
 
 const AGENT_URL = "agents";
 

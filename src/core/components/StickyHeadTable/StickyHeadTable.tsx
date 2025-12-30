@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import * as React from "react";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -8,23 +6,17 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
-import type { Column } from "../../interfaces";
+import type { TableProps } from "../../interfaces";
+import { useState } from "react";
 
-interface TableProps<T> {
-  columns: Column<T>[];
-  rows: T[];
-  rowsPerPageOptions?: number[];
-  initialRowsPerPage?: number;
-}
-
-export default function StickyHeadTable<T extends { [key: string]: any }>({
+export default function StickyHeadTable<T extends { [key: string]: unknown }>({
   columns,
   rows,
   rowsPerPageOptions = [10, 25, 100],
   initialRowsPerPage = 10,
 }: TableProps<T>) {
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(initialRowsPerPage);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(initialRowsPerPage);
 
   const handleChangePage = (_event: unknown, newPage: number) => {
     setPage(newPage);
@@ -64,7 +56,7 @@ export default function StickyHeadTable<T extends { [key: string]: any }>({
                       <TableCell key={String(column.id)} align={column.align}>
                         {column.render
                           ? column.render(row)
-                          : row[column.id as keyof T]}
+                          : String(row[column.id])}
                       </TableCell>
                     );
                   })}

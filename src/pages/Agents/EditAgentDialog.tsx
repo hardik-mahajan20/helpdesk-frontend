@@ -17,7 +17,7 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { updateAgent } from "../../services/agent-service";
-import type UpdateAgentRequest from "../../interfaces/update-agent-request";
+import type UpdateAgentRequest from "../../interfaces/agent/update-agent-request";
 
 export default function EditAgentDialog({
   open,
