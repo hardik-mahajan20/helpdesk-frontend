@@ -1,0 +1,24 @@
+.profile-container {
+  max-width: 100%;
+  background-color: white;
+
+  .profile-header {
+    border-bottom: 1px solid black;
+
+    .page-title {
+      font-weight: 600;
+      color: black;
+    }
+
+    .page-subtitle {
+      color: black;
+    }
+  }
+
+  .profile-tabs {
+    .tab-label {
+      margin-top: 2px;
+      margin-left: 5px;
+    }
+  }
+}
