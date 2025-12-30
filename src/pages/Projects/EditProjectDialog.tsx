@@ -38,7 +38,7 @@ export default function EditProjectDialog({
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
-      <DialogTitle>Add Project</DialogTitle>
+      <DialogTitle>Edit Project</DialogTitle>
 
       <DialogContent
         sx={{ display: "flex", flexDirection: "column", gap: 2 }}

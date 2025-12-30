@@ -17,13 +17,13 @@ import type {
 } from "../../interfaces";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
 import SearchIcon from "@mui/icons-material/Search";
 import ConfirmDeleteDialog from "../../core/components/ConfirmationDialog";
 import EditDepartmentDialog from "../Departments/EditDepartmentDialog";
 import { deleteProject, getAllProjects } from "../../services/project-service";
 import "./Projects.scss";
 import AddProjectDialog from "./AddProjectDialog";
+import SettingsIcon from "@mui/icons-material/Settings";
 
 const ProjectActions = memo(
   ({ projects, onEdit, onDelete }: ProjectsActionsProps) => (
@@ -34,7 +34,7 @@ const ProjectActions = memo(
           color="primary"
           onClick={() => onEdit(projects)}
         >
-          <EditIcon />
+          <SettingsIcon />
         </IconButton>
       </Tooltip>
       <Tooltip title="Delete Project">
