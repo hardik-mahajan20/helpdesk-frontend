@@ -25,6 +25,7 @@ import BusinessIcon from "@mui/icons-material/Business";
 import PeopleIcon from "@mui/icons-material/People";
 import PersonIcon from "@mui/icons-material/Person";
 import LogoutIcon from "@mui/icons-material/Logout";
+import SettingsIcon from '@mui/icons-material/Settings';
 
 const menuItems = [
   { label: "Dashboard", icon: <DashboardIcon />, path: "/dashboard" },
@@ -35,6 +36,7 @@ const menuItems = [
   { label: "Reporting", icon: <AssessmentIcon />, path: "/reporting" },
   { label: "Departments", icon: <BusinessIcon />, path: "/department" },
   { label: "Agents", icon: <PeopleIcon />, path: "/agents" },
+  { label: "Settings", icon: <SettingsIcon />, path: "/settings" },
 ];
 
 export default function LeftDrawer() {

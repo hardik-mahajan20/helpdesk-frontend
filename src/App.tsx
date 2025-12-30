@@ -13,6 +13,7 @@ import Departments from "./pages/Departments";
 import ProtectedRoute from "./guard/ProtectedRoute";
 import PageNotFound from "./pages/PageNotFound";
 import Profile from "./pages/Profile";
+import Settings from "./pages/Settings";
 
 export default function App() {
   return (
@@ -32,6 +33,7 @@ export default function App() {
               <Route path="/department" element={<Departments />} />
               <Route path="/agents" element={<Agents />} />
               <Route path="/profile" element={<Profile />} />
+              <Route path="/settings" element={<Settings />} />
             </Route>
           </Route>
         </Routes>

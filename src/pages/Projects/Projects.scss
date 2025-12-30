@@ -1,0 +1,41 @@
+.project-container {
+  max-width: 100%;
+  background-color: var(--background-color);
+}
+
+// Header Section
+.project-header {
+  border-bottom: 1px solid var(--border-color);
+}
+
+.header-left {
+  .page-title {
+    font-weight: 600;
+    color: var(--primary-color);
+  }
+
+  .page-subtitle {
+    color: var(--text-secondary);
+  }
+}
+
+// Table Section
+.table-container {
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--border-color);
+  overflow-x: auto;
+}
+
+// Responsive Design
+@media (max-width: 767.98px) {
+  .project-header {
+    gap: 20px;
+  }
+
+  .project-header .header-actions {
+    width: 100%;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+  }
+}
