@@ -1,7 +1,7 @@
 import { jwtDecode } from "jwt-decode";
-import type { ApiResponse } from "../interfaces/api-response";
-import type { LoginRequest } from "../interfaces/login-request";
-import type { LoginResponse } from "../interfaces/login-response";
+import type { ApiResponse } from "../interfaces/other/api-response";
+import type { LoginRequest } from "../interfaces/auth/login-request";
+import type { LoginResponse } from "../interfaces/auth/login-response";
 import { API_BASE_URL } from "../api";
 
 const AUTH_URL = `${API_BASE_URL}/auth`;

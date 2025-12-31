@@ -1,5 +1,5 @@
 import type { Agent } from "./agent";
-import type { DepartmentsGet } from "./departments-get";
+import type { DepartmentsGet } from "../department/departments-get";
 
 export interface AddAgentDialogProps {
   open: boolean;
