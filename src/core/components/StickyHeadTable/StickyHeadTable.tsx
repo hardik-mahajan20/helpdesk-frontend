@@ -9,7 +9,7 @@ import TableRow from "@mui/material/TableRow";
 import type { TableProps } from "../../interfaces";
 import { useState } from "react";
 
-export default function StickyHeadTable<T extends { [key: string]: unknown }>({
+export default function StickyHeadTable<T extends { [key: string]: any }>({
   columns,
   rows,
   rowsPerPageOptions = [10, 25, 100],

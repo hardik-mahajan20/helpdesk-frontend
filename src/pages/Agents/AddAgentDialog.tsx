@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   Dialog,
   DialogTitle,
@@ -10,121 +9,118 @@ import {
   FormControl,
   InputLabel,
   Select,
-  ListSubheader,
-} from "@mui/material";
-import { useState, useEffect } from "react";
-import type { AddAgentDialogProps, ReportsToDropdown } from "../../interfaces";
-import { getAllReportsTos, inviteAgent } from "../../services/agent-service";
+  ListSubheader
+} from '@mui/material'
+import { useState, useEffect } from 'react'
+import type { AddAgentDialogProps, ReportsToDropdown } from '../../interfaces'
+import { getAllReportsTos, inviteAgent } from '../../services/agent-service'
 
-export default function AddAgentDialog({
+export default function AddAgentDialog ({
   open,
   departments,
-  onClose,
+  onClose
 }: AddAgentDialogProps) {
-  const [email, setEmail] = useState("");
-  const [department, setDepartment] = useState<number | "">("");
-  const [reportsTo, setReportsTo] = useState<number | "">("");
+  const [email, setEmail] = useState('')
+  const [department, setDepartment] = useState<number | ''>('')
+  const [reportsTo, setReportsTo] = useState<number | ''>('')
 
-  const [reportPersons, setReportPersons] = useState<ReportsToDropdown[]>([]);
+  const [reportPersons, setReportPersons] = useState<ReportsToDropdown[]>([])
 
   const handleSubmit = async () => {
     try {
-      console.log(department);
+      console.log(department)
 
-      if (!department) return;
+      if (!department) return
 
       const payload = {
         email,
         roleId: 3,
         departmentId: Number(department),
-        reportsToId: Number(reportsTo) || 0,
-      };
+        reportsToId: Number(reportsTo) || 0
+      }
 
-      await inviteAgent(payload);
-      onClose();
+      await inviteAgent(payload)
+      onClose()
     } catch (error) {
-      console.error("Failed to invite agent", error);
+      console.error('Failed to invite agent', error)
     }
-  };
+  }
 
   useEffect(() => {
     const fetchReports = async () => {
-      if (!department) return;
+      if (!department) return
 
       try {
         const data = await getAllReportsTos<ReportsToDropdown[]>(
           3,
           Number(department)
-        );
-        setReportPersons(data);
+        )
+        setReportPersons(data)
       } catch (error) {
-        console.error("Failed to fetch reports to:", error);
+        console.error('Failed to fetch reports to:', error)
       }
-    };
+    }
 
-    fetchReports();
-  }, [department]);
+    fetchReports()
+  }, [department])
 
   const groupedReports = reportPersons.reduce((acc: any, person) => {
-    const group = person.groupName || "Department Member";
-    if (!acc[group]) acc[group] = [];
-    acc[group].push(person);
-    return acc;
-  }, {});
+    const group = person.groupName || 'Department Member'
+    if (!acc[group]) acc[group] = []
+    acc[group].push(person)
+    return acc
+  }, {})
 
   return (
-    <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
+    <Dialog open={open} onClose={onClose} fullWidth maxWidth='sm'>
       <DialogTitle>Add Agent</DialogTitle>
 
       <DialogContent
-        sx={{ display: "flex", flexDirection: "column", gap: 2 }}
-        className="p-3"
+        sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
+        className='p-3'
       >
         <TextField
-          label="Agent Email"
-          type="email"
+          label='Agent Email'
+          type='email'
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={e => setEmail(e.target.value)}
           fullWidth
           required
         />
-
         <FormControl fullWidth required>
-          <InputLabel id="department-label">Department</InputLabel>
+          <InputLabel id='department-label'>Department</InputLabel>
           <Select
-            labelId="department-label"
+            labelId='department-label'
             value={department}
-            label="Department"
-            onChange={(e) => setDepartment(e.target.value as number)}
+            label='Department'
+            onChange={e => setDepartment(e.target.value as number)}
           >
-            {departments.map((dept) => (
+            {departments.map(dept => (
               <MenuItem key={dept.id} value={dept.id}>
                 {dept.name}
               </MenuItem>
             ))}
           </Select>
         </FormControl>
-
         <FormControl fullWidth>
-          <InputLabel id="reports-to-label">Reports To</InputLabel>
+          <InputLabel id='reports-to-label'>Reports To</InputLabel>
           <Select
-            labelId="reports-to-label"
+            labelId='reports-to-label'
             value={reportsTo}
-            label="Reports To"
-            onChange={(e) => setReportsTo(e.target.value as number)}
+            label='Reports To'
+            onChange={e => setReportsTo(e.target.value as number)}
           >
-            {/* EMPTY OPTION */}
-            <MenuItem value="">
+            <MenuItem value=''>
               <em>None</em>
             </MenuItem>
 
             {Object.entries(groupedReports).map(([group, persons]) => [
               <ListSubheader key={group}>{group}</ListSubheader>,
-              ...(persons as ReportsToDropdown[]).map((person) => (
+              ...(persons as ReportsToDropdown[]).map(person => (
                 <MenuItem key={person.id} value={person.id}>
                   {person.name}
                 </MenuItem>
-              )),
+              ))
             ])}
           </Select>
         </FormControl>
@@ -132,10 +128,10 @@ export default function AddAgentDialog({
 
       <DialogActions>
         <Button onClick={onClose}>Cancel</Button>
-        <Button variant="contained" onClick={handleSubmit}>
+        <Button variant='contained' onClick={handleSubmit}>
           Save
         </Button>
       </DialogActions>
     </Dialog>
-  );
+  )
 }
