@@ -108,7 +108,7 @@ export function isTokenExpired (): boolean {
 }
 
 export function isAuthenticated (): boolean {
-  return !getToken() && !isTokenExpired()
+  return !!getToken() && !isTokenExpired()
 }
 
 export async function logout (): Promise<ApiResponse<void>> {

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   Box,
   Button,
@@ -61,7 +60,7 @@ export default function Login () {
           />
         </Box>
 
-        <Box className='auth-form-section d-flex justify-content-center align-items-center'>
+        <Box className='auth-form-section d-flex justify-content-center align-items-center m-2'>
           <Box className='form-container'>
             <Typography variant='h5' mb={1}>
               HelpDesk
