@@ -19,7 +19,7 @@ export default function Layout () {
       />
       <Toolbar />
 
-      <Box display='flex' flexGrow={1} overflow='hidden'>
+      <Box display='flex' flexGrow={1}>
         <Drawer
           variant='persistent'
           open={leftOpen}

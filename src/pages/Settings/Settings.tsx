@@ -1,4 +1,3 @@
-import "./Settings.scss";
 
 export default function Settings() {
   return (
