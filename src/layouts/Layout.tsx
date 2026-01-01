@@ -1,73 +1,72 @@
-import { Box, Drawer, Toolbar } from "@mui/material";
-import { useState } from "react";
-import Header from "../components/Header";
-import LeftDrawer from "../components/LeftDrawer";
-import RightDrawer from "../components/RightDrawer";
-import { Outlet } from "react-router-dom";
+import { Box, Drawer, Toolbar } from '@mui/material'
+import { useState } from 'react'
+import Header from '../components/Header'
+import LeftDrawer from '../components/LeftDrawer'
+import RightDrawer from '../components/RightDrawer'
+import { Outlet } from 'react-router-dom'
 
-const drawerWidth = 240;
+const drawerWidth = 240
 
-export default function Layout() {
-  const [leftOpen, setLeftOpen] = useState(true);
-  const [rightOpen, setRightOpen] = useState(false);
+export default function Layout () {
+  const [leftOpen, setLeftOpen] = useState(true)
+  const [rightOpen, setRightOpen] = useState(false)
 
   return (
-    <Box display="flex" flexDirection="column" height="100vh">
+    <Box display='flex' flexDirection='column' height='100vh'>
       <Header
-        onLeftToggle={() => setLeftOpen((prev) => !prev)}
+        onLeftToggle={() => setLeftOpen(prev => !prev)}
         onRightToggle={() => setRightOpen(true)}
       />
       <Toolbar />
 
-      <Box display="flex" flexGrow={1} overflow="hidden">
+      <Box display='flex' flexGrow={1}>
         <Drawer
-          variant="persistent"
+          variant='persistent'
           open={leftOpen}
           sx={{
             flexShrink: 0,
-            "& .MuiDrawer-paper": {
+            '& .MuiDrawer-paper': {
               width: drawerWidth,
-              mt: "66px",
-              height: "calc(100% - 66px)",
-              boxSizing: "border-box",
-            },
+              mt: '66px',
+              height: 'calc(100% - 66px)',
+              boxSizing: 'border-box'
+            }
           }}
         >
           <LeftDrawer />
         </Drawer>
 
         <Box
-          component="main"
+          component='main'
           sx={{
             flexGrow: 1,
             p: 2,
-            bgcolor: "#f5f5f5",
-            transition: (theme) => theme.transitions.create("margin", {}),
-            marginLeft: leftOpen ? `${drawerWidth}px` : 0,
+            bgcolor: '#f5f5f5',
+            transition: theme => theme.transitions.create('margin', {}),
+            marginLeft: leftOpen ? `${drawerWidth}px` : 0
           }}
         >
           <Outlet />
         </Box>
 
         <Drawer
-          variant="temporary"
-          anchor="right"
+          variant='temporary'
+          anchor='right'
           open={rightOpen}
           onClose={() => setRightOpen(false)}
           ModalProps={{ keepMounted: true }}
           slotProps={{
             paper: {
               sx: {
-                mt: "66px",
-                height: "calc(100% - 66px)",
-              },
-            },
+                mt: '66px',
+                height: 'calc(100% - 66px)'
+              }
+            }
           }}
         >
-          {/* <RightDrawer onClose={() => setRightOpen(false)} /> */}
           <RightDrawer />
         </Drawer>
       </Box>
     </Box>
-  );
+  )
 }
