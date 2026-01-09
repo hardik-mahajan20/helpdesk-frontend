@@ -15,7 +15,9 @@ import {
   InputAdornment,
   InputLabel,
   OutlinedInput,
-  Tooltip
+  Tooltip,
+  MenuItem,
+  Card
 } from '@mui/material'
 import SettingsIcon from '@mui/icons-material/Settings'
 import './Settings.scss'
@@ -29,17 +31,25 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy'
 import VisibilityIcon from '@mui/icons-material/Visibility'
 import ChatWidget from '../ChatWidget'
 import {
+  getChatShortCutMessages,
   getChatWidgetByProjectId,
   getProjectById,
   updateChatWidgetSetting
 } from '../../services/settings-service'
 import type {
+  ChatShortCutMessages,
   ChatWidgetSettingsDto,
   ProjectDetailsRequestDTO,
+  ShortCutMessage,
   UpdateChatWidgetRequestDTO
 } from '../../interfaces'
 import { useProjectSelectionStore } from '../../services/project-selection-service'
 import { useNavigate } from 'react-router-dom'
+import AddIcon from '@mui/icons-material/Add'
+import CancelIcon from '@mui/icons-material/Cancel'
+import EditIcon from '@mui/icons-material/Edit'
+import DeleteIcon from '@mui/icons-material/Delete'
+import { VisibilityOff } from '@mui/icons-material'
 function TabPanel ({ value, index, children }: any) {
   return value === index ? <Box sx={{ mt: 3 }}>{children}</Box> : null
 }
@@ -97,6 +107,11 @@ export default function Settings () {
   const [widgetForm, setWidgetForm] = useState<ChatWidgetSettingsDto | null>(
     null
   )
+  const [chatShorCutForm, setChatShorCutForm] = useState<
+    ChatShortCutMessages[]
+  >([])
+  const [shortcutMessageFrom, setShortcutMessageFrom] =
+    useState<ShortCutMessage | null>(null)
 
   const [tabIndex, setTabIndex] = useState(0)
 
@@ -104,6 +119,9 @@ export default function Settings () {
   const [, setChatWidget] = useState<ChatWidgetSettingsDto>()
 
   const [activePicker, setActivePicker] = useState<string | null>(null)
+  const [chatShortCutMessages, setChatShortCutMessages] = useState<
+    ChatShortCutMessages[]
+  >([])
 
   const togglePicker = (key: string) => {
     setActivePicker(prev => (prev === key ? null : key))
@@ -157,9 +175,14 @@ export default function Settings () {
         const data = await getChatWidgetByProjectId<ChatWidgetSettingsDto>(
           selectedProjectId
         )
+        const chatShortCutMessages = await getChatShortCutMessages<
+          ChatShortCutMessages[]
+        >(selectedProjectId)
 
         setChatWidget(data)
+        setChatShortCutMessages(chatShortCutMessages)
         setWidgetForm(data)
+        setChatShorCutForm(chatShortCutMessages)
       } catch (error) {
         console.error(error)
       }
@@ -528,9 +551,119 @@ export default function Settings () {
         </TabPanel>
 
         <TabPanel value={tabIndex} index={1}>
-          <Typography variant='body1'>
-            Security settings (change password, 2FA, sessions)
-          </Typography>
+          <div className='d-flex flex-column gap-3 mt-4 card new-shortcut-container'>
+            <div className='d-flex align-items-center gap-1'>
+              <ContentCutIcon></ContentCutIcon>
+              <h1 className='fw-medium fs-4 mx-0 title'>Shortcut Messages</h1>
+            </div>
+            <div className='d-flex flex-column gap-3'>
+              <div className='d-flex flex-wrap align-items-start gap-3'>
+                <TextField
+                  label='Title'
+                  type='text'
+                  variant='outlined'
+                  margin='dense'
+                  required
+                  placeholder='Enter shortcut title'
+                  value={shortcutMessageFrom?.shortCutKey ?? ''}
+                  onChange={e =>
+                    setShortcutMessageFrom(prev =>
+                      prev ? { ...prev, shortCutKey: e.target.value } : prev
+                    )
+                  }
+                  className='field'
+                />
+                <TextField
+                  label=''
+                  type='text'
+                  variant='outlined'
+                  margin='dense'
+                  required
+                  placeholder='Enter shortcut message'
+                  value={shortcutMessageFrom?.shortCutMessage ?? ''}
+                  onChange={e =>
+                    setShortcutMessageFrom(prev =>
+                      prev ? { ...prev, shortCutMessage: e.target.value } : prev
+                    )
+                  }
+                  className='field'
+                />
+                <TextField
+                  select
+                  label='Visibility'
+                  variant='outlined'
+                  margin='dense'
+                  value={shortcutMessageFrom?.isPublic ?? true}
+                  onChange={e =>
+                    setShortcutMessageFrom(prev =>
+                      prev
+                        ? { ...prev, isPublic: e.target.value === 'true' }
+                        : prev
+                    )
+                  }
+                  className='field'
+                >
+                  <MenuItem value='true'>Public</MenuItem>
+                  <MenuItem value='false'>Private</MenuItem>
+                </TextField>
+              </div>
+              <div className='d-flex align-items-center justify-content-start gap-3'>
+                <Button
+                  variant='contained'
+                  color='primary'
+                  onClick={saveChatWidget}
+                  className='add-shortcut'
+                >
+                  <AddIcon></AddIcon>
+                  Add ShortCut
+                </Button>
+                <Button variant='contained' className='add-shortcut'>
+                  <CancelIcon></CancelIcon>
+                  Cancle
+                </Button>
+              </div>
+            </div>
+          </div>
+
+          <div className='mt-4 pe-2 shortcut-list-container'>
+            <div className='d-flex flex-column gap-3'>
+              {chatShorCutForm.map(shortcut => (
+                <Card key={shortcut.id} className='shortcut-card'>
+                  <div className='d-flex justify-content-between align-items-center mb-2 shortcut-card-header'>
+                    <h3 className='shortcut-title'>{shortcut.shortCutKey}</h3>
+                    <div className='d-flex align-items-center justify-content-end gap-3'>
+                      <IconButton
+                        edge='end'
+                        onClick={handleLinkCopy}
+                        color='primary'
+                      >
+                        {shortcut.isPublic ? (
+                          <VisibilityIcon />
+                        ) : (
+                          <VisibilityOff />
+                        )}
+                      </IconButton>
+                      <IconButton
+                        edge='end'
+                        onClick={handleLinkCopy}
+                        color='primary'
+                      >
+                        <EditIcon />
+                      </IconButton>
+                      <IconButton
+                        edge='end'
+                        onClick={handleLinkCopy}
+                        color='primary'
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </div>
+                  </div>
+                  <p className='shortcut-message'>{shortcut.shortCutMessage}</p>
+                </Card>
+              ))}
+            </div>
+          </div>
         </TabPanel>
 
         <TabPanel value={tabIndex} index={2}>
