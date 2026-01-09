@@ -30,11 +30,13 @@ import VisibilityIcon from '@mui/icons-material/Visibility'
 import ChatWidget from '../ChatWidget'
 import {
   getChatWidgetByProjectId,
-  getProjectById
+  getProjectById,
+  updateChatWidgetSetting
 } from '../../services/settings-service'
 import type {
   ChatWidgetSettingsDto,
-  ProjectDetailsRequestDTO
+  ProjectDetailsRequestDTO,
+  UpdateChatWidgetRequestDTO
 } from '../../interfaces'
 import { useProjectSelectionStore } from '../../services/project-selection-service'
 import { useNavigate } from 'react-router-dom'
@@ -171,6 +173,15 @@ export default function Settings () {
   }, [selectedProjectId])
 
   const navigate = useNavigate()
+
+  const saveChatWidget = async () => {
+    const formVlaue = widgetForm
+    const payload: UpdateChatWidgetRequestDTO = {
+      projectId: selectedProjectId,
+      widgetSetting: JSON.stringify(formVlaue)
+    }
+    await updateChatWidgetSetting(payload)
+  }
 
   return (
     <div className='profile-container h-100 p-2 p-lg-3'>
@@ -421,7 +432,11 @@ export default function Settings () {
                   </div>
                   <div className='d-flex justify-content-end flex-wrap gap-3 mt-3'>
                     <Button variant='outlined'>Cancel</Button>
-                    <Button variant='contained' color='primary'>
+                    <Button
+                      variant='contained'
+                      color='primary'
+                      onClick={saveChatWidget}
+                    >
                       Save
                     </Button>
                   </div>
@@ -474,7 +489,7 @@ export default function Settings () {
                 <OutlinedInput
                   id='outlined-adornment-direct-chat'
                   type='text'
-                  value={project?.directChatLink}
+                  value={project?.directChatLink ? project?.directChatLink : ''}
                   readOnly
                   label='Direct Chat Link'
                   endAdornment={

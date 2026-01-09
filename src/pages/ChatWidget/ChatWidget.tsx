@@ -166,7 +166,7 @@ export default function ChatWidget ({ settings }: ChatWidgetProps) {
   return (
     <>
       <div className='chat-preview-container position-relative w-100 p-3 rounded'>
-        <Button
+        <IconButton
           className='chat-icon-button position-absolute d-flex align-items-center justify-content-center'
           onClick={handleWidgetToken}
           style={{
@@ -187,7 +187,7 @@ export default function ChatWidget ({ settings }: ChatWidgetProps) {
               }}
             />
           )}
-        </Button>
+        </IconButton>
         {isWidgetOpen && (
           <div
             className='widget-wrapper position-absolute'
@@ -220,7 +220,7 @@ export default function ChatWidget ({ settings }: ChatWidgetProps) {
                       <CardContent className='d-flex align-items-center'>
                         <FormControl variant='outlined' fullWidth>
                           <InputLabel
-                            htmlFor='outlined-adornment-direct-chat'
+                            htmlFor='outlined-adornment-search'
                             style={{
                               color: settings.headerBackground
                             }}
@@ -229,7 +229,7 @@ export default function ChatWidget ({ settings }: ChatWidgetProps) {
                           </InputLabel>
 
                           <OutlinedInput
-                            id='outlined-adornment-direct-chat'
+                            id='outlined-adornment-search'
                             type='text'
                             placeholder='Search for answers'
                             label='Search for answers'
