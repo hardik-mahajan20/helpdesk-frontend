@@ -11,6 +11,11 @@ export async function getAllProjects<T> () {
   return httpRequest<T>(url, HTTP_METHOD.GET)
 }
 
+export async function getAllUsersProjects<T> () {
+  const url = `${PROJECT_URL}/users-projects`
+  return httpRequest<T>(url, HTTP_METHOD.GET)
+}
+
 export async function getAllDepartmentsSearched<T> (search: string) {
   const url = `${PROJECT_URL}?&search=${search}`
   return httpRequest<T>(url, HTTP_METHOD.GET)

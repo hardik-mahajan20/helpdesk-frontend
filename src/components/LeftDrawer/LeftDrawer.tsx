@@ -13,7 +13,7 @@ import {
   IconButton
 } from '@mui/material'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { useState, type JSX } from 'react'
+import { useEffect, useState, type JSX } from 'react'
 import DashboardIcon from '@mui/icons-material/Dashboard'
 import InboxIcon from '@mui/icons-material/Inbox'
 import MoreVertIcon from '@mui/icons-material/MoreVert'
@@ -27,26 +27,52 @@ import PersonIcon from '@mui/icons-material/Person'
 import LogoutIcon from '@mui/icons-material/Logout'
 import SettingsIcon from '@mui/icons-material/Settings'
 import { clearAuthSession } from '../../utils/storage'
+import { useProfileSelectionStore } from '../../services/profile-selection-service'
+import type { UserProfileResponse } from '../../interfaces/profile'
+import { useProjectSelectionStore } from '../../services/project-selection-service'
 
-interface menuItems_interface  {
+interface menuItems_interface {
   label: string
   icon: JSX.Element
   path: string
 }
-const menuItems: menuItems_interface[] = [
+
+const allProjectMenuItems: menuItems_interface[] = [
   { label: 'Dashboard', icon: <DashboardIcon />, path: '/dashboard' },
   { label: 'Inbox', icon: <InboxIcon />, path: '/inbox' },
   { label: 'Contacts', icon: <ContactsIcon />, path: '/contacts' },
   { label: 'Projects', icon: <FolderIcon />, path: '/projects' },
-  { label: 'Knowledge Base', icon: <BookIcon />, path: '/knowledge-base' },
+  // { label: 'Knowledge Base', icon: <BookIcon />, path: '/knowledge-base' },
   { label: 'Reporting', icon: <AssessmentIcon />, path: '/reporting' },
   { label: 'Departments', icon: <BusinessIcon />, path: '/department' },
   { label: 'Agents', icon: <PeopleIcon />, path: '/agents' },
+  { label: 'Admins', icon: <SettingsIcon />, path: '/settings' }
+]
+
+const projectSpecificMenuItems: menuItems_interface[] = [
+  { label: 'Dashboard', icon: <DashboardIcon />, path: '/dashboard' },
+  { label: 'Inbox', icon: <InboxIcon />, path: '/inbox' },
+  { label: 'Contacts', icon: <ContactsIcon />, path: '/contacts' },
+  { label: 'Knowledge Base', icon: <BookIcon />, path: '/knowledge-base' },
+  { label: 'Reporting', icon: <AssessmentIcon />, path: '/reporting' },
   { label: 'Settings', icon: <SettingsIcon />, path: '/settings' }
 ]
 
 export default function LeftDrawer () {
   const navigate = useNavigate()
+
+  const selectedProjectId = useProjectSelectionStore(
+    state => state.selectedProjectId
+  )
+  
+  const { getProfile } = useProfileSelectionStore()
+
+  const [, setProfileData] = useState<UserProfileResponse | null>(
+    null
+  )
+
+  const [menuItems, setMenuItems] = useState<menuItems_interface[]>([])
+
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const [isActive, setIsActive] = useState(true)
   const location = useLocation()
@@ -54,6 +80,58 @@ export default function LeftDrawer () {
   const handleClick = (path: string) => {
     navigate(path)
   }
+
+  useEffect(() => {
+    const loadProfile = async () => {
+      const profile = await getProfile()
+      if (!profile) return
+
+      let items: menuItems_interface[] = []
+
+      if (selectedProjectId === 0) {
+        if (profile.roleId === 1) {
+          items = allProjectMenuItems
+        } else if (profile.roleId === 2) {
+          items = allProjectMenuItems.filter(item =>
+            [
+              'Dashboard',
+              'Inbox',
+              'Contacts',
+              'Projects',
+              'Reporting',
+              'Agents',
+              'Departments'
+            ].includes(item.label)
+          )
+        } else {
+          items = allProjectMenuItems.filter(item =>
+            [
+              'Dashboard',
+              'Inbox',
+              'Contacts',
+              'Knowledge Base',
+              'Reporting'
+            ].includes(item.label)
+          )
+        }
+      } else {
+        if (profile.roleId === 1) {
+          items = projectSpecificMenuItems
+        } else if (profile.roleId === 2) {
+          items = projectSpecificMenuItems
+        } else {
+          items = projectSpecificMenuItems.filter(
+            item => item.label !== 'Settings'
+          )
+        }
+      }
+
+      setProfileData(profile)
+      setMenuItems(items)
+    }
+
+    loadProfile()
+  }, [selectedProjectId])
 
   return (
     <Box

@@ -19,20 +19,21 @@ import AddIcon from '@mui/icons-material/Add'
 import DeleteIcon from '@mui/icons-material/Delete'
 import SearchIcon from '@mui/icons-material/Search'
 import ConfirmDeleteDialog from '../../core/components/ConfirmationDialog'
-import EditDepartmentDialog from '../Departments/EditDepartmentDialog'
 import { deleteProject, getAllProjects } from '../../services/project-service'
 import './Projects.scss'
 import AddProjectDialog from './AddProjectDialog'
 import SettingsIcon from '@mui/icons-material/Settings'
+import { useProjectSelectionStore } from '../../services/project-selection-service'
+import { useNavigate } from 'react-router-dom'
 
 const ProjectActions = memo(
-  ({ projects, onEdit, onDelete }: ProjectsActionsProps) => (
+  ({ projects, goToSettings, onDelete }: ProjectsActionsProps) => (
     <>
       <Tooltip title='Edit Project'>
         <IconButton
           size='small'
           color='primary'
-          onClick={() => onEdit(projects)}
+          onClick={() => goToSettings(projects)}
         >
           <SettingsIcon />
         </IconButton>
@@ -55,10 +56,11 @@ export default function Projects () {
   const [projects, setProjects] = useState<AllProjectsGet[]>([])
   const [searchText, setSearchText] = useState<string>('')
   const [isAddProjectOpen, setIsAddProjectOpen] = useState(false)
-  const [isEditProjectOpen, setIsEditProjectOpen] = useState(false)
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const [selectedProject, setSelectedProject] = useState<Project | null>(null)
-  const [projectId, setProjectId] = useState<number>(0)
+  const navigate = useNavigate()
+
+  const { setProjectId } = useProjectSelectionStore()
 
   // CallBack Functions
   const handleDeleteProject = useCallback((projects: Project) => {
@@ -87,10 +89,13 @@ export default function Projects () {
     setSelectedProject(null)
   }
 
-  const handleEditProject = useCallback(async (project: Project) => {
-    if (project.projectId > 0) setProjectId(project.projectId)
-    setIsEditProjectOpen(true)
-  }, [])
+  const handleProjectSettingsNavigation = useCallback(
+    async (project: Project) => {
+      if (project.projectId > 0) setProjectId(project.projectId)
+      navigate('/settings')
+    },
+    []
+  )
 
   const handleAddProject = async () => {
     setIsAddProjectOpen(true)
@@ -111,13 +116,13 @@ export default function Projects () {
         render: row => (
           <ProjectActions
             projects={row}
-            onEdit={handleEditProject}
+            goToSettings={handleProjectSettingsNavigation}
             onDelete={handleDeleteProject}
           />
         )
       }
     ],
-    [handleEditProject, handleDeleteProject]
+    [handleProjectSettingsNavigation, handleDeleteProject]
   )
 
   useEffect(() => {
@@ -190,13 +195,6 @@ export default function Projects () {
           <AddProjectDialog
             open={isAddProjectOpen}
             onClose={() => setIsAddProjectOpen(false)}
-          />
-        )}
-        {isEditProjectOpen && (
-          <EditDepartmentDialog
-            id={projectId}
-            open={isEditProjectOpen}
-            onClose={() => setIsEditProjectOpen(false)}
           />
         )}
         <ConfirmDeleteDialog
