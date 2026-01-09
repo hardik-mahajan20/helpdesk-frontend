@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
   Box,
   Tabs,
@@ -28,6 +28,16 @@ import CodeIcon from '@mui/icons-material/Code'
 import ContentCopyIcon from '@mui/icons-material/ContentCopy'
 import VisibilityIcon from '@mui/icons-material/Visibility'
 import ChatWidget from '../ChatWidget'
+import {
+  getChatWidgetByProjectId,
+  getProjectById
+} from '../../services/settings-service'
+import type {
+  ChatWidgetSettingsDto,
+  ProjectDetailsRequestDTO
+} from '../../interfaces'
+import { useProjectSelectionStore } from '../../services/project-selection-service'
+import { useNavigate } from 'react-router-dom'
 function TabPanel ({ value, index, children }: any) {
   return value === index ? <Box sx={{ mt: 3 }}>{children}</Box> : null
 }
@@ -82,19 +92,14 @@ type ColorFieldKeys =
   | 'customerMessageBackground'
 
 export default function Settings () {
-  const [tabIndex, setTabIndex] = useState(0)
-  const [, setChatPosition] = useState<string | null>(null)
+  const [widgetForm, setWidgetForm] = useState<ChatWidgetSettingsDto | null>(
+    null
+  )
 
-  const onColorChange = (color: any, key: string) => {
-    setColors(prev => ({
-      ...prev,
-      [key]: color.hex
-    }))
-  }
-  const [colors, setColors] = useState<Record<string, string>>({
-    primaryColor: '#1976d2',
-    secondaryColor: '#9c27b0'
-  })
+  const [tabIndex, setTabIndex] = useState(0)
+
+  const [project, setProject] = useState<ProjectDetailsRequestDTO>()
+  const [, setChatWidget] = useState<ChatWidgetSettingsDto>()
 
   const [activePicker, setActivePicker] = useState<string | null>(null)
 
@@ -102,9 +107,8 @@ export default function Settings () {
     setActivePicker(prev => (prev === key ? null : key))
   }
 
-  const linkvalue =
-    'https://yourdomain.com/livechat?project=3B563A93-CE09-44E9-ADC3-230038326F58'
-  const codeValue = `<script type="text/javascript" data-project-code="3b563a93-ce09-44e9-adc3-230038326f58">
+  const linkvalue = project?.directChatLink
+  const codeValue = `<script type="text/javascript" data-project-code="${project?.projectCode}">
             (function() {
               var s1 = document.createElement("script"),
                   s0 = document.getElementsByTagName("script")[0];
@@ -115,20 +119,58 @@ export default function Settings () {
               s0.parentNode.insertBefore(s1, s0);
             })();
           </script>`
-  const [copied, setCopied] = useState(false)
+  const [copied, setCopied] = useState<boolean>(false)
 
-  const handleLinkCopy = async () => {
+  const handleLinkCopy: () => Promise<void> = async () => {
+    if (!linkvalue) return
     await navigator.clipboard.writeText(linkvalue)
     setCopied(true)
 
     setTimeout(() => setCopied(false), 1500)
   }
   const handleCodeCopy = async () => {
+    if (!linkvalue) return
     await navigator.clipboard.writeText(linkvalue)
     setCopied(true)
 
     setTimeout(() => setCopied(false), 1500)
   }
+
+  const selectedProjectId = useProjectSelectionStore(
+    state => state.selectedProjectId
+  )
+
+  useEffect(() => {
+    const loadProject: () => Promise<void> = async () => {
+      try {
+        setProject(
+          await getProjectById<ProjectDetailsRequestDTO>(selectedProjectId)
+        )
+      } catch (error) {
+        console.error(error)
+      }
+    }
+    const loadChatWidget = async () => {
+      try {
+        const data = await getChatWidgetByProjectId<ChatWidgetSettingsDto>(
+          selectedProjectId
+        )
+
+        setChatWidget(data)
+        setWidgetForm(data)
+      } catch (error) {
+        console.error(error)
+      }
+    }
+    if (selectedProjectId > 0) {
+      loadProject()
+      loadChatWidget()
+    } else {
+      navigate('/dashboard')
+    }
+  }, [selectedProjectId])
+
+  const navigate = useNavigate()
 
   return (
     <div className='profile-container h-100 p-2 p-lg-3'>
@@ -181,6 +223,12 @@ export default function Settings () {
                     margin='dense'
                     required
                     placeholder='Enter Widget Title'
+                    value={widgetForm?.headerTitle ?? ''}
+                    onChange={e =>
+                      setWidgetForm(prev =>
+                        prev ? { ...prev, headerTitle: e.target.value } : prev
+                      )
+                    }
                   />
                   <TextField
                     fullWidth
@@ -190,6 +238,14 @@ export default function Settings () {
                     margin='dense'
                     required
                     placeholder='Enter Welcome Message'
+                    value={widgetForm?.welcomeMessage ?? ''}
+                    onChange={e =>
+                      setWidgetForm(prev =>
+                        prev
+                          ? { ...prev, welcomeMessage: e.target.value }
+                          : prev
+                      )
+                    }
                   />
                   <div className='chat-position-card p-2'>
                     <h3 className='fs-6 fw-medium mb-3 mt-0'>
@@ -199,8 +255,16 @@ export default function Settings () {
                       {positions.map(pos => (
                         <div
                           key={pos.value}
-                          onClick={() => setChatPosition(pos.value)}
-                          className='position-item rounded active'
+                          className={`position-item rounded  ${
+                            widgetForm?.chatPosition === pos.value
+                              ? 'active'
+                              : ''
+                          }`}
+                          onClick={() =>
+                            setWidgetForm(prev =>
+                              prev ? { ...prev, chatPosition: pos.value } : prev
+                            )
+                          }
                         >
                           <div className='position-grid'>
                             {positionMatrix.map(cell => (
@@ -232,18 +296,22 @@ export default function Settings () {
                           {/* Color preview */}
                           <div
                             className='color-preview rounded'
-                            style={{ background: colors[colorField.key] }}
+                            style={{ background: widgetForm?.[colorField.key] }}
                             onClick={() => togglePicker(colorField.key)}
                           />
 
                           <TextField
                             fullWidth
-                            value={colors[colorField.key]}
+                            value={widgetForm?.[colorField.key]}
                             onChange={e =>
-                              setColors(prev => ({
-                                ...prev,
-                                [colorField.key]: e.target.value
-                              }))
+                              setWidgetForm(prev =>
+                                prev
+                                  ? {
+                                      ...prev,
+                                      [colorField.key]: e.target.value
+                                    }
+                                  : prev
+                              )
                             }
                             placeholder='#HEX'
                             variant='outlined'
@@ -257,9 +325,13 @@ export default function Settings () {
                         {activePicker === colorField.key && (
                           <div className='color-picker-popup rounded'>
                             <SketchPicker
-                              color={colors[colorField.key]}
-                              onChangeComplete={color =>
-                                onColorChange(color, colorField.key)
+                              color={widgetForm?.[colorField.key]}
+                              onChange={color =>
+                                setWidgetForm(prev =>
+                                  prev
+                                    ? { ...prev, [colorField.key]: color.hex }
+                                    : prev
+                                )
                               }
                             />
                           </div>
@@ -270,20 +342,79 @@ export default function Settings () {
                   <div className='d-flex flex-column gap-2 mt-1'>
                     <FormGroup>
                       <FormControlLabel
-                        control={<Switch defaultChecked />}
+                        control={
+                          <Switch
+                            checked={widgetForm?.enablePhoto ?? false}
+                            onClick={() =>
+                              setWidgetForm(prev =>
+                                prev
+                                  ? {
+                                      ...prev,
+                                      enablePhoto: !widgetForm?.enablePhoto
+                                    }
+                                  : prev
+                              )
+                            }
+                          />
+                        }
                         label='Show agent photos'
                       />
                       <FormControlLabel
                         required
-                        control={<Switch defaultChecked />}
+                        control={
+                          <Switch
+                            checked={widgetForm?.enableAttachment ?? false}
+                            onClick={() =>
+                              setWidgetForm(prev =>
+                                prev
+                                  ? {
+                                      ...prev,
+                                      enableAttachment:
+                                        !widgetForm?.enableAttachment
+                                    }
+                                  : prev
+                              )
+                            }
+                          />
+                        }
                         label='Enable file uploads'
                       />
                       <FormControlLabel
-                        control={<Switch defaultChecked />}
+                        control={
+                          <Switch
+                            checked={widgetForm?.enableEditOption ?? false}
+                            onClick={() =>
+                              setWidgetForm(prev =>
+                                prev
+                                  ? {
+                                      ...prev,
+                                      enableEditOption:
+                                        !widgetForm?.enableEditOption
+                                    }
+                                  : prev
+                              )
+                            }
+                          />
+                        }
                         label='Enable Chat Message Edit'
                       />
                       <FormControlLabel
-                        control={<Switch defaultChecked />}
+                        control={
+                          <Switch
+                            checked={widgetForm?.enableDeleteOption ?? false}
+                            onClick={() =>
+                              setWidgetForm(prev =>
+                                prev
+                                  ? {
+                                      ...prev,
+                                      enableDeleteOption:
+                                        !widgetForm?.enableDeleteOption
+                                    }
+                                  : prev
+                              )
+                            }
+                          />
+                        }
                         label='Enable Chat Message Delete'
                       />
                     </FormGroup>
@@ -304,25 +435,28 @@ export default function Settings () {
                     Live Preview
                   </h1>
                 </div>
-                <ChatWidget
-                  settings={{
-                    chatWidgetId: 1,
-                    headerTitle: 'Live Support',
-                    welcomeMessage: 'Hi! How can we help?',
-                    chatPosition: 'bottom-right',
-                    headerTextColor: '#ffffff',
-                    headerBackground: '#1976d2',
-                    agentTextColor: '#000000',
-                    agentMessageBackground: '#e3f2fd',
-                    customerTextColor: '#000000',
-                    customerMessageBackground: '#f5f5f5',
-                    enablePhoto: true,
-                    enableAttachment: true,
-                    enableEmoji: true,
-                    enableEditOption: true,
-                    enableDeleteOption: true
-                  }}
-                />
+                {widgetForm && (
+                  <ChatWidget
+                    settings={{
+                      chatWidgetId: widgetForm.chatWidgetId,
+                      headerTitle: widgetForm.headerTitle,
+                      welcomeMessage: widgetForm.welcomeMessage,
+                      chatPosition: widgetForm.chatPosition,
+                      headerTextColor: widgetForm.headerTextColor,
+                      headerBackground: widgetForm.headerBackground,
+                      agentTextColor: widgetForm.agentTextColor,
+                      agentMessageBackground: widgetForm.agentMessageBackground,
+                      customerTextColor: widgetForm.customerTextColor,
+                      customerMessageBackground:
+                        widgetForm.customerMessageBackground,
+                      enablePhoto: widgetForm.enablePhoto,
+                      enableAttachment: widgetForm.enableAttachment,
+                      enableEmoji: widgetForm.enableEmoji,
+                      enableEditOption: widgetForm.enableEditOption,
+                      enableDeleteOption: widgetForm.enableDeleteOption
+                    }}
+                  />
+                )}
               </div>
             </div>
             <div className='card w-100 mt-3 d-flex flex-column gap-3'>
@@ -340,7 +474,7 @@ export default function Settings () {
                 <OutlinedInput
                   id='outlined-adornment-direct-chat'
                   type='text'
-                  value={linkvalue}
+                  value={project?.directChatLink}
                   readOnly
                   label='Direct Chat Link'
                   endAdornment={

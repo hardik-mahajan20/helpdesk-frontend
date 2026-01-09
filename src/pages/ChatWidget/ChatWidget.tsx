@@ -15,7 +15,7 @@ import {
 import SearchIcon from '@mui/icons-material/Search'
 import SendIcon from '@mui/icons-material/Send'
 import ChatIcon from '@mui/icons-material/Chat'
-import { useState } from 'react'
+import { useMemo, useState, type CSSProperties } from 'react'
 import CloseIcon from '@mui/icons-material/Close'
 import ArrowBackTwoToneIcon from '@mui/icons-material/ArrowBackTwoTone'
 import AttachmentIcon from '@mui/icons-material/Attachment'
@@ -69,22 +69,143 @@ export default function ChatWidget ({ settings }: ChatWidgetProps) {
     }
   }
 
+  // Utils (can be inside component or in a helper file)
+  const lightenColor = (hex: string, percent: number): string => {
+    hex = hex.replace(/^#/, '')
+
+    if (hex.length === 3) {
+      hex = hex
+        .split('')
+        .map(c => c + c)
+        .join('')
+    }
+
+    const num = parseInt(hex, 16)
+
+    let r = (num >> 16) & 0xff
+    let g = (num >> 8) & 0xff
+    let b = num & 0xff
+
+    r = Math.round(r + (255 - r) * (percent / 100))
+    g = Math.round(g + (255 - g) * (percent / 100))
+    b = Math.round(b + (255 - b) * (percent / 100))
+
+    return `rgb(${r}, ${g}, ${b})`
+  }
+
+  const darkenColor = (hex: string, percent: number): string => {
+    hex = hex.replace(/^#/, '')
+
+    if (hex.length === 3) {
+      hex = hex
+        .split('')
+        .map(c => c + c)
+        .join('')
+    }
+
+    const num = parseInt(hex, 16)
+
+    let r = (num >> 16) & 0xff
+    let g = (num >> 8) & 0xff
+    let b = num & 0xff
+
+    r = Math.round(r * (1 - percent / 100))
+    g = Math.round(g * (1 - percent / 100))
+    b = Math.round(b * (1 - percent / 100))
+
+    return `rgb(${r}, ${g}, ${b})`
+  }
+
+  const getTabGradient = (): string => {
+    const base = settings?.headerBackground || '#00a859'
+    const lighter = lightenColor(base, 30)
+    const darker = darkenColor(base, 50)
+
+    return `radial-gradient(
+      circle at 100% 100%,
+      ${lighter} 0%,
+      ${base} 40%,
+      ${darker} 90%
+    )`
+  }
+
+  const widgetPositionStyle = useMemo<CSSProperties>(() => {
+    const pos = settings.chatPosition
+    const style: React.CSSProperties = {
+      position: 'absolute',
+      zIndex: 10
+    }
+
+    if (!pos) return style
+
+    if (pos.includes('bottom')) style.bottom = '5rem'
+    if (pos.includes('top')) style.top = '5rem'
+    if (pos.includes('left')) style.left = '1rem'
+    if (pos.includes('right')) style.right = '1rem'
+
+    return style
+  }, [settings])
+
+  const getButtonPositionStyle = useMemo<CSSProperties>(() => {
+    const pos = settings.chatPosition
+    const style: React.CSSProperties = {
+      position: 'absolute',
+      zIndex: 11
+    }
+
+    if (!pos) return style
+
+    if (pos.includes('bottom')) style.bottom = '1rem'
+    if (pos.includes('top')) style.top = '1rem'
+    if (pos.includes('left')) style.left = '1rem'
+    if (pos.includes('right')) style.right = '1rem'
+
+    return style
+  }, [settings])
+
   return (
     <>
       <div className='chat-preview-container position-relative w-100 p-3 rounded'>
         <Button
           className='chat-icon-button position-absolute d-flex align-items-center justify-content-center'
           onClick={handleWidgetToken}
+          style={{
+            ...getButtonPositionStyle,
+            backgroundColor: settings.headerBackground
+          }}
         >
-          {isWidgetOpen ? <CloseIcon /> : <ChatIcon />}
+          {isWidgetOpen ? (
+            <CloseIcon
+              style={{
+                color: settings.headerTextColor
+              }}
+            />
+          ) : (
+            <ChatIcon
+              style={{
+                color: settings.headerTextColor
+              }}
+            />
+          )}
         </Button>
         {isWidgetOpen && (
-          <div className='widget-wrapper position-absolute'>
+          <div
+            className='widget-wrapper position-absolute'
+            style={widgetPositionStyle}
+          >
             <Card className='chat-widget-card d-flex flex-column overflow-hidden'>
               {isShowHome && (
-                <div className='d-flex flex-column'>
-                  <div className='cw-tab-content p-3'>
-                    <div className='cw-header p-3'>
+                <div className='cw-container d-flex flex-column'>
+                  <div
+                    className='cw-tab-content p-3'
+                    style={{ background: getTabGradient() }}
+                  >
+                    <div
+                      className='cw-header p-3'
+                      style={{
+                        color: settings.headerTextColor
+                      }}
+                    >
                       <h2 className='fw-bold'>
                         {settings.headerTitle
                           ? settings.headerTitle
@@ -98,7 +219,12 @@ export default function ChatWidget ({ settings }: ChatWidgetProps) {
                     <Card className='mb-3 glass-card'>
                       <CardContent className='d-flex align-items-center'>
                         <FormControl variant='outlined' fullWidth>
-                          <InputLabel htmlFor='outlined-adornment-direct-chat'>
+                          <InputLabel
+                            htmlFor='outlined-adornment-direct-chat'
+                            style={{
+                              color: settings.headerBackground
+                            }}
+                          >
                             Search for answers
                           </InputLabel>
 
@@ -116,7 +242,11 @@ export default function ChatWidget ({ settings }: ChatWidgetProps) {
                             endAdornment={
                               <InputAdornment position='end'>
                                 <IconButton edge='end'>
-                                  <SearchIcon />
+                                  <SearchIcon
+                                    style={{
+                                      color: settings.headerBackground
+                                    }}
+                                  />
                                 </IconButton>
                               </InputAdornment>
                             }
@@ -131,22 +261,38 @@ export default function ChatWidget ({ settings }: ChatWidgetProps) {
                         onClick={startNewConversation}
                         role='button'
                         tabIndex={0}
+                        style={{
+                          color: settings.headerBackground
+                        }}
                       >
                         <CardContent className='d-flex justify-content-between align-items-center'>
                           <div>
                             <h6 className='mb-1'>New Conversation</h6>
                           </div>
-                          <SendIcon />
+                          <SendIcon
+                            style={{
+                              color: settings.headerBackground
+                            }}
+                          />
                         </CardContent>
                       </Card>
 
-                      <Card className='col glass-card cursor-pointer'>
+                      <Card
+                        className='col glass-card cursor-pointer'
+                        style={{
+                          color: settings.headerBackground
+                        }}
+                      >
                         <CardContent className='d-flex justify-content-between align-items-center'>
                           <div>
                             <h6 className='mb-0'>Your Chats</h6>
                             <small>No chats yet</small>
                           </div>
-                          <ChatIcon />
+                          <ChatIcon
+                            style={{
+                              color: settings.headerBackground
+                            }}
+                          />
                         </CardContent>
                       </Card>
                     </div>
@@ -163,11 +309,19 @@ export default function ChatWidget ({ settings }: ChatWidgetProps) {
                           setIsShowHome(true)
                         }}
                       >
-                        <ArrowBackTwoToneIcon />
+                        <ArrowBackTwoToneIcon
+                          style={{
+                            color: settings.headerTextColor
+                          }}
+                        />
                       </IconButton>
                     }
-                    title='Welcome to Acme Support'
+                    title={settings.headerTitle}
                     className='chat-header'
+                    style={{
+                      background: settings.headerBackground,
+                      color: settings.headerTextColor
+                    }}
                   />
 
                   <CardContent className='chat-messages d-flex flex-column gap-2 p-2 overflow-auto flex-grow-1'>
@@ -183,7 +337,6 @@ export default function ChatWidget ({ settings }: ChatWidgetProps) {
                               <SupportAgentIcon className='avatar-icon' />
                             </div>
                           )}
-
                           <div
                             className='p-2 rounded message'
                             style={{
@@ -231,10 +384,15 @@ export default function ChatWidget ({ settings }: ChatWidgetProps) {
                               position='end'
                               className='d-flex align-items-center gap-1'
                             >
-                              <IconButton>
-                                <AttachmentIcon />
-                              </IconButton>
-                              <IconButton onClick={sendMessage}>
+                              {settings.enableAttachment && (
+                                <IconButton className='attachment-button'>
+                                  <AttachmentIcon />
+                                </IconButton>
+                              )}
+                              <IconButton
+                                onClick={sendMessage}
+                                className='send-button'
+                              >
                                 <SendIcon />
                               </IconButton>
                             </InputAdornment>

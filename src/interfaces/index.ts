@@ -30,3 +30,4 @@ export * from "./project/user-project-get";
 export * from "./project/project-selection-store";
 export * from "./project/profile-selection-store";
 export * from './settings/chat-widget-settings-dto'
+export * from './settings/project-details'

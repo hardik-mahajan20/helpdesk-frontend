@@ -1,6 +1,7 @@
 .chat-preview-container {
   min-height: 36rem;
   height: calc(100% - 3rem);
+  // background-color: var(--background-color);
   border-radius: 0.375rem;
 }
 
@@ -13,8 +14,6 @@
   cursor: pointer;
   border: none;
   z-index: 11;
-  top: 1rem;
-  left: 1rem;
 
   &:hover {
     transform: scale(1.05);
@@ -35,8 +34,6 @@
 .widget-wrapper {
   z-index: 10;
   gap: 4rem;
-  top: 5rem;
-  left: 1rem;
 }
 .close-icon-button {
   width: 52px;
@@ -66,6 +63,7 @@
   z-index: 9;
   width: 22rem;
   height: 28rem;
+  // background-color: var(--surface-color);
   border-radius: 12px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
   animation: slideIn 0.3s ease-out;
@@ -237,46 +235,4 @@
   .chat-preview-container {
     height: 36rem;
   }
-}
-
-.cw-container {
-  height: 100vh;
-  background: #fff;
-}
-
-.cw-header {
-  background-color: #00a859;
-  color: #fff;
-}
-
-.cw-tab-content {
-  flex-grow: 1;
-  height: calc(100vh - 142px);
-  overflow-y: auto;
-  background-color: #00a859;
-  color: #fff;
-}
-
-.chat-message {
-  display: inline-block;
-  padding: 10px 14px;
-  border-radius: 0.25rem;
-  font-size: 0.875rem;
-  max-width: 70%;
-  word-wrap: break-word;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-}
-
-.glass-card {
-  opacity: 0.9;
-  background-color: white;
-}
-
-.chat-list {
-  max-height: 400px;
-  overflow-y: auto;
-}
-
-.cursor-pointer {
-  cursor: pointer;
 }
