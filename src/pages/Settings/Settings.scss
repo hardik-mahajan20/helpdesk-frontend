@@ -68,3 +68,69 @@
   top: 100%;
   margin-top: 0.25rem;
 }
+
+.card {
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.chat-position-card {
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+  .position-item {
+    cursor: pointer;
+    padding: 0.25rem;
+    transition: box-shadow 0.2s ease;
+
+    &:hover {
+      box-shadow: 0 5px 10px black;
+    }
+
+    &.active {
+      outline: 2px solid black;
+      outline-offset: 2px;
+    }
+
+    .position-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(3, 1fr);
+      gap: 0.25rem;
+      width: 2rem;
+      height: 2rem;
+      position: relative;
+    }
+
+    .position-cell {
+      border: 1px solid #d1d5db;
+      width: 0.5rem;
+      height: 0.5rem;
+      position: relative;
+    }
+
+    .widget-dot {
+      background-color: black;
+      width: 0.5rem;
+      height: 0.5rem;
+    }
+  }
+}
+
+.live-preview {
+  padding: 1rem;
+  // background-color: black;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  // border: 1px solid black;
+
+  .custom-card-header {
+    gap: 0.3rem;
+    margin-bottom: 1rem;
+
+    .title {
+      color: black;
+    }
+  }
+}

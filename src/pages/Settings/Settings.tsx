@@ -15,8 +15,7 @@ import {
   InputAdornment,
   InputLabel,
   OutlinedInput,
-  Tooltip,
-  TextareaAutosize
+  Tooltip
 } from '@mui/material'
 import SettingsIcon from '@mui/icons-material/Settings'
 import './Settings.scss'
@@ -164,20 +163,22 @@ export default function Settings () {
         </Tabs>
 
         <TabPanel value={tabIndex} index={0}>
-          <Paper variant='outlined'>
+          <div>
             <div className='d-flex flex-row xxl-flex-column gap-3 py-0 my-4'>
               <div className='card d-flex flex-column gap-3 w-50'>
                 <div className='d-flex justify-content-between align-items-center'>
-                  <div className='d-flex align-item-center gap-1'>
+                  <div className='d-flex align-items-center gap-1'>
                     <PaletteIcon className='d-none d-sm-inline' />
                     <h1 className='fw-medium fs-4 my-0'>Widget Appearance</h1>
                   </div>
+                </div>
+                <div className='d-flex flex-column flex-grow-1 gap-3'>
                   <TextField
                     fullWidth
                     label='Widget Title'
                     type='text'
-                    variant='filled'
-                    margin='normal'
+                    variant='outlined'
+                    margin='dense'
                     required
                     placeholder='Enter Widget Title'
                   />
@@ -185,115 +186,120 @@ export default function Settings () {
                     fullWidth
                     label='Welcome Message'
                     type='text'
-                    variant='filled'
-                    margin='normal'
+                    variant='outlined'
+                    margin='dense'
                     required
                     placeholder='Enter Welcome Message'
                   />
-                </div>
-                <div className='card p-2'>
-                  <h3 className='fs-6 fw-medium mb-3 mt-0'>
-                    Chat Widget Position
-                  </h3>
-                  <div className='d-flex gap-2 flex-wrap'>
-                    {positions.map(pos => (
-                      <div
-                        key={pos.value}
-                        onClick={() => setChatPosition(pos.value)}
-                      >
-                        <div className='position-grid'>
-                          {positionMatrix.map(cell => (
-                            <div
-                              key={cell}
-                              className='position-cell d-flex align-items-center justify-content-center'
-                            >
-                              {cell === pos.value && (
-                                <div className='widget-dot' title='Widget' />
-                              )}
-                            </div>
-                          ))}
+                  <div className='chat-position-card p-2'>
+                    <h3 className='fs-6 fw-medium mb-3 mt-0'>
+                      Chat Widget Position
+                    </h3>
+                    <div className='d-flex gap-2 flex-wrap'>
+                      {positions.map(pos => (
+                        <div
+                          key={pos.value}
+                          onClick={() => setChatPosition(pos.value)}
+                          className='position-item rounded active'
+                        >
+                          <div className='position-grid'>
+                            {positionMatrix.map(cell => (
+                              <div
+                                key={cell}
+                                className='position-cell d-flex align-items-center justify-content-center'
+                              >
+                                {cell === pos.value && (
+                                  <div className='widget-dot' title='Widget' />
+                                )}
+                              </div>
+                            ))}
+                          </div>
                         </div>
+                      ))}
+                    </div>
+                  </div>
+                  <div className='color-fields color-input-field'>
+                    {colorFields.map(colorField => (
+                      <div
+                        key={colorField.key}
+                        className='d-flex flex-column gap-1 position-relative'
+                      >
+                        <label className='fw-medium small'>
+                          {colorField.label}
+                        </label>
+
+                        <div className='d-flex justify-content-center align-items-center gap-2'>
+                          {/* Color preview */}
+                          <div
+                            className='color-preview rounded'
+                            style={{ background: colors[colorField.key] }}
+                            onClick={() => togglePicker(colorField.key)}
+                          />
+
+                          <TextField
+                            fullWidth
+                            value={colors[colorField.key]}
+                            onChange={e =>
+                              setColors(prev => ({
+                                ...prev,
+                                [colorField.key]: e.target.value
+                              }))
+                            }
+                            placeholder='#HEX'
+                            variant='outlined'
+                            className='color-input'
+                            margin='dense'
+                            size='small'
+                          />
+                        </div>
+
+                        {/* Color Picker Popup */}
+                        {activePicker === colorField.key && (
+                          <div className='color-picker-popup rounded'>
+                            <SketchPicker
+                              color={colors[colorField.key]}
+                              onChangeComplete={color =>
+                                onColorChange(color, colorField.key)
+                              }
+                            />
+                          </div>
+                        )}
                       </div>
                     ))}
                   </div>
-                </div>
-                <div className='color-fields color-input-field'>
-                  {colorFields.map(colorField => (
-                    <div
-                      key={colorField.key}
-                      className='d-flex flex-column gap-1 position-relative'
-                    >
-                      <label className='fw-medium small'>
-                        {colorField.label}
-                      </label>
-
-                      <div className='d-flex gap-2 align-items-center'>
-                        {/* Color preview */}
-                        <div
-                          className='color-preview rounded'
-                          style={{ background: colors[colorField.key] }}
-                          onClick={() => togglePicker(colorField.key)}
-                        />
-
-                        <TextField
-                          fullWidth
-                          value={colors[colorField.key]}
-                          onChange={e =>
-                            setColors(prev => ({
-                              ...prev,
-                              [colorField.key]: e.target.value
-                            }))
-                          }
-                          placeholder='#HEX'
-                          variant='filled'
-                        />
-                      </div>
-
-                      {/* Color Picker Popup */}
-                      {activePicker === colorField.key && (
-                        <div className='color-picker-popup rounded'>
-                          <SketchPicker
-                            color={colors[colorField.key]}
-                            onChangeComplete={color =>
-                              onColorChange(color, colorField.key)
-                            }
-                          />
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-                <div className='d-flex flex-column gap-2 mt-1'>
-                  <FormGroup>
-                    <FormControlLabel
-                      control={<Switch defaultChecked />}
-                      label='Show agent photos'
-                    />
-                    <FormControlLabel
-                      required
-                      control={<Switch defaultChecked />}
-                      label='Enable file uploads'
-                    />
-                    <FormControlLabel
-                      control={<Switch defaultChecked />}
-                      label='Enable Chat Message Edit'
-                    />
-                    <FormControlLabel
-                      control={<Switch defaultChecked />}
-                      label='Enable Chat Message Delete'
-                    />
-                  </FormGroup>
-                </div>
-                <div className='d-flex justify-content-end flex-wrap gap-3 mt-3'>
-                  <Button variant='outlined'>Cancel</Button>
-                  <Button variant='contained' color='primary'>
-                    Save
-                  </Button>
+                  <div className='d-flex flex-column gap-2 mt-1'>
+                    <FormGroup>
+                      <FormControlLabel
+                        control={<Switch defaultChecked />}
+                        label='Show agent photos'
+                      />
+                      <FormControlLabel
+                        required
+                        control={<Switch defaultChecked />}
+                        label='Enable file uploads'
+                      />
+                      <FormControlLabel
+                        control={<Switch defaultChecked />}
+                        label='Enable Chat Message Edit'
+                      />
+                      <FormControlLabel
+                        control={<Switch defaultChecked />}
+                        label='Enable Chat Message Delete'
+                      />
+                    </FormGroup>
+                  </div>
+                  <div className='d-flex justify-content-end flex-wrap gap-3 mt-3'>
+                    <Button variant='outlined'>Cancel</Button>
+                    <Button variant='contained' color='primary'>
+                      Save
+                    </Button>
+                  </div>
                 </div>
               </div>
-              <div className='card d-flex flex-column gap-3 w-50'>
-                <div className='d-flex align-items-center'>
-                  <VisibilityIcon />
+
+              <div className='live-preview d-none d-xxl-flex flex-column gap-3 w-50'>
+                <div className='custom-card-header d-flex align-items-center'>
+                  <VisibilityIcon color='primary' />
                   <h1 className='title fw-medium fs-4 mt-0 mb-0'>
                     Live Preview
                   </h1>
@@ -369,7 +375,7 @@ export default function Settings () {
                 />
               </FormControl>
             </div>
-          </Paper>
+          </div>
         </TabPanel>
 
         <TabPanel value={tabIndex} index={1}>
