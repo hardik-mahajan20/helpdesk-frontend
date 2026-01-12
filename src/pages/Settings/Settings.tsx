@@ -15,7 +15,9 @@ import {
   InputAdornment,
   InputLabel,
   OutlinedInput,
-  Tooltip
+  Tooltip,
+  MenuItem,
+  Card
 } from '@mui/material'
 import SettingsIcon from '@mui/icons-material/Settings'
 import './Settings.scss'
@@ -29,17 +31,33 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy'
 import VisibilityIcon from '@mui/icons-material/Visibility'
 import ChatWidget from '../ChatWidget'
 import {
+  createChatShortCut,
+  deleteChatShortCut,
+  getChatShortCutMessages,
   getChatWidgetByProjectId,
   getProjectById,
+  toggleChatShortCutVisibility,
+  updateChatShortCut,
   updateChatWidgetSetting
 } from '../../services/settings-service'
 import type {
+  ChatShortCutCreate,
+  ChatShortCutMessages,
   ChatWidgetSettingsDto,
   ProjectDetailsRequestDTO,
+  ShortCutMessage,
   UpdateChatWidgetRequestDTO
 } from '../../interfaces'
 import { useProjectSelectionStore } from '../../services/project-selection-service'
 import { useNavigate } from 'react-router-dom'
+import AddIcon from '@mui/icons-material/Add'
+import CancelIcon from '@mui/icons-material/Cancel'
+import EditIcon from '@mui/icons-material/Edit'
+import DeleteIcon from '@mui/icons-material/Delete'
+import { VisibilityOff } from '@mui/icons-material'
+import { useProfileSelectionStore } from '../../services/profile-selection-service'
+import SaveIcon from '@mui/icons-material/Save'
+import ConfirmDeleteDialog from '../../core/components/ConfirmationDialog'
 function TabPanel ({ value, index, children }: any) {
   return value === index ? <Box sx={{ mt: 3 }}>{children}</Box> : null
 }
@@ -97,6 +115,9 @@ export default function Settings () {
   const [widgetForm, setWidgetForm] = useState<ChatWidgetSettingsDto | null>(
     null
   )
+  const [chatShorCutForm, setChatShorCutForm] = useState<
+    ChatShortCutMessages[]
+  >([])
 
   const [tabIndex, setTabIndex] = useState(0)
 
@@ -104,6 +125,8 @@ export default function Settings () {
   const [, setChatWidget] = useState<ChatWidgetSettingsDto>()
 
   const [activePicker, setActivePicker] = useState<string | null>(null)
+  const [, setChatShortCutMessages] = useState<ChatShortCutMessages[]>([])
+  const [currentUserId, setCurrentUserId] = useState<number>(0)
 
   const togglePicker = (key: string) => {
     setActivePicker(prev => (prev === key ? null : key))
@@ -157,9 +180,15 @@ export default function Settings () {
         const data = await getChatWidgetByProjectId<ChatWidgetSettingsDto>(
           selectedProjectId
         )
+        const chatShortCutMessages = await getChatShortCutMessages<
+          ChatShortCutMessages[]
+        >(selectedProjectId)
 
         setChatWidget(data)
+        setChatShortCutMessages(chatShortCutMessages)
         setWidgetForm(data)
+        setChatShorCutForm(chatShortCutMessages)
+        setCurrentUserId(getCurrentUserId())
       } catch (error) {
         console.error(error)
       }
@@ -172,6 +201,10 @@ export default function Settings () {
     }
   }, [selectedProjectId])
 
+  const getCurrentUserId = useProfileSelectionStore(
+    state => state.getCurrentUserId
+  )
+
   const navigate = useNavigate()
 
   const saveChatWidget = async () => {
@@ -181,6 +214,98 @@ export default function Settings () {
       widgetSetting: JSON.stringify(formVlaue)
     }
     await updateChatWidgetSetting(payload)
+  }
+  const saveShortCut = async () => {
+    const updatedData = {
+      id: newShortcut.id,
+      projectId: selectedProjectId,
+      shortCutKey: newShortcut.shortCutKey,
+      shortCutMessage: newShortcut.shortCutMessage,
+      isPublic: newShortcut.isPublic
+    }
+    await updateChatShortCut(updatedData)
+
+    setChatShorCutForm(prev =>
+      prev.map(shortcut =>
+        shortcut.id === updatedData.id
+          ? { ...shortcut, ...updatedData }
+          : shortcut
+      )
+    )
+    setNewShortcut(DEFAULT_SHORTCUT)
+    setIsEditing(false)
+  }
+  const addShortCut = async () => {
+    const shortcut: ChatShortCutCreate = {
+      projectId: selectedProjectId,
+      shortCutKey: newShortcut.shortCutKey,
+      shortCutMessage: newShortcut.shortCutMessage,
+      isPublic: true
+    }
+    const createdShortcut: ChatShortCutMessages = await createChatShortCut(
+      shortcut
+    )
+
+    setChatShorCutForm(prev =>
+      [...prev, createdShortcut].sort((a, b) => b.id - a.id)
+    )
+    setNewShortcut(DEFAULT_SHORTCUT)
+  }
+
+  const [isEditing, setIsEditing] = useState<boolean>(false)
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState<boolean>(false)
+  const [selectedShortcut, setSelectedShortcut] =
+    useState<ShortCutMessage | null>(null)
+  const DEFAULT_SHORTCUT: ShortCutMessage = {
+    id: 0,
+    projectId: 0,
+    shortCutKey: '',
+    shortCutMessage: '',
+    isPublic: true
+  }
+  const [newShortcut, setNewShortcut] =
+    useState<ShortCutMessage>(DEFAULT_SHORTCUT)
+
+  const handleCancelDelete = () => {
+    setIsDeleteDialogOpen(false)
+  }
+
+  const handleConfirmDelete = async (): Promise<void> => {
+    if (!selectedShortcut) return
+    await deleteChatShortCut(selectedShortcut.id)
+
+    setChatShorCutForm(prev =>
+      prev.filter(shortcut => shortcut.id !== selectedShortcut.id)
+    )
+    setIsDeleteDialogOpen(false)
+    setSelectedShortcut(null)
+  }
+
+  const handleDeleteShortcut = (id: number): void => {
+    const index = chatShorCutForm.findIndex(s => s.id === id)
+    if (index === -1) return
+    const currentShortCut = chatShorCutForm[index]
+    setSelectedShortcut(currentShortCut)
+    setIsDeleteDialogOpen(true)
+  }
+
+  const editShortCut = (id: number): void => {
+    const index = chatShorCutForm.findIndex(s => s.id === id)
+    if (index === -1) return
+    const currentShortCut = chatShorCutForm[index]
+    setNewShortcut(currentShortCut)
+    setIsEditing(true)
+  }
+
+  const toggleShortCutVisibility = async (id: number): Promise<void> => {
+    await toggleChatShortCutVisibility(id)
+    setChatShorCutForm(prev =>
+      prev.map(shortcut =>
+        shortcut.id === id
+          ? { ...shortcut, isPublic: !shortcut.isPublic }
+          : shortcut
+      )
+    )
   }
 
   return (
@@ -528,9 +653,137 @@ export default function Settings () {
         </TabPanel>
 
         <TabPanel value={tabIndex} index={1}>
-          <Typography variant='body1'>
-            Security settings (change password, 2FA, sessions)
-          </Typography>
+          <div className='d-flex flex-column gap-3 mt-4 card new-shortcut-container'>
+            <div className='d-flex align-items-center gap-1'>
+              <ContentCutIcon></ContentCutIcon>
+              <h1 className='fw-medium fs-4 mx-0 title'>Shortcut Messages</h1>
+            </div>
+            <div className='d-flex flex-column gap-3'>
+              <div className='d-flex flex-wrap align-items-start gap-3'>
+                <TextField
+                  label='Title'
+                  type='text'
+                  variant='outlined'
+                  margin='dense'
+                  required
+                  placeholder='Enter shortcut title'
+                  value={newShortcut?.shortCutKey ?? ''}
+                  onChange={e =>
+                    setNewShortcut(prev =>
+                      prev ? { ...prev, shortCutKey: e.target.value } : prev
+                    )
+                  }
+                  className='field'
+                />
+                <TextField
+                  label=''
+                  type='text'
+                  variant='outlined'
+                  margin='dense'
+                  required
+                  placeholder='Enter shortcut message'
+                  value={newShortcut?.shortCutMessage ?? ''}
+                  onChange={e =>
+                    setNewShortcut(prev =>
+                      prev ? { ...prev, shortCutMessage: e.target.value } : prev
+                    )
+                  }
+                  className='field'
+                />
+                <TextField
+                  select
+                  label='Visibility'
+                  variant='outlined'
+                  margin='dense'
+                  value={newShortcut?.isPublic ?? true}
+                  onChange={e =>
+                    setNewShortcut(prev =>
+                      prev
+                        ? { ...prev, isPublic: e.target.value === 'true' }
+                        : prev
+                    )
+                  }
+                  className='field'
+                >
+                  <MenuItem value='true'>Public</MenuItem>
+                  <MenuItem value='false'>Private</MenuItem>
+                </TextField>
+              </div>
+              <div className='d-flex align-items-center justify-content-start gap-3'>
+                <Button
+                  variant='contained'
+                  color='primary'
+                  onClick={isEditing ? saveShortCut : addShortCut}
+                  className='add-shortcut'
+                  startIcon={
+                    isEditing ? <SaveIcon></SaveIcon> : <AddIcon></AddIcon>
+                  }
+                >
+                  {isEditing ? 'Save Changes' : 'Add ShortCut'}
+                </Button>
+                <Button
+                  variant='contained'
+                  className='add-shortcut'
+                  startIcon={<CancelIcon></CancelIcon>}
+                >
+                  Cancle
+                </Button>
+              </div>
+            </div>
+          </div>
+
+          <div className='mt-4 pe-2 shortcut-list-container'>
+            <div className='d-flex flex-column gap-3'>
+              {chatShorCutForm.map(
+                shortcut =>
+                  (shortcut.isPublic === true ||
+                    shortcut.userId === currentUserId) && (
+                    <Card key={shortcut.id} className='shortcut-card'>
+                      <div className='d-flex justify-content-between align-items-center mb-2 shortcut-card-header'>
+                        <h3 className='shortcut-title'>
+                          {shortcut.shortCutKey}
+                          {!shortcut.isPublic && '(Visible to you only)'}
+                        </h3>
+                        {shortcut.userId === currentUserId && (
+                          <div className='d-flex align-items-center justify-content-end gap-3'>
+                            <IconButton
+                              edge='end'
+                              onClick={() =>
+                                toggleShortCutVisibility(shortcut.id)
+                              }
+                              color='primary'
+                            >
+                              {shortcut.isPublic ? (
+                                <VisibilityIcon />
+                              ) : (
+                                <VisibilityOff />
+                              )}
+                            </IconButton>
+                            <IconButton
+                              edge='end'
+                              onClick={() => editShortCut(shortcut.id)}
+                              color='primary'
+                            >
+                              <EditIcon />
+                            </IconButton>
+                            <IconButton
+                              edge='end'
+                              onClick={() => handleDeleteShortcut(shortcut.id)}
+                              color='primary'
+                            >
+                              <DeleteIcon />
+                            </IconButton>
+                          </div>
+                        )}
+                      </div>
+                      <p className='shortcut-message'>
+                        {shortcut.shortCutMessage}
+                      </p>
+                    </Card>
+                  )
+              )}
+            </div>
+          </div>
         </TabPanel>
 
         <TabPanel value={tabIndex} index={2}>
@@ -539,6 +792,13 @@ export default function Settings () {
           </Typography>
         </TabPanel>
       </Paper>
+      <ConfirmDeleteDialog
+        open={isDeleteDialogOpen}
+        title='Delete Shortcut'
+        description={`Are you sure you want to delete this shortcut?`}
+        onCancel={handleCancelDelete}
+        onConfirm={handleConfirmDelete}
+      />
     </div>
   )
 }

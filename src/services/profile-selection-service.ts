@@ -5,7 +5,7 @@ import { httpRequest } from '../api'
 import { HTTP_METHOD } from '../enums'
 
 export const useProfileSelectionStore = create<ProfileSelectionStore>(
-  (set) => ({
+  (set, get) => ({
     profile: null,
 
     getProfile: async (): Promise<UserProfileResponse | null> => {
@@ -15,6 +15,10 @@ export const useProfileSelectionStore = create<ProfileSelectionStore>(
       )
       set({ profile: result })
       return result
+    },
+    getCurrentUserId : () => {
+      const profile = get().profile
+      return profile ? profile.id : 0
     }
   })
 )
