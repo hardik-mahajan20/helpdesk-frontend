@@ -3,7 +3,6 @@ import {
   Box,
   Tabs,
   Tab,
-  Typography,
   Paper,
   TextField,
   Switch,
@@ -17,7 +16,9 @@ import {
   OutlinedInput,
   Tooltip,
   MenuItem,
-  Card
+  Card,
+  Select,
+  type SelectChangeEvent
 } from '@mui/material'
 import SettingsIcon from '@mui/icons-material/Settings'
 import './Settings.scss'
@@ -29,6 +30,10 @@ import { SketchPicker } from 'react-color'
 import CodeIcon from '@mui/icons-material/Code'
 import ContentCopyIcon from '@mui/icons-material/ContentCopy'
 import VisibilityIcon from '@mui/icons-material/Visibility'
+import FolderIcon from '@mui/icons-material/Folder'
+import NotificationsIcon from '@mui/icons-material/Notifications'
+import EmailIcon from '@mui/icons-material/Email'
+import AddAPhotoIcon from '@mui/icons-material/AddAPhoto'
 import ChatWidget from '../ChatWidget'
 import {
   createChatShortCut,
@@ -38,7 +43,8 @@ import {
   getProjectById,
   toggleChatShortCutVisibility,
   updateChatShortCut,
-  updateChatWidgetSetting
+  updateChatWidgetSetting,
+  updateProjectDetails
 } from '../../services/settings-service'
 import type {
   ChatShortCutCreate,
@@ -54,7 +60,7 @@ import AddIcon from '@mui/icons-material/Add'
 import CancelIcon from '@mui/icons-material/Cancel'
 import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
-import { VisibilityOff } from '@mui/icons-material'
+import { Description, VisibilityOff } from '@mui/icons-material'
 import { useProfileSelectionStore } from '../../services/profile-selection-service'
 import SaveIcon from '@mui/icons-material/Save'
 import ConfirmDeleteDialog from '../../core/components/ConfirmationDialog'
@@ -122,6 +128,8 @@ export default function Settings () {
   const [tabIndex, setTabIndex] = useState(0)
 
   const [project, setProject] = useState<ProjectDetailsRequestDTO>()
+  const [originalproject, setOriginalProject] =
+    useState<ProjectDetailsRequestDTO>()
   const [, setChatWidget] = useState<ChatWidgetSettingsDto>()
 
   const [activePicker, setActivePicker] = useState<string | null>(null)
@@ -171,6 +179,9 @@ export default function Settings () {
         setProject(
           await getProjectById<ProjectDetailsRequestDTO>(selectedProjectId)
         )
+        setOriginalProject(
+          await getProjectById<ProjectDetailsRequestDTO>(selectedProjectId)
+        )
       } catch (error) {
         console.error(error)
       }
@@ -214,6 +225,32 @@ export default function Settings () {
       widgetSetting: JSON.stringify(formVlaue)
     }
     await updateChatWidgetSetting(payload)
+  }
+  const saveProjectSettings = async () => {
+    if (!project) return
+
+    setOriginalProject(project)
+
+    const toggleSettings = {
+      enableNewChatNotifications: project?.enableNewChatNotifications || false,
+      enableEmailNotifications: project?.enableEmailNotifications || false,
+      enableSoundNotifications: project?.enableSoundNotifications || false
+    }
+
+    const payload = {
+      Id: selectedProjectId,
+      Name: project?.projectName.toString(),
+      Description: project?.description.toString(),
+      LiveProjectUrl: project?.projectURL.toString(),
+      Settings: JSON.stringify(toggleSettings),
+      IsProjectEnable: project?.projectStatus,
+      IsPrechatFormEnable: project?.preChatFormEnabled
+    }
+
+    await updateProjectDetails(payload)
+  }
+  const cancelProjectSetting = () => {
+    setProject(originalproject)
   }
   const saveShortCut = async () => {
     const updatedData = {
@@ -787,9 +824,292 @@ export default function Settings () {
         </TabPanel>
 
         <TabPanel value={tabIndex} index={2}>
-          <Typography variant='body1'>
-            User preferences and application settings
-          </Typography>
+          <div className='card mt-4'>
+            <div className='project-info-card d-flex flex-column gap-3'>
+              <div className='d-flex align-items-center gap-1'>
+                <FolderIcon></FolderIcon>
+                <h1 className='title fw-medium fs-4 mx-0'>Project Settings</h1>
+              </div>
+
+              <div className='project-info-layout'>
+                <div className='project-image-wrapper'>
+                  {project?.projectImage ? (
+                    <img
+                      src={project?.projectImage}
+                      alt='Project Image'
+                      className='project-image'
+                    />
+                  ) : (
+                    <div className='project-image avatar-initials d-flex justify-content-center align-items-center'>
+                      {project?.projectName?.[0]
+                        ? project?.projectName?.[0]
+                        : ''}
+                    </div>
+                  )}
+                  {/* Upload Button */}
+                  <div className='image-label'>Project Image</div>
+                  <label className='upload-icon'>
+                    <input type='file' accept='image/*' />
+                    <AddAPhotoIcon></AddAPhotoIcon>
+                  </label>
+                </div>
+
+                {/* Project Fields */}
+                <div className='project-fields d-flex flex-column gap-3 flex-fill'>
+                  <div className='field-row d-flex gap-3 flex-wrap'>
+                    <FormControl
+                      variant='outlined'
+                      className='field flex-fill min-w-200px'
+                    >
+                      <InputLabel htmlFor='outlined-adornment-project-name'>
+                        Project Name
+                      </InputLabel>
+                      <OutlinedInput
+                        id='outlined-adornment-project-name'
+                        type='text'
+                        value={project?.projectName ? project?.projectName : ''}
+                        label='Project Name'
+                        onChange={e =>
+                          setProject(prev =>
+                            prev
+                              ? { ...prev, projectName: e.target.value }
+                              : prev
+                          )
+                        }
+                      />
+                    </FormControl>
+                    <FormControl
+                      variant='outlined'
+                      className='field'
+                      margin='dense'
+                      required
+                    >
+                      <InputLabel id='project-status-label'>
+                        Project Status
+                      </InputLabel>
+
+                      <Select
+                        labelId='project-status-label'
+                        label='Project Status'
+                        value={project?.projectStatus ? 'true' : 'false'}
+                        onChange={e =>
+                          setProject(prev =>
+                            prev
+                              ? {
+                                  ...prev,
+                                  projectStatus: e.target.value === 'true'
+                                }
+                              : prev
+                          )
+                        }
+                      >
+                        <MenuItem value='true'>Active</MenuItem>
+                        <MenuItem value='false'>Inactive</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </div>
+                  <div className='field-row d-flex gap-3 flex-wrap'>
+                    <FormControl
+                      variant='outlined'
+                      className='field flex-fill min-w-200px'
+                    >
+                      <InputLabel htmlFor='outlined-adornment-project-code'>
+                        Project Code
+                      </InputLabel>
+                      <OutlinedInput
+                        id='outlined-adornment-project-code'
+                        type='text'
+                        value={project?.projectCode ? project?.projectCode : ''}
+                        label='Project Code'
+                        readOnly
+                        disabled
+                      />
+                    </FormControl>
+                    <FormControl
+                      variant='outlined'
+                      className='field flex-fill min-w-200px'
+                    >
+                      <InputLabel htmlFor='outlined-adornment-property-url'>
+                        Property URL
+                      </InputLabel>
+                      <OutlinedInput
+                        id='outlined-adornment-property-url'
+                        type='text'
+                        value={project?.projectURL ? project?.projectURL : ''}
+                        label='Property URL'
+                        onChange={e =>
+                          setProject(prev =>
+                            prev
+                              ? { ...prev, projectURL: e.target.value }
+                              : prev
+                          )
+                        }
+                      />
+                    </FormControl>
+                    <FormControl
+                      variant='outlined'
+                      className='field'
+                      margin='dense'
+                      required
+                    >
+                      <InputLabel id='project-prechat-status-label'>
+                        PreChat Form
+                      </InputLabel>
+
+                      <Select
+                        labelId='project-prechat-status-label'
+                        value={project?.preChatFormEnabled ? 'true' : 'false'}
+                        label='PreChat Form'
+                        onChange={e =>
+                          setProject(prev =>
+                            prev
+                              ? {
+                                  ...prev,
+                                  preChatFormEnabled: e.target.value === 'true'
+                                }
+                              : prev
+                          )
+                        }
+                      >
+                        <MenuItem value='true'>Active</MenuItem>
+                        <MenuItem value='false'>Inactive</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </div>
+                  <FormControl variant='outlined' className='field full-width'>
+                    <InputLabel htmlFor='outlined-adornment-description'>
+                      Description
+                    </InputLabel>
+                    <OutlinedInput
+                      multiline
+                      rows={2}
+                      id='outlined-adornment-description'
+                      type='text'
+                      value={project?.description ? project?.description : ''}
+                      label='Description'
+                    />
+                  </FormControl>
+                </div>
+              </div>
+            </div>
+            <div className='mt-3 d-flex flex-column gap-3'>
+              <div className='d-flex align-items-center gap-1'>
+                <NotificationsIcon></NotificationsIcon>
+                <h1 className='title fw-medium fs-4 mx-0'>
+                  Notification Settings
+                </h1>
+              </div>
+              <div className='d-flex align-self-center justify-content-between gap-3 w-100'>
+                <div className='d-flex flex-column gap-1'>
+                  <h6 className='m-0'>New Chat Notificaions</h6>
+                  <p className='m-0'>Get notified when new chats arrive</p>
+                </div>
+                <div className='notification toggle'>
+                  <Switch
+                    checked={project?.enableNewChatNotifications ?? false}
+                    onChange={e =>
+                      setProject(prev =>
+                        prev
+                          ? {
+                              ...prev,
+                              enableNewChatNotifications: e.target.checked
+                            }
+                          : prev
+                      )
+                    }
+                  />
+                </div>
+              </div>
+              <div className='d-flex align-self-center justify-content-between gap-3 w-100'>
+                <div className='d-flex flex-column gap-1'>
+                  <h6 className='m-0'>Email Notifications</h6>
+                  <p className='m-0'>Receive notifications via email</p>
+                </div>
+                <div className='notification toggle'>
+                  <Switch
+                    checked={project?.enableEmailNotifications ?? false}
+                    onChange={e =>
+                      setProject(prev =>
+                        prev
+                          ? {
+                              ...prev,
+                              enableEmailNotifications: e.target.checked
+                            }
+                          : prev
+                      )
+                    }
+                  />
+                </div>
+              </div>
+              <div className='d-flex align-self-center justify-content-between gap-3 w-100'>
+                <div className='d-flex flex-column gap-1'>
+                  <h6 className='m-0'>Sound Notificaions</h6>
+                  <p className='m-0'>Play sound for new messages</p>
+                </div>
+                <div className='notification toggle'>
+                  <Switch
+                    checked={project?.enableSoundNotifications ?? false}
+                    onChange={e =>
+                      setProject(prev =>
+                        prev
+                          ? {
+                              ...prev,
+                              enableSoundNotifications: e.target.checked
+                            }
+                          : prev
+                      )
+                    }
+                  />
+                </div>
+              </div>
+
+              <div className='d-flex justify-content-end flex-wrap gap-3'>
+                <Button variant='outlined' onClick={cancelProjectSetting}>
+                  Cancel
+                </Button>
+                <Button
+                  variant='contained'
+                  color='primary'
+                  onClick={saveProjectSettings}
+                >
+                  Save
+                </Button>
+              </div>
+            </div>
+          </div>
+          <div className='mt-4 card d-flex flex-column gap-3'>
+            <div className='d-flex align-items-center gap-1'>
+              <EmailIcon></EmailIcon>
+
+              <h1 className='title fw-medium fs-4 mx-0'>Email Integration</h1>
+            </div>
+            <FormControl variant='outlined' fullWidth>
+              <InputLabel htmlFor='outlined-adornment-ticket-forwarding-email'>
+                Ticket Forwarding Email
+              </InputLabel>
+
+              <OutlinedInput
+                id='outlined-adornment-ticket-forwarding-email'
+                type='text'
+                value={
+                  project?.ticketForwardingEmail
+                    ? project?.ticketForwardingEmail
+                    : ''
+                }
+                readOnly
+                label='Ticket Forwarding Email'
+                endAdornment={
+                  <InputAdornment position='end'>
+                    <Tooltip title={copied ? 'Copied!' : 'Copy'}>
+                      <IconButton edge='end' onClick={saveProjectSettings}>
+                        <ContentCopyIcon />
+                      </IconButton>
+                    </Tooltip>
+                  </InputAdornment>
+                }
+              />
+            </FormControl>
+          </div>
         </TabPanel>
       </Paper>
       <ConfirmDeleteDialog
