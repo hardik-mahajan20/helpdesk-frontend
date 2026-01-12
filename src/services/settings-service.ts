@@ -1,10 +1,14 @@
+import { API_BASE_URL } from '../api'
 import { httpRequest } from '../api/http-Client'
 import { HTTP_METHOD } from '../enums'
 import type {
+  ApiResponse,
   ChatShortCutCreate,
+  ChatShortCutMessages,
   ChatShortCutUpdate,
   UpdateChatWidgetRequestDTO
 } from '../interfaces'
+import { getToken } from './auth-service'
 
 const PROJECT_URL = 'projects'
 const CHATSHORCUT_URL = 'chat-shortcut-messages'
@@ -51,4 +55,38 @@ export async function createChatShortCut<ChatShortCutMessages> (
 ) {
   const url = `${CHATSHORCUT_URL}`
   return httpRequest<ChatShortCutMessages>(url, HTTP_METHOD.POST, chatShortcut)
+}
+
+export async function updateProjectDetails<T> (payload: any) {
+  const BASE_URL = API_BASE_URL
+  const url = `${PROJECT_URL}`
+  const token = getToken()
+
+  const formData = new FormData()
+  Object.entries(payload).forEach(([key, value]) => {
+    if (value !== undefined && value !== null) {
+      formData.append(key, value as any)
+    }
+  })
+
+  const response = await fetch(`${BASE_URL}/${url}/update-project`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${token}`
+    },
+    body: formData
+  })
+
+  return handleResponse<T>(response)
+}
+
+async function handleResponse<T> (response: Response): Promise<T> {
+  const responseJson: ApiResponse<T> = await response.json()
+
+  if (!response.ok) {
+    const messages = responseJson.messages
+    const errorMessage = messages?.join(', ') ?? 'Request failed'
+    throw new Error(errorMessage)
+  }
+  return responseJson.data
 }
