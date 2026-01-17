@@ -17,8 +17,15 @@ import { useState } from 'react'
 import SecurityIcon from '@mui/icons-material/Security'
 import ContentCopyIcon from '@mui/icons-material/ContentCopy'
 import { useNavigate } from 'react-router-dom'
-import { changePassword } from '../../../services/profile-service'
+import {
+  changePassword,
+  disableTwoFactorAuth,
+  enableTwoFactorAuth,
+  verifyTwoFactorAuth
+} from '../../../services/profile-service'
 import { logout } from '../../../services/auth-service'
+import { QRCodeCanvas } from 'qrcode.react'
+import type { EnableTwoFactorAuthResponse } from '../../../interfaces/profile'
 
 export default function Profile () {
   const navigate = useNavigate()
@@ -38,14 +45,13 @@ export default function Profile () {
     }
     // { id: 'passkey', title: 'Passkeys', description: 'Use biometric authentication', icon: 'fingerprint', enabled: false }
   ]
-  const backupCodes: string[] = [
-    'HCNT4RF9',
-    'IKZB209U',
-    'IKZB209U',
-    'HCNT4RF9',
-    'IKZB209U',
-    'IKZB209U'
-  ]
+
+  const [isTwoFactorEnabled, setIsTwoFactorEnabled] = useState<boolean>(false)
+  const [isVerified, setIsVerified] = useState<boolean>(false)
+  const [otpPathUri, setOtpPathUri] = useState<string>('')
+  const [secret, setSecret] = useState<string>('')
+  const [securityCode, setSecurityCode] = useState<string>('')
+  const [backupCodes, setBackupCodes] = useState<string[]>([])
 
   const updatePassword = async () => {
     const payload = {
@@ -57,6 +63,37 @@ export default function Profile () {
     await logout()
     navigate('/')
   }
+
+  const handleTwoFactorToggle = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const enabled = event.target.checked
+
+    setIsTwoFactorEnabled(enabled)
+
+    if (enabled) {
+      const response: EnableTwoFactorAuthResponse = await enableTwoFactorAuth()
+
+      setOtpPathUri(response.otpauthUri)
+      setSecret(response.secret)
+    } else {
+      await disableTwoFactorAuth()
+      setOtpPathUri('')
+      setSecret('')
+      setIsVerified(false)
+    }
+  }
+
+  const verifyCode = async () => {
+    const payload = securityCode
+    const response: string[] = await verifyTwoFactorAuth(payload)
+    const backUpCodes = response
+    setBackupCodes(backUpCodes)
+    console.log(backUpCodes)
+
+    setIsVerified(true)
+  }
+
   return (
     <div className='tab-content py-3 py-sm-4 px-0'>
       <Card className='section-card mb-4'>
@@ -192,114 +229,126 @@ export default function Profile () {
                     </div>
                   </div>
                   <div className='option-actions ms-2'>
-                    <Switch />
+                    <Switch
+                      checked={isTwoFactorEnabled}
+                      onChange={handleTwoFactorToggle}
+                    />
                   </div>
                 </div>
               ))}
+              {isTwoFactorEnabled && (
+                <div className='twofa-setup-ui mt-3 p-3 border rounded bg-light-subtle'>
+                  <h5 className='mb-3'>Set up Two-Factor Authentication</h5>
 
-              <div className='twofa-setup-ui mt-3 p-3 border rounded bg-light-subtle'>
-                <h5 className='mb-3'>Set up Two-Factor Authentication</h5>
+                  <div className='d-flex flex-column flex-md-row gap-4'>
+                    <div className='qr-code-section d-flex flex-column align-items-center'>
+                      {/* <qrcode></qrcode> */}
+                      <QRCodeCanvas value={otpPathUri} size={180} level='M' />
+                      <p className='mt-2 text-muted small'>
+                        Scan this QR code using Google Authenticator
+                      </p>
+                    </div>
 
-                <div className='d-flex flex-column flex-md-row gap-4'>
-                  <div className='qr-code-section d-flex flex-column align-items-center'>
-                    {/* <qrcode></qrcode> */}
-                    <p className='mt-2 text-muted small'>
-                      Scan this QR code using Google Authenticator
-                    </p>
-                  </div>
+                    <div className='text-section'>
+                      <p>
+                        If you're unable to scan the QR code, you can manually
+                        enter this secret:
+                      </p>
 
-                  <div className='text-section'>
-                    <p>
-                      If you're unable to scan the QR code, you can manually
-                      enter this secret:
-                    </p>
-
-                    <FormControl variant='outlined' className='w-100'>
-                      <InputLabel
-                        htmlFor='outlined-adornment-seckret-key'
-                        className='mono-font'
-                      >
-                        Seckret Key
-                      </InputLabel>
-
-                      <OutlinedInput
-                        id='outlined-adornment-seckret-key'
-                        type='text'
-                        readOnly
-                        value={'OEIHOWACWDFJMQNVPENLV5O4DFTYWIX5'}
-                        label='Seckret Key'
-                        endAdornment={
-                          <InputAdornment position='end'>
-                            <Tooltip title='Hardik'>
-                              <IconButton
-                                edge='end'
-                                onClick={() =>
-                                  setShowCurrentPassword(!showCurrentPassword)
-                                }
-                              >
-                                <ContentCopyIcon></ContentCopyIcon>
-                              </IconButton>
-                            </Tooltip>
-                          </InputAdornment>
-                        }
-                      />
-                    </FormControl>
-
-                    <div className='mt-3 d-flex align-items-center gap-2'>
-                      <FormControl variant='outlined' className='w-50'>
+                      <FormControl variant='outlined' className='w-100'>
                         <InputLabel
-                          htmlFor='outlined-adornment-six-digit-code'
+                          htmlFor='outlined-adornment-seckret-key'
                           className='mono-font'
                         >
-                          Enter 6-digit code from the app
+                          Seckret Key
                         </InputLabel>
 
                         <OutlinedInput
-                          id='outlined-adornment-six-digit-code'
+                          id='outlined-adornment-seckret-key'
                           type='text'
-                          label='Enter 6-digit code from the app'
-                          placeholder='123456'
+                          readOnly
+                          value={secret}
+                          label='Seckret Key'
+                          endAdornment={
+                            <InputAdornment position='end'>
+                              <Tooltip title='Hardik'>
+                                <IconButton
+                                  edge='end'
+                                  onClick={() =>
+                                    setShowCurrentPassword(!showCurrentPassword)
+                                  }
+                                >
+                                  <ContentCopyIcon></ContentCopyIcon>
+                                </IconButton>
+                              </Tooltip>
+                            </InputAdornment>
+                          }
                         />
                       </FormControl>
-                      <Button variant='contained' color='primary'>
-                        Verify
-                      </Button>
+
+                      <div className='mt-3 d-flex align-items-center gap-2'>
+                        <FormControl variant='outlined' className='w-50'>
+                          <InputLabel
+                            htmlFor='outlined-adornment-six-digit-code'
+                            className='mono-font'
+                          >
+                            Enter 6-digit code from the app
+                          </InputLabel>
+
+                          <OutlinedInput
+                            id='outlined-adornment-six-digit-code'
+                            type='text'
+                            label='Enter 6-digit code from the app'
+                            placeholder='123456'
+                            value={securityCode}
+                            onChange={e => setSecurityCode(e.target.value)}
+                          />
+                        </FormControl>
+                        <Button
+                          variant='contained'
+                          color='primary'
+                          onClick={() => verifyCode()}
+                        >
+                          Verify
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
+              )}
+              {isVerified && (
+                <div className='backup-codes-section p-3 border rounded bg-light-subtle'>
+                  <h5 className='mb-2'>Backup Codes</h5>
+                  <p className='small text-muted'>
+                    Save these backup codes in a safe place. You can use them
+                    when your Authenticator app is unavailable.
+                    <br />
+                    <strong>Each code can be used only once.</strong>
+                    <br />
+                    <strong>
+                      If you disable 2FA or regenerate backup codes, these will
+                      stop working.
+                    </strong>
+                  </p>
 
-              <div className='backup-codes-section p-3 border rounded bg-light-subtle'>
-                <h5 className='mb-2'>Backup Codes</h5>
-                <p className='small text-muted'>
-                  Save these backup codes in a safe place. You can use them when
-                  your Authenticator app is unavailable.
-                  <br />
-                  <strong>Each code can be used only once.</strong>
-                  <br />
-                  <strong>
-                    If you disable 2FA or regenerate backup codes, these will
-                    stop working.
-                  </strong>
-                </p>
-
-                <div
-                  className='backup-codes-grid d-grid gap-2 mt-3'
-                  style={{
-                    gridTemplateColumns:
-                      ' repeat(auto-fill, minmax(120px, 1fr))'
-                  }}
-                >
-                  {backupCodes.map((code, index) => (
-                    <div
-                      key={index}
-                      className='backup-code border p-2 text-center rounded shadow-sm'
-                    >
-                      {code}
-                    </div>
-                  ))}
+                  <div
+                    className='backup-codes-grid d-grid gap-2 mt-3'
+                    style={{
+                      gridTemplateColumns:
+                        ' repeat(auto-fill, minmax(120px, 1fr))'
+                    }}
+                  >
+                    {backupCodes.map((code, index) => (
+                      <div
+                        key={index}
+                        className='backup-code border p-2 text-center rounded shadow-sm'
+                      >
+                        {code}
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           </div>
         </CardContent>
