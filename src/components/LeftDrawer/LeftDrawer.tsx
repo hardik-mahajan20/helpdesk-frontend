@@ -67,9 +67,7 @@ export default function LeftDrawer () {
   
   const { getProfile } = useProfileSelectionStore()
 
-  const [, setProfileData] = useState<UserProfileResponse | null>(
-    null
-  )
+  const [profile, setProfileData] = useState<UserProfileResponse | null>(null)
 
   const [menuItems, setMenuItems] = useState<menuItems_interface[]>([])
 
@@ -166,7 +164,7 @@ export default function LeftDrawer () {
           <Box display='flex' alignItems='center' gap={1}>
             <Avatar sx={{ width: 32, height: 32 }}>H</Avatar>
             <ListItemText
-              primary='Harsh Kumar'
+              primary={`${profile?.firstName ?? ''} ${profile?.lastName ?? ''}`}
               secondary={isActive ? 'Active' : 'Inactive'}
             />
           </Box>
