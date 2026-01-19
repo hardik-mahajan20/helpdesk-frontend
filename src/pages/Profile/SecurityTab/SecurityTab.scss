@@ -1,0 +1,63 @@
+.section-card {
+  // background-color: var(--surface-color);
+  border-radius: 8px;
+}
+
+.security-section {
+  .section-description {
+    // color: var(--text-secondary);
+  }
+
+  .two-factor-options {
+    .option-card {
+      // border: 2px solid var(--border-color);
+      border-radius: 12px;
+      transition: all 0.3s ease;
+
+      &.enabled {
+        // border-color: rgba(var(--primary-color-rgb), 0.15);
+        // background: rgba(var(--primary-color-rgb), 0.25);
+      }
+
+      .option-content {
+        .option-icon {
+          width: 48px;
+          height: 48px;
+          border-radius: 50%;
+          // background: rgba(var(--primary-color-rgb), 0.9);
+
+          mat-icon {
+            color: white;
+            font-size: 24px;
+          }
+
+          @media (max-width: 575.98px) {
+            width: 36px;
+            height: 36px;
+
+            mat-icon {
+              font-size: 20px;
+              width: 20px;
+              height: 20px;
+            }
+          }
+        }
+
+        .option-info {
+          h4 {
+            font-size: 1.125rem;
+            font-weight: 500;
+            // color: var(--text-primary);
+            margin: 0 0 0.25rem 0;
+          }
+
+          p {
+            font-size: 0.875rem;
+            // color: var(--text-secondary);
+            margin: 0;
+          }
+        }
+      }
+    }
+  }
+}
