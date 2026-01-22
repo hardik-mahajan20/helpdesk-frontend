@@ -4,8 +4,9 @@ import Header from '../components/Header'
 import LeftDrawer from '../components/LeftDrawer'
 import RightDrawer from '../components/RightDrawer'
 import { Outlet } from 'react-router-dom'
+import './Layout.scss'
 
-const drawerWidth = 240
+const drawerWidth = 260
 
 export default function Layout () {
   const [leftOpen, setLeftOpen] = useState(true)
@@ -26,10 +27,8 @@ export default function Layout () {
           sx={{
             flexShrink: 0,
             '& .MuiDrawer-paper': {
-              width: drawerWidth,
               mt: '66px',
-              height: 'calc(100% - 66px)',
-              boxSizing: 'border-box'
+              height: 'calc(100% - 66px)'
             }
           }}
         >
@@ -40,11 +39,11 @@ export default function Layout () {
           component='main'
           sx={{
             flexGrow: 1,
-            p: 2,
             bgcolor: '#f5f5f5',
             transition: theme => theme.transitions.create('margin', {}),
             marginLeft: leftOpen ? `${drawerWidth}px` : 0
           }}
+          className='content-area'
         >
           <Outlet />
         </Box>

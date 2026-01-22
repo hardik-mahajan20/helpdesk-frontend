@@ -1,0 +1,26 @@
+.dashboard-container {
+    max-width: 100%;
+    background-color: var(--background-color);
+  }
+  
+  // Header Section
+  .dashboard-header {
+    border-bottom: 1px solid var(--border-color);
+  }
+  
+  .header-left {
+    .page-title {
+      font-weight: 600;
+      color: var(--primary-color);
+      margin: 0 0 8px 0;
+      line-height: 1.2;
+    }
+  
+    .page-subtitle {
+      font-size: 16px;
+      color: var(--text-secondary);
+      margin: 0;
+      line-height: 1.4;
+    }
+  }
+  

@@ -4,8 +4,6 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  Box,
-  Avatar,
   Divider,
   Menu,
   MenuItem,
@@ -30,7 +28,7 @@ import { clearAuthSession } from '../../utils/storage'
 import { useProfileSelectionStore } from '../../services/profile-selection-service'
 import type { UserProfileResponse } from '../../interfaces/profile'
 import { useProjectSelectionStore } from '../../services/project-selection-service'
-
+import './LeftDrawer.scss'
 interface menuItems_interface {
   label: string
   icon: JSX.Element
@@ -64,7 +62,7 @@ export default function LeftDrawer () {
   const selectedProjectId = useProjectSelectionStore(
     state => state.selectedProjectId
   )
-  
+
   const { getProfile } = useProfileSelectionStore()
 
   const [profile, setProfileData] = useState<UserProfileResponse | null>(null)
@@ -132,98 +130,106 @@ export default function LeftDrawer () {
   }, [selectedProjectId])
 
   return (
-    <Box
-      sx={{
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column'
-      }}
-    >
-      <List sx={{ flexGrow: 1 }}>
-        {menuItems.map((item, index) => {
-          const isSelected = location.pathname === item.path
+    <>
+      <div className='sidebar h-100 d-flex flex-column'>
+        <nav className='sidebar-nav flex-grow-1 py-4 px-0'>
+          <ul className='nav-list list-unstyled p-0 m-0'>
+            {menuItems.map(item => {
+              const isSelected = location.pathname === item.path
 
-          return (
-            <ListItem key={index} disablePadding>
-              <ListItemButton
-                selected={isSelected}
-                onClick={() => handleClick(item.path)}
-              >
-                <ListItemIcon>{item.icon}</ListItemIcon>
-                <ListItemText primary={item.label} />
-              </ListItemButton>
-            </ListItem>
-          )
-        })}
-      </List>
+              return (
+                <li
+                  key={item.path}
+                  className={`nav-item ${isSelected ? 'active' : ''}`}
+                >
+                  <ListItemButton
+                    selected={isSelected}
+                    onClick={() => handleClick(item.path)}
+                    className='nav-link d-flex align-items-center text-decoration-none position-relative'
+                    disableRipple
+                  >
+                    <ListItemIcon className='nav-icon'>
+                      {item.icon}
+                    </ListItemIcon>
 
-      <Divider />
+                    <ListItemText primary={item.label} className='nav-label' />
+                  </ListItemButton>
+                </li>
+              )
+            })}
+          </ul>
+        </nav>
 
-      <Box sx={{ p: 1.5 }}>
-        <Box display='flex' alignItems='center' justifyContent='space-between'>
-          <Box display='flex' alignItems='center' gap={1}>
-            <Avatar sx={{ width: 32, height: 32 }}>H</Avatar>
-            <ListItemText
-              primary={`${profile?.firstName ?? ''} ${profile?.lastName ?? ''}`}
-              secondary={isActive ? 'Active' : 'Inactive'}
-            />
-          </Box>
-          <IconButton
-            size='small'
-            onClick={e => {
-              e.stopPropagation()
-              setAnchorEl(e.currentTarget)
-            }}
-          >
-            <MoreVertIcon fontSize='small' />
-          </IconButton>
-        </Box>
+        <Divider />
 
-        <Menu
-          anchorEl={anchorEl}
-          open={Boolean(anchorEl)}
-          onClose={() => setAnchorEl(null)}
-          anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-          transformOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-        >
-          <MenuItem
-            onClick={() => {
-              setAnchorEl(null)
-              navigate('/profile')
-            }}
-          >
-            <ListItemIcon>
-              <PersonIcon fontSize='small' />
-            </ListItemIcon>
-            User Profile
-          </MenuItem>
-
-          <MenuItem>
-            Active
-            <Switch
+        <div className='sidebar-footer'>
+          <div className='user-profile d-flex align-items-center'>
+            <div className='profile-avatar d-flex justify-content-center align-items-center'>
+              HA
+            </div>
+            <div className='profile-info'>
+              <div className='profile-name'>
+                {profile?.firstName} {profile?.lastName}
+              </div>
+              <div className='profile-email'>{profile?.roleName}</div>
+            </div>
+            <IconButton
               size='small'
-              checked={isActive}
-              onChange={() => setIsActive(!isActive)}
-              sx={{ ml: 'auto' }}
-            />
-          </MenuItem>
+              onClick={e => {
+                e.stopPropagation()
+                setAnchorEl(e.currentTarget)
+              }}
+              className='nav-icon-button profile-menu-btn'
+            >
+              <MoreVertIcon fontSize='small' />
+            </IconButton>
+          </div>
+        </div>
+      </div>
+      <Menu
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={() => setAnchorEl(null)}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        transformOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+      >
+        <MenuItem
+          onClick={() => {
+            setAnchorEl(null)
+            navigate('/profile')
+          }}
+        >
+          <ListItemIcon>
+            <PersonIcon fontSize='small' />
+          </ListItemIcon>
+          User Profile
+        </MenuItem>
 
-          <Divider />
+        <MenuItem>
+          Active
+          <Switch
+            size='small'
+            checked={isActive}
+            onChange={() => setIsActive(!isActive)}
+            sx={{ ml: 'auto' }}
+          />
+        </MenuItem>
 
-          <MenuItem
-            onClick={() => {
-              setAnchorEl(null)
-              clearAuthSession()
-              navigate('/')
-            }}
-          >
-            <ListItemIcon>
-              <LogoutIcon fontSize='small' />
-            </ListItemIcon>
-            Logout
-          </MenuItem>
-        </Menu>
-      </Box>
-    </Box>
+        <Divider />
+
+        <MenuItem
+          onClick={() => {
+            setAnchorEl(null)
+            clearAuthSession()
+            navigate('/')
+          }}
+        >
+          <ListItemIcon>
+            <LogoutIcon fontSize='small' />
+          </ListItemIcon>
+          Logout
+        </MenuItem>
+      </Menu>
+    </>
   )
 }

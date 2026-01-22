@@ -1,0 +1,147 @@
+:root {
+  --background-color: #fafafa;
+  --background-color-rgb: 250, 250, 250;
+  --surface-color: #ffffff;
+  --text-primary: rgba(0, 0, 0, 0.87);
+  --text-primary-rgb: 0, 0, 0;
+  --text-secondary: rgba(0, 0, 0, 0.6);
+  --border-color: #e0e0e0;
+  --sidebar-background: #ffffff;
+  --navbar-background: #ffffff;
+  --warn-color: #f44336;
+}
+
+.theme-light {
+  --background-color: #fafafa;
+  --background-color-rgb: 250, 250, 250;
+  --surface-color: #ffffff;
+  --text-primary: rgba(0, 0, 0, 0.87);
+  --text-primary-rgb: 0, 0, 0;
+  --text-secondary: rgba(0, 0, 0, 0.6);
+  --border-color: #e0e0e0;
+  --sidebar-background: #ffffff;
+  --navbar-background: #ffffff;
+  --auth-bg: rgba(var(--text-primary-rgb), 0.15);
+
+  &.color-blue {
+    --primary-color: #1976d2;
+    --primary-color-rgb: 25, 118, 210;
+    --primary-dark: #0d47a1;
+    --accent-color: #3f51b5;
+    --kb-btn-success-bg: #1976d2;
+    --kb-btn-success-hover-bg: #0d47a1;
+  }
+
+  &.color-green {
+    --primary-color: #388e3c;
+    --primary-color-rgb: 56, 142, 60;
+    --primary-dark: #2e7d32;
+    --accent-color: #009688;
+    --kb-btn-success-bg: #388e3c;
+    --kb-btn-success-hover-bg: #2e7d32;
+  }
+
+  &.color-purple {
+    --primary-color: #7b1fa2;
+    --primary-color-rgb: 123, 31, 162;
+    --primary-dark: #4a148c;
+    --accent-color: #673ab7;
+    --kb-btn-success-bg: #7b1fa2;
+    --kb-btn-success-hover-bg: #4a148c;
+  }
+
+  &.color-orange {
+    --primary-color: #f57c00;
+    --primary-color-rgb: 245, 124, 0;
+    --primary-dark: #e65100;
+    --accent-color: #ff5722;
+    --kb-btn-success-bg: #f57c00;
+    --kb-btn-success-hover-bg: #e65100;
+  }
+}
+
+.theme-dark {
+  --background-color: #121212;
+  --background-color-rgb: 18, 18, 18;
+  --surface-color: #1e1e1e;
+  --text-primary: rgba(255, 255, 255, 0.87);
+  --text-primary-rgb: 255, 255, 255;
+  --text-secondary: rgba(255, 255, 255, 0.6);
+  --border-color: #333;
+  --sidebar-background: #1e1e1e;
+  --navbar-background: #1e1e1e;
+
+  &.color-blue {
+    --primary-color: #90caf9;
+    --primary-color-rgb: 144, 202, 249;
+    --primary-dark: #42a5f5;
+    --accent-color: #5c6bc0;
+    --kb-btn-success-bg: #90caf9;
+    --kb-btn-success-hover-bg: #42a5f5;
+  }
+
+  &.color-green {
+    --primary-color: #81c784;
+    --primary-color-rgb: 129, 199, 132;
+    --primary-dark: #66bb6a;
+    --accent-color: #26a69a;
+    --kb-btn-success-bg: #81c784;
+    --kb-btn-success-hover-bg: #66bb6a;
+  }
+
+  &.color-purple {
+    --primary-color: #ce93d8;
+    --primary-color-rgb: 206, 147, 216;
+    --primary-dark: #ab47bc;
+    --accent-color: #9575cd;
+    --kb-btn-success-bg: #ce93d8;
+    --kb-btn-success-hover-bg: #ab47bc;
+  }
+
+  &.color-orange {
+    --primary-color: #ffb74d;
+    --primary-color-rgb: 255, 183, 77;
+    --primary-dark: #ffa726;
+    --accent-color: #ff8a65;
+    --kb-btn-success-bg: #ffb74d;
+    --kb-btn-success-hover-bg: #ffa726;
+  }
+}
+
+/* Light-mode auth theme (blue) */
+.theme-light .auth-theme {
+  --primary-color: #1976d2;
+  --primary-color-rgb: 25, 118, 210;
+  --primary-dark: #0d47a1;
+  --accent-color: #3f51b5;
+  --warn-color: #f44336;
+
+  --background-color: #fafafa;
+  --background-color-rgb: 250, 250, 250;
+  --surface-color: #ffffff;
+  --text-primary: rgba(0, 0, 0, 0.87);
+  --text-primary-rgb: 0, 0, 0;
+  --text-secondary: rgba(0, 0, 0, 0.6);
+  --border-color: #e0e0e0;
+
+  --auth-bg: rgba(var(--primary-color-rgb), 0.45);
+}
+
+/* Dark-mode auth theme */
+.theme-dark .auth-theme {
+  --primary-color: rgb(144, 202, 249);
+  --primary-color-rgb: 144, 202, 249;
+  --primary-dark: #42a5f5;
+  --accent-color: #00bcd4;
+  --warn-color: #f44336;
+
+  --background-color: #121212;
+  --background-color-rgb: 18, 18, 18;
+  --surface-color: #1e1e1e;
+  --text-primary: rgba(255, 255, 255, 0.87);
+  --text-primary-rgb: 255, 255, 255;
+  --text-secondary: rgba(255, 255, 255, 0.6);
+  --border-color: #333;
+
+  --auth-bg: rgba(var(--text-primary-rgb), 0.15);
+}
