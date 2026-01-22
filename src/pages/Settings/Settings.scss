@@ -1,17 +1,37 @@
+.settings-container {
+  max-width: 100%;
+  background-color: var(--background-color);
+}
+
+// Header Section
+.settings-header {
+  border-bottom: 1px solid var(--border-color);
+}
+
+.header-left {
+  .page-title {
+    color: var(--primary-color);
+  }
+
+  .page-subtitle {
+    color: var(--text-secondary);
+  }
+}
+
 .profile-container {
   max-width: 100%;
-  background-color: white;
+  background-color: var(--surface-color);
 
   .profile-header {
-    border-bottom: 1px solid black;
+    border-bottom: 1px solid var(--border-color);
 
     .page-title {
       font-weight: 600;
-      color: black;
+      color: var(--primary-color);
     }
 
     .page-subtitle {
-      color: black;
+      color: var(--primary-color);
     }
   }
 
@@ -76,20 +96,22 @@
 }
 
 .chat-position-card {
+  background-color: var(--surface-color);
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
   .position-item {
     cursor: pointer;
     padding: 0.25rem;
     transition: box-shadow 0.2s ease;
 
     &:hover {
-      box-shadow: 0 5px 10px black;
+      box-shadow: 0 5px 10px var(--primary-color);
     }
 
     &.active {
-      outline: 2px solid black;
+      outline: 2px solid var(--primary-color);
       outline-offset: 2px;
     }
 
@@ -111,7 +133,7 @@
     }
 
     .widget-dot {
-      background-color: black;
+      background-color: var(--primary-color);
       width: 0.5rem;
       height: 0.5rem;
     }
@@ -120,7 +142,7 @@
 
 .live-preview {
   padding: 1rem;
-  // background-color: black;
+  background-color: var(--surface-color);
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   // border: 1px solid black;
@@ -130,7 +152,7 @@
     margin-bottom: 1rem;
 
     .title {
-      color: black;
+      color: var(--primary-color);
     }
   }
 }
@@ -162,10 +184,10 @@
 
 .shortcut-card {
   padding: 1rem;
-  // background-color: var(--surface-color);
+  background-color: var(--surface-color);
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  // border: 1px solid var(--border-color);
+  border: 1px solid var(--border-color);
 
   .shortcut-card-header {
     height: 20px !important;
@@ -310,17 +332,26 @@
 
 .card {
   padding: 1rem;
-  // background-color: var(--surface-color);
+  background-color: var(--surface-color) !important;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  // border: 1px solid var(--border-color);
+  border: 1px solid var(--border-color);
 
   .title {
-    // color: var(--primary-color);
+    color: var(--primary-color) !important;
   }
 }
 
 .shortcut-list-container {
   max-height: 400px;
   overflow-y: auto;
+}
+
+.toggle-text {
+    color: var(--text-primary) !important;
+}
+
+
+.text-color{
+  color: var(--text-primary);
 }

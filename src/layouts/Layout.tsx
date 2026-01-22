@@ -27,8 +27,8 @@ export default function Layout () {
           sx={{
             flexShrink: 0,
             '& .MuiDrawer-paper': {
-              mt: '66px',
-              height: 'calc(100% - 66px)'
+              mt: '64px',
+              height: 'calc(100% - 64px)'
             }
           }}
         >

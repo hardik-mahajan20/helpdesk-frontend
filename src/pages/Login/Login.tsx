@@ -61,7 +61,7 @@ export default function Login () {
   const [showPassword, setShowPassword] = useState(false)
 
   return (
-    <div className='d-flex justify-content-center align-items-center auth-container auth-theme'>
+    <div className='d-flex justify-content-center align-items-center auth-container'>
       <div className='auth-wrapper d-flex flex-column flex-lg-row'>
         <div className='auth-image-section d-flex justify-content-center align-items-center position-relative'>
           <div className='image-content text-center'>
@@ -182,7 +182,6 @@ export default function Login () {
                 fullWidth
                 margin='normal'
                 sx={{
-                  backgroundColor: '#fff',
                   borderRadius: 1
                 }}
               >
@@ -211,7 +210,6 @@ export default function Login () {
                 variant='filled'
                 margin='normal'
                 sx={{
-                  backgroundColor: '#fff',
                   borderRadius: 1
                 }}
               >
@@ -258,7 +256,11 @@ export default function Login () {
                 alignItems='center'
                 mt={1}
               >
-                <FormControlLabel control={<Checkbox />} label='Remember me' />
+                <FormControlLabel
+                  control={<Checkbox />}
+                  label='Remember me'
+                  className='text-color'
+                />
                 <Typography variant='body2' color='primary'>
                   Forgot password?
                 </Typography>

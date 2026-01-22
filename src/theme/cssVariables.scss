@@ -21,7 +21,6 @@
   --border-color: #e0e0e0;
   --sidebar-background: #ffffff;
   --navbar-background: #ffffff;
-  --auth-bg: rgba(var(--text-primary-rgb), 0.15);
 
   &.color-blue {
     --primary-color: #1976d2;
@@ -30,6 +29,7 @@
     --accent-color: #3f51b5;
     --kb-btn-success-bg: #1976d2;
     --kb-btn-success-hover-bg: #0d47a1;
+    --auth-bg: rgba(var(--primary-color-rgb), 0.45);
   }
 
   &.color-green {
@@ -78,6 +78,7 @@
     --accent-color: #5c6bc0;
     --kb-btn-success-bg: #90caf9;
     --kb-btn-success-hover-bg: #42a5f5;
+    --auth-bg: #353535;
   }
 
   &.color-green {
@@ -123,8 +124,6 @@
   --text-primary-rgb: 0, 0, 0;
   --text-secondary: rgba(0, 0, 0, 0.6);
   --border-color: #e0e0e0;
-
-  --auth-bg: rgba(var(--primary-color-rgb), 0.45);
 }
 
 /* Dark-mode auth theme */
@@ -142,6 +141,4 @@
   --text-primary-rgb: 255, 255, 255;
   --text-secondary: rgba(255, 255, 255, 0.6);
   --border-color: #333;
-
-  --auth-bg: rgba(var(--text-primary-rgb), 0.15);
 }
