@@ -34,6 +34,18 @@
   }
 }
 
+.nav-badge {
+  border-radius: 12px;
+  padding: 2px 8px;
+  font-size: 12px;
+  font-weight: 600;
+  min-width: 20px;
+
+  &.warn-badge {
+    background-color: var(--warn-color);
+  }
+}
+
 .nav-icon {
   width: 24px;
   height: 24px;

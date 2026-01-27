@@ -345,17 +345,7 @@ export default function Settings () {
   }
 
   return (
-    // <div className='settings-container h-100 p-2 p-lg-3'>
-    //   <div className='settings-header d-flex justify-content-between align-items-start mb-3 pb-3'>
-    //     <div className='header-left'>
-    //       <h1 className='page-title fs-2'>Settings</h1>
-    //       <p className='page-subtitle'>
-    //         Manage Projects and Chat Widget Settings
-    //       </p>
-    //     </div>
-    //   </div>
-    // </div>
-    <div className='settings-container h-100 p-2 p-lg-3'>
+    <div className='settings-container h-100 p-2 p-lg-4'>
       <div className='settings-header d-flex justify-content-between align-items-start mb-3 pb-3'>
         <div className='header-left'>
           <h1 className='page-title fs-2'>Settings</h1>

@@ -149,7 +149,7 @@ export default function Departments () {
 
   return (
     <>
-      <div className='department-container h-100 p-2 p-lg-3'>
+      <div className='department-container h-100 p-2 p-lg-4'>
         {/* Header */}
         <div className='department-header d-flex flex-column flex-md-row justify-content-between align-items-start mb-3 pb-3'>
           <div className='header-left'>

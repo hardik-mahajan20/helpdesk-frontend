@@ -33,11 +33,18 @@ interface menuItems_interface {
   label: string
   icon: JSX.Element
   path: string
+  badge?: number
+  active?: boolean
 }
 
 const allProjectMenuItems: menuItems_interface[] = [
-  { label: 'Dashboard', icon: <DashboardIcon />, path: '/dashboard' },
-  { label: 'Inbox', icon: <InboxIcon />, path: '/inbox' },
+  {
+    label: 'Dashboard',
+    icon: <DashboardIcon />,
+    path: '/dashboard',
+    active: true
+  },
+  { label: 'Inbox', icon: <InboxIcon />, path: '/inbox', badge: 12 },
   { label: 'Contacts', icon: <ContactsIcon />, path: '/contacts' },
   { label: 'Projects', icon: <FolderIcon />, path: '/projects' },
   // { label: 'Knowledge Base', icon: <BookIcon />, path: '/knowledge-base' },
@@ -48,8 +55,13 @@ const allProjectMenuItems: menuItems_interface[] = [
 ]
 
 const projectSpecificMenuItems: menuItems_interface[] = [
-  { label: 'Dashboard', icon: <DashboardIcon />, path: '/dashboard' },
-  { label: 'Inbox', icon: <InboxIcon />, path: '/inbox' },
+  {
+    label: 'Dashboard',
+    icon: <DashboardIcon />,
+    path: '/dashboard',
+    active: true
+  },
+  { label: 'Inbox', icon: <InboxIcon />, path: '/inbox', badge: 12 },
   { label: 'Contacts', icon: <ContactsIcon />, path: '/contacts' },
   { label: 'Knowledge Base', icon: <BookIcon />, path: '/knowledge-base' },
   { label: 'Reporting', icon: <AssessmentIcon />, path: '/reporting' },
@@ -153,6 +165,11 @@ export default function LeftDrawer () {
                     </ListItemIcon>
 
                     <ListItemText primary={item.label} className='nav-label' />
+                    {item.label === 'Inbox' && (
+                      <span className={`nav-badge text-center text-white ${item.label === 'Inbox' ? 'warn-badge' : ''}`}>
+                        {item.badge}
+                      </span>
+                    )}
                   </ListItemButton>
                 </li>
               )

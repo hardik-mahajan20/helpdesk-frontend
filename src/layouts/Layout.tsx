@@ -6,7 +6,7 @@ import RightDrawer from '../components/RightDrawer'
 import { Outlet } from 'react-router-dom'
 import './Layout.scss'
 
-const drawerWidth = 260
+const drawerWidth = 250
 
 export default function Layout () {
   const [leftOpen, setLeftOpen] = useState(true)

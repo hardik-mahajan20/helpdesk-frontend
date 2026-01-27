@@ -91,7 +91,7 @@ export default function Profile () {
     }
 
   return (
-    <div className='profile-container h-100 p-2 p-lg-3'>
+    <div className='profile-container h-100 p-2 p-lg-4'>
       <div className='profile-header d-flex justify-content-between align-items-start mb-3 pb-3'>
         <div className='header-left'>
           <h1 className='page-title fs-2'>Profile</h1>
