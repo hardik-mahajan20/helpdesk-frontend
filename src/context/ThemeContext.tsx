@@ -6,14 +6,35 @@ import {
   type ReactNode
 } from 'react'
 import { ThemeProvider, createTheme } from '@mui/material/styles'
-import type { ThemeContextType } from '../interfaces/theme'
+import type {
+  ThemeColor,
+  ThemeContextType,
+  ThemeMode
+} from '../interfaces/theme'
+import { ColorOption, LOCAL_STORAGE_KEYS, ThemeOption } from '../enums'
 
-const ThemeCtx = createContext<ThemeContextType | undefined>(undefined)
+const defaultMode: ThemeMode = ThemeOption.Light
+const defaultColor: ThemeColor = ColorOption.Blue
+
+const defaultThemeContext: ThemeContextType = {
+  mode: defaultMode,
+  color: defaultColor,
+  setMode: () => {},
+  setColor: () => {},
+  setThemeAndColor: () => {}
+}
+
+const ThemeCtx = createContext<ThemeContextType>(defaultThemeContext)
 
 export const ThemeContextProvider = ({ children }: { children: ReactNode }) => {
-  const [mode, setMode] = useState<'light' | 'dark'>('dark')
-  const [color, setColor] = useState<'blue' | 'green' | 'purple' | 'orange'>(
-    'blue'
+  const [mode, setMode] = useState<ThemeMode>(
+    (localStorage.getItem(LOCAL_STORAGE_KEYS.THEME_PREFERENCE) as ThemeMode) ??
+      ThemeOption.Light
+  )
+
+  const [color, setColor] = useState<ThemeColor>(
+    (localStorage.getItem(LOCAL_STORAGE_KEYS.COLOR_PREFERENCE) as ThemeColor) ??
+      ColorOption.Blue
   )
 
   // MUI theme
@@ -29,7 +50,7 @@ export const ThemeContextProvider = ({ children }: { children: ReactNode }) => {
       mode,
       primary: {
         main:
-          mode === 'light'
+          mode === ThemeOption.Light
             ? paletteColors[color].light
             : paletteColors[color].dark
       },
@@ -103,10 +124,9 @@ export const ThemeContextProvider = ({ children }: { children: ReactNode }) => {
     }
   })
 
-  // Add theme classes to body
   useEffect(() => {
     const body = document.body
-    // Remove old theme classes
+
     body.classList.remove(
       'theme-light',
       'theme-dark',
@@ -115,12 +135,28 @@ export const ThemeContextProvider = ({ children }: { children: ReactNode }) => {
       'color-purple',
       'color-orange'
     )
-    // Add current theme classes
+
     body.classList.add(`theme-${mode}`, `color-${color}`)
+
+    localStorage.setItem(LOCAL_STORAGE_KEYS.THEME_PREFERENCE, mode)
+    localStorage.setItem(LOCAL_STORAGE_KEYS.COLOR_PREFERENCE, color)
   }, [mode, color])
 
+  const setThemeAndColor = (theme: ThemeMode, clr: ThemeColor) => {
+    setMode(theme)
+    setColor(clr)
+  }
+
   return (
-    <ThemeCtx.Provider value={{ mode, setMode, color, setColor }}>
+    <ThemeCtx.Provider
+      value={{
+        mode,
+        color,
+        setMode,
+        setColor,
+        setThemeAndColor
+      }}
+    >
       <ThemeProvider theme={theme}>{children}</ThemeProvider>
     </ThemeCtx.Provider>
   )

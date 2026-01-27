@@ -3,6 +3,7 @@ import type { ApiResponse } from '../interfaces/other/api-response'
 import type { LoginRequest } from '../interfaces/auth/login-request'
 import type { LoginResponse } from '../interfaces/auth/login-response'
 import { API_BASE_URL } from '../api'
+import { LOCAL_STORAGE_KEYS } from '../enums'
 
 const AUTH_URL = `${API_BASE_URL}/auth`
 
@@ -60,7 +61,7 @@ export async function refreshToken (): Promise<
       }
       const result: ApiResponse<{ accessToken: string }> = await response.json()
       const newToken = result.data.accessToken
-      localStorage.setItem('accessToken', newToken)
+      localStorage.setItem(LOCAL_STORAGE_KEYS.ACCESS_TOKEN, newToken)
       return newToken
     })
     .finally(() => {
@@ -112,7 +113,7 @@ export function isAuthenticated (): boolean {
 }
 
 export async function logout (): Promise<ApiResponse<void>> {
-  localStorage.removeItem('accessToken')
+  localStorage.removeItem(LOCAL_STORAGE_KEYS.ACCESS_TOKEN)
   sessionStorage.clear()
 
   const response = await fetch(`${AUTH_URL}/logout`, {

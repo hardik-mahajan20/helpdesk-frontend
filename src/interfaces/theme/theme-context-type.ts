@@ -1,8 +1,10 @@
+export type ThemeMode = 'light' | 'dark'
+export type ThemeColor = 'blue' | 'green' | 'purple' | 'orange'
+
 export interface ThemeContextType {
-  mode: 'light' | 'dark'
-  setMode: React.Dispatch<React.SetStateAction<'light' | 'dark'>>
-  color: 'blue' | 'green' | 'purple' | 'orange'
-  setColor: React.Dispatch<
-    React.SetStateAction<'blue' | 'green' | 'purple' | 'orange'>
-  >
+  mode: ThemeMode
+  setMode: (mode: ThemeMode) => void
+  color: ThemeColor
+  setColor: (mode: ThemeColor) => void
+  setThemeAndColor: (mode: ThemeMode, color: ThemeColor) => void
 }

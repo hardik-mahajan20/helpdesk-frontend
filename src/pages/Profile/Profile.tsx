@@ -3,7 +3,6 @@ import {
   Box,
   Tabs,
   Tab,
-  Typography,
   Paper,
   Card,
   CardContent,
@@ -24,6 +23,7 @@ import type { UserProfileResponse } from '../../interfaces/profile'
 import PhotoCameraIcon from '@mui/icons-material/PhotoCamera'
 import { updateProfile } from '../../services/profile-service'
 import './Profile.scss'
+import SettingsTab from './SettingsTab'
 
 function TabPanel ({ value, index, children }: any) {
   return value === index ? <Box sx={{ mt: 3 }}>{children}</Box> : null
@@ -343,9 +343,7 @@ export default function Profile () {
         </TabPanel>
 
         <TabPanel value={tabIndex} index={2}>
-          <Typography variant='body1'>
-            User preferences and application settings
-          </Typography>
+          <SettingsTab></SettingsTab>
         </TabPanel>
       </Paper>
     </div>
