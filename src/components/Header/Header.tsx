@@ -34,7 +34,6 @@ export default function Header ({ onLeftToggle, onRightToggle }: HeaderProps) {
 
   const handleChange = (event: SelectChangeEvent) => {
     const value = event.target.value as string
-    console.log(value)
 
     setProjectId(Number(value))
   }

@@ -89,19 +89,18 @@ export async function getCurrentUser<T> () {
 }
 
 export function getToken (): string | null {
-  return localStorage.getItem('authToken')
+  return localStorage.getItem(LOCAL_STORAGE_KEYS.ACCESS_TOKEN)
 }
 
 export function setToken (token: string): void {
-  localStorage.setItem('authToken', token)
+  localStorage.setItem(LOCAL_STORAGE_KEYS.ACCESS_TOKEN, token)
 }
 
 export function clearToken (): void {
-  localStorage.removeItem('authToken')
+  localStorage.removeItem(LOCAL_STORAGE_KEYS.ACCESS_TOKEN)
 }
 
 export function isTokenExpired (): boolean {
-
   const token = getToken()
   if (!token) return true
   const decoded = jwtDecode(token)

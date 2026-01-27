@@ -29,7 +29,6 @@ export default function AddAgentDialog ({
 
   const handleSubmit = async () => {
     try {
-      console.log(department)
 
       if (!department) return
 

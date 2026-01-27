@@ -29,6 +29,8 @@ import { useProfileSelectionStore } from '../../services/profile-selection-servi
 import type { UserProfileResponse } from '../../interfaces/profile'
 import { useProjectSelectionStore } from '../../services/project-selection-service'
 import './LeftDrawer.scss'
+import { useThemeContext } from '../../context/ThemeContext'
+import { ColorOption, LOCAL_STORAGE_KEYS, ThemeOption } from '../../enums'
 interface menuItems_interface {
   label: string
   icon: JSX.Element
@@ -85,6 +87,8 @@ export default function LeftDrawer () {
   const [isActive, setIsActive] = useState(true)
   const location = useLocation()
 
+  const { setMode, setColor } = useThemeContext()
+
   const handleClick = (path: string) => {
     navigate(path)
   }
@@ -92,7 +96,26 @@ export default function LeftDrawer () {
   useEffect(() => {
     const loadProfile = async () => {
       const profile = await getProfile()
+
       if (!profile) return
+
+      if (profile.userPreferenceSettings) {
+        try {
+          const preference = JSON.parse(profile.userPreferenceSettings)
+
+          // Handle theme preference
+          const theme = preference.theme || ThemeOption.Light
+          setMode(theme)
+          localStorage.setItem(LOCAL_STORAGE_KEYS.THEME_PREFERENCE, theme)
+
+          // Handle color preference
+          const color = preference.color || ColorOption.Blue
+          setColor(color)
+          localStorage.setItem(LOCAL_STORAGE_KEYS.COLOR_PREFERENCE, color)
+        } catch (e) {
+          console.error('Failed to parse user preferences:', e)
+        }
+      }
 
       let items: menuItems_interface[] = []
 
@@ -166,7 +189,11 @@ export default function LeftDrawer () {
 
                     <ListItemText primary={item.label} className='nav-label' />
                     {item.label === 'Inbox' && (
-                      <span className={`nav-badge text-center text-white ${item.label === 'Inbox' ? 'warn-badge' : ''}`}>
+                      <span
+                        className={`nav-badge text-center text-white ${
+                          item.label === 'Inbox' ? 'warn-badge' : ''
+                        }`}
+                      >
                         {item.badge}
                       </span>
                     )}

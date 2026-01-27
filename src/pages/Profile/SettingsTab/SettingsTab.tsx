@@ -45,19 +45,11 @@ export default function SettingsTab () {
     'appearance'
   )
 
-  const [currentTheme, setCurrentTheme] = useState<ThemeOption>(
-    ThemeOption.Light
-  )
-  const [pendingTheme, setPendingTheme] = useState<ThemeOption>(
-    ThemeOption.Light
-  )
+  const [currentTheme, setCurrentTheme] = useState<ThemeOption>()
+  const [pendingTheme, setPendingTheme] = useState<ThemeOption>()
 
-  const [currentColor, setCurrentColor] = useState<ColorOption>(
-    ColorOption.Blue
-  )
-  const [pendingColor, setPendingColor] = useState<ColorOption>(
-    ColorOption.Blue
-  )
+  const [currentColor, setCurrentColor] = useState<ColorOption>()
+  const [pendingColor, setPendingColor] = useState<ColorOption>()
 
   const { profile } = useProfileSelectionStore()
 

@@ -77,7 +77,6 @@ export default function Agents () {
   const [searchText, setSearchText] = useState('')
 
   const handleDeleteAgent = useCallback(async (agent: Agent) => {
-    console.log(agent)
 
     await deleteAgent(agent.userId)
   }, [])
@@ -85,7 +84,6 @@ export default function Agents () {
   const handleEditAgent = useCallback(async (agent: Agent) => {
     try {
       // Fetch agent details
-      console.log(agent)
       const token = getToken()
 
       const agentDetails = await fetch(`http://localhost:5093/api/agents/5`, {
@@ -150,7 +148,6 @@ export default function Agents () {
     department: string
     reportsTo: string
   }) => {
-    console.log('Submitting agent:', data)
     setIsAddAgentOpen(false)
     setAgents(await getAllAgents<AgentsGet[]>(true))
   }
@@ -343,7 +340,6 @@ export default function Agents () {
         reportsTo={reportsTo}
         onClose={() => setIsEditAgentOpen(false)}
         onSubmit={(data: any) => {
-          console.log('Updated Agent:', data)
           setIsEditAgentOpen(false)
         }}
       />

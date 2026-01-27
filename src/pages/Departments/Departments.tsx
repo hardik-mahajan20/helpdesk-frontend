@@ -97,7 +97,6 @@ export default function Departments () {
 
   const handleAddDepartment = async () => {
     setIsAddADepartmentOpen(true)
-    console.log(isAddADepartmentOpen)
   }
 
   // Table Structure
@@ -127,7 +126,6 @@ export default function Departments () {
     const loadDepartments: () => Promise<void> = async () => {
       try {
         setDepartments(await getAllDepartments<AllDepartmentsGet[]>())
-        console.log('loadDepartment')
       } catch (error) {
         console.error(error)
       }

@@ -26,6 +26,7 @@ import {
 import { logout } from '../../../services/auth-service'
 import { QRCodeCanvas } from 'qrcode.react'
 import type { EnableTwoFactorAuthResponse } from '../../../interfaces/profile'
+import clsx from 'clsx'
 
 export default function Profile () {
   const navigate = useNavigate()
@@ -89,7 +90,6 @@ export default function Profile () {
     const response: string[] = await verifyTwoFactorAuth(payload)
     const backUpCodes = response
     setBackupCodes(backUpCodes)
-    console.log(backUpCodes)
 
     setIsVerified(true)
   }
@@ -114,7 +114,7 @@ export default function Profile () {
                   label='Current Password'
                   endAdornment={
                     <InputAdornment position='end'>
-                      <Tooltip title='Hardik'>
+                      <Tooltip title='Current Password'>
                         <IconButton
                           edge='end'
                           onClick={() =>
@@ -145,7 +145,7 @@ export default function Profile () {
                   label='New Password'
                   endAdornment={
                     <InputAdornment position='end'>
-                      <Tooltip title='Hardik'>
+                      <Tooltip title='New Password'>
                         <IconButton
                           edge='end'
                           onClick={() => setShowNewPassword(!showNewPassword)}
@@ -174,7 +174,7 @@ export default function Profile () {
                   label='Confirm Password'
                   endAdornment={
                     <InputAdornment position='end'>
-                      <Tooltip title='Hardik'>
+                      <Tooltip title='Confirm Password'>
                         <IconButton
                           edge='end'
                           onClick={() =>
@@ -216,13 +216,18 @@ export default function Profile () {
             <div className='two-factor-options d-flex flex-column gap-3'>
               {twoFactorOptions.map(option => (
                 <div
-                  className='option-card d-flex justify-content-between align-items-center p-sm-3 p-2'
+                  className={clsx(
+                    'option-card d-flex justify-content-between align-items-center p-sm-3 p-2',
+                    { enabled: isTwoFactorEnabled }
+                  )}
                   key={option.id}
                 >
                   <div className='option-content d-flex align-items-center gap-3'>
-                    <div className='option-icon d-flex justify-content-center align-items-center'>
-                      <SecurityIcon></SecurityIcon>
-                    </div>
+                    <SecurityIcon
+                      className={clsx('option-icon', {
+                        enabled: isTwoFactorEnabled
+                      })}
+                    />
                     <div className='option-info'>
                       <h4>{option.title}</h4>
                       <p>{option.description}</p>
@@ -232,12 +237,13 @@ export default function Profile () {
                     <Switch
                       checked={isTwoFactorEnabled}
                       onChange={handleTwoFactorToggle}
+                      color='primary'
                     />
                   </div>
                 </div>
               ))}
               {isTwoFactorEnabled && (
-                <div className='twofa-setup-ui mt-3 p-3 border rounded bg-light-subtle'>
+                <div className='twofa-setup-ui mt-3 p-3 border rounded'>
                   <h5 className='mb-3'>Set up Two-Factor Authentication</h5>
 
                   <div className='d-flex flex-column flex-md-row gap-4'>
@@ -257,21 +263,21 @@ export default function Profile () {
 
                       <FormControl variant='outlined' className='w-100'>
                         <InputLabel
-                          htmlFor='outlined-adornment-seckret-key'
+                          htmlFor='outlined-adornment-secret-key'
                           className='mono-font'
                         >
-                          Seckret Key
+                          Secret Key
                         </InputLabel>
 
                         <OutlinedInput
-                          id='outlined-adornment-seckret-key'
+                          id='outlined-adornment-secret-key'
                           type='text'
                           readOnly
                           value={secret}
-                          label='Seckret Key'
+                          label='Secret Key'
                           endAdornment={
                             <InputAdornment position='end'>
-                              <Tooltip title='Hardik'>
+                              <Tooltip title='Current Password'>
                                 <IconButton
                                   edge='end'
                                   onClick={() =>
