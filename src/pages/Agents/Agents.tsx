@@ -44,6 +44,7 @@ import { getToken } from '../../services/auth-service'
 import FileDownloadIcon from '@mui/icons-material/FileDownload'
 import FileUploadIcon from '@mui/icons-material/FileUpload'
 import FilterListIcon from '@mui/icons-material/FilterList'
+import { toast } from 'react-toastify'
 
 function a11yProps (index: number) {
   return {
@@ -77,7 +78,8 @@ export default function Agents () {
   const [searchText, setSearchText] = useState('')
 
   const handleDeleteAgent = useCallback(async (agent: Agent) => {
-    await deleteAgent(agent.userId)
+    var result = await deleteAgent(agent.userId)
+    toast.success(result.messages[0])
   }, [])
 
   const handleEditAgent = useCallback(async (agent: Agent) => {

@@ -15,6 +15,7 @@ import { useState, useEffect } from 'react'
 import type { AddAgentDialogProps, ReportsToDropdown } from '../../interfaces'
 import { getAllReportsTos, inviteAgent } from '../../services/agent-service'
 import './AddAgentDialog.scss'
+import { toast } from 'react-toastify'
 
 export default function AddAgentDialog ({
   open,
@@ -38,7 +39,8 @@ export default function AddAgentDialog ({
         reportsToId: Number(reportsTo) || 0
       }
 
-      await inviteAgent(payload)
+      var result = await inviteAgent(payload)
+      toast.success(result.messages[0])
       onClose()
     } catch (error) {
       console.error('Failed to invite agent', error)
