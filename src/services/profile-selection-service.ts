@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import type { ProfileSelectionStore } from '../interfaces'
 import type { UserProfileResponse } from '../interfaces/profile'
-import { httpRequest } from '../api'
+import { httpRequestAsync } from '../api'
 import { HTTP_METHOD } from '../enums'
 
 export const useProfileSelectionStore = create<ProfileSelectionStore>(
@@ -9,14 +9,16 @@ export const useProfileSelectionStore = create<ProfileSelectionStore>(
     profile: null,
 
     getProfile: async (): Promise<UserProfileResponse | null> => {
-      let result = await httpRequest<UserProfileResponse>(
-        'profile/profile-details',
-        HTTP_METHOD.GET
-      )
+      let result = (
+        await httpRequestAsync<UserProfileResponse>(
+          'profile/profile-details',
+          HTTP_METHOD.GET
+        )
+      ).data
       set({ profile: result })
       return result
     },
-    getCurrentUserId : () => {
+    getCurrentUserId: () => {
       const profile = get().profile
       return profile ? profile.id : 0
     }

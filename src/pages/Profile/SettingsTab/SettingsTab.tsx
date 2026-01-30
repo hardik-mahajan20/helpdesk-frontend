@@ -19,6 +19,7 @@ import { useProfileSelectionStore } from '../../../services/profile-selection-se
 import { useThemeContext } from '../../../context/ThemeContext'
 import { updateUserPreferences } from '../../../services/profile-service'
 import { ColorOption, ThemeOption } from '../../../enums'
+import { toast } from 'react-toastify'
 
 export default function SettingsTab () {
   const { mode, color, setThemeAndColor, setMode, setColor } = useThemeContext()
@@ -103,10 +104,11 @@ export default function SettingsTab () {
   const saveThemeAndColor = async () => {
     await updateUserPreferences({
       preferences: {
-        theme: mode,
-        color: color
+        theme: mode as ThemeOption,
+        color: color as ColorOption
       }
     })
+    toast.success('Preference Updated Successfully')
   }
 
   return (

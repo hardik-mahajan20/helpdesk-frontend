@@ -144,7 +144,11 @@ export default function Header ({ onLeftToggle, onRightToggle }: HeaderProps) {
             <Select
               labelId='project-select-label'
               id='project-select'
-              value={selectedProjectId.toString()}
+              value={
+                projectsList.some(p => p.id === selectedProjectId)
+                  ? selectedProjectId.toString()
+                  : '0'
+              }
               label='Select Project'
               onChange={handleChange}
             >

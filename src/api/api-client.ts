@@ -5,11 +5,11 @@ import { getToken } from "../services/auth-service";
 
 const BASE_URL = API_BASE_URL;
 
-export async function httpRequest<TResponse, TBody = unknown>(
+export async function httpRequestAsync<T, TBody = unknown> (
   url: string,
   method: HttpMethod,
   payload?: TBody
-): Promise<TResponse> {
+): Promise<ApiResponse<T>> {
   const token = getToken();
 
   const hasBody = method === "POST" || method === "PUT" || method === "PATCH";
@@ -23,10 +23,10 @@ export async function httpRequest<TResponse, TBody = unknown>(
     body: hasBody ? JSON.stringify(payload) : undefined,
   });
 
-  return handleResponse<TResponse>(response);
+  return handleResponseAsync<T>(response)
 }
 
-async function handleResponse<T>(response: Response): Promise<T> {
+async function handleResponseAsync<T> (response: Response): Promise<ApiResponse<T>> {
   const responseJson: ApiResponse<T> = await response.json();
 
   if (!response.ok) {
@@ -34,5 +34,5 @@ async function handleResponse<T>(response: Response): Promise<T> {
     const errorMessage = messages?.join(", ") ?? "Request failed";
     throw new Error(errorMessage);
   }
-  return responseJson.data;
+  return responseJson
 }

@@ -27,6 +27,7 @@ import './Departments.scss'
 import AddDepartmentDialog from './AddDepartmentDialog'
 import EditDepartmentDialog from './EditDepartmentDialog'
 import ConfirmDeleteDialog from '../../core/components/ConfirmationDialog'
+import { toast } from 'react-toastify'
 
 const DepartmentActions = memo(
   ({ department, onEdit, onDelete }: DepartmentActionsProps) => (
@@ -74,7 +75,8 @@ export default function Departments () {
     if (!selectedDepartment) return
 
     try {
-      await deleteDepartment(selectedDepartment.id)
+      var result = await deleteDepartment(selectedDepartment.id)
+      toast.success(result.messages[0])
 
       setDepartments(prev => prev.filter(d => d.id !== selectedDepartment.id))
 
@@ -125,7 +127,7 @@ export default function Departments () {
   useEffect(() => {
     const loadDepartments: () => Promise<void> = async () => {
       try {
-        setDepartments(await getAllDepartments<AllDepartmentsGet[]>())
+        setDepartments((await getAllDepartments<AllDepartmentsGet[]>()).data)
       } catch (error) {
         console.error(error)
       }

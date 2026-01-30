@@ -14,7 +14,8 @@ import {
 import { useState, useEffect } from 'react'
 import type { AddAgentDialogProps, ReportsToDropdown } from '../../interfaces'
 import { getAllReportsTos, inviteAgent } from '../../services/agent-service'
-import "./AddAgentDialog.scss"
+import './AddAgentDialog.scss'
+import { toast } from 'react-toastify'
 
 export default function AddAgentDialog ({
   open,
@@ -29,7 +30,6 @@ export default function AddAgentDialog ({
 
   const handleSubmit = async () => {
     try {
-
       if (!department) return
 
       const payload = {
@@ -39,7 +39,8 @@ export default function AddAgentDialog ({
         reportsToId: Number(reportsTo) || 0
       }
 
-      await inviteAgent(payload)
+      var result = await inviteAgent(payload)
+      toast.success(result.messages[0])
       onClose()
     } catch (error) {
       console.error('Failed to invite agent', error)
@@ -51,10 +52,9 @@ export default function AddAgentDialog ({
       if (!department) return
 
       try {
-        const data = await getAllReportsTos<ReportsToDropdown[]>(
-          3,
-          Number(department)
-        )
+        const data = (
+          await getAllReportsTos<ReportsToDropdown[]>(3, Number(department))
+        ).data
         setReportPersons(data)
       } catch (error) {
         console.error('Failed to fetch reports to:', error)
