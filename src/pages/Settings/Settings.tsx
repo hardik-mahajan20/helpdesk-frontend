@@ -46,6 +46,7 @@ import {
   updateProjectDetails
 } from '../../services/settings-service'
 import type {
+  ApiResponse,
   ChatShortCutCreate,
   ChatShortCutMessages,
   ChatWidgetSettingsDto,
@@ -63,6 +64,7 @@ import { VisibilityOff } from '@mui/icons-material'
 import { useProfileSelectionStore } from '../../services/profile-selection-service'
 import SaveIcon from '@mui/icons-material/Save'
 import ConfirmDeleteDialog from '../../core/components/ConfirmationDialog'
+import { toast } from 'react-toastify'
 function TabPanel ({ value, index, children }: any) {
   return value === index ? <Box sx={{ mt: 3 }}>{children}</Box> : null
 }
@@ -224,6 +226,7 @@ export default function Settings () {
       widgetSetting: JSON.stringify(formVlaue)
     }
     await updateChatWidgetSetting(payload)
+    toast.success('Request processes successfully.')
   }
   const saveProjectSettings = async () => {
     if (!project) return
@@ -998,6 +1001,11 @@ export default function Settings () {
                       type='text'
                       value={project?.description ? project?.description : ''}
                       label='Description'
+                      onChange={e =>
+                        setProject(prev =>
+                          prev ? { ...prev, description: e.target.value } : prev
+                        )
+                      }
                     />
                   </FormControl>
                 </div>
@@ -1013,7 +1021,9 @@ export default function Settings () {
               <div className='d-flex align-self-center justify-content-between gap-3 w-100'>
                 <div className='d-flex flex-column gap-1'>
                   <h6 className='m-0 toggle-text'>New Chat Notificaions</h6>
-                  <p className='m-0 toggle-text'>Get notified when new chats arrive</p>
+                  <p className='m-0 toggle-text'>
+                    Get notified when new chats arrive
+                  </p>
                 </div>
                 <div className='notification toggle'>
                   <Switch
@@ -1034,7 +1044,9 @@ export default function Settings () {
               <div className='d-flex align-self-center justify-content-between gap-3 w-100'>
                 <div className='d-flex flex-column gap-1'>
                   <h6 className='m-0 toggle-text'>Email Notifications</h6>
-                  <p className='m-0 toggle-text'>Receive notifications via email</p>
+                  <p className='m-0 toggle-text'>
+                    Receive notifications via email
+                  </p>
                 </div>
                 <div className='notification toggle'>
                   <Switch
