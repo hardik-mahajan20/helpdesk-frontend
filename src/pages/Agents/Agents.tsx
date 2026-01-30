@@ -41,6 +41,9 @@ import EditIcon from '@mui/icons-material/Edit'
 import AddAgentDialog from './AddAgentDialog'
 import EditAgentDialog from './EditAgentDialog'
 import { getToken } from '../../services/auth-service'
+import FileDownloadIcon from '@mui/icons-material/FileDownload'
+import FileUploadIcon from '@mui/icons-material/FileUpload'
+import FilterListIcon from '@mui/icons-material/FilterList';
 
 function a11yProps (index: number) {
   return {
@@ -74,7 +77,6 @@ export default function Agents () {
   const [searchText, setSearchText] = useState('')
 
   const handleDeleteAgent = useCallback(async (agent: Agent) => {
-    console.log(agent)
 
     await deleteAgent(agent.userId)
   }, [])
@@ -82,7 +84,6 @@ export default function Agents () {
   const handleEditAgent = useCallback(async (agent: Agent) => {
     try {
       // Fetch agent details
-      console.log(agent)
       const token = getToken()
 
       const agentDetails = await fetch(`http://localhost:5093/api/agents/5`, {
@@ -147,7 +148,6 @@ export default function Agents () {
     department: string
     reportsTo: string
   }) => {
-    console.log('Submitting agent:', data)
     setIsAddAgentOpen(false)
     setAgents(await getAllAgents<AgentsGet[]>(true))
   }
@@ -239,7 +239,7 @@ export default function Agents () {
   }, [rows, searchText])
   return (
     <>
-      <div className='agents-container h-100 p-2 p-lg-3'>
+      <div className='agents-container h-100 p-2 p-lg-4'>
         {/* Header */}
         <div className='agents-header d-flex flex-column flex-md-row justify-content-between align-items-start mb-3 pb-3'>
           <div className='header-left'>
@@ -247,6 +247,27 @@ export default function Agents () {
             <p className='page-subtitle m-0'>Manage agents for all projects</p>
           </div>
           <div className='header-actions d-flex align-items-center gap-3'>
+            <Button
+              variant='outlined'
+              startIcon={<FilterListIcon />}
+              className='action-btn'
+            >
+              Filter
+            </Button>
+            <Button
+              variant='outlined'
+              startIcon={<FileDownloadIcon />}
+              className='action-btn'
+            >
+              Import
+            </Button>
+            <Button
+              variant='outlined'
+              startIcon={<FileUploadIcon />}
+              className='action-btn'
+            >
+              Export
+            </Button>
             <Button
               variant='contained'
               startIcon={<AddIcon />}
@@ -319,7 +340,6 @@ export default function Agents () {
         reportsTo={reportsTo}
         onClose={() => setIsEditAgentOpen(false)}
         onSubmit={(data: any) => {
-          console.log('Updated Agent:', data)
           setIsEditAgentOpen(false)
         }}
       />

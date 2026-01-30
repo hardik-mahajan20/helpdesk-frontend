@@ -20,11 +20,11 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import SearchIcon from '@mui/icons-material/Search'
 import ConfirmDeleteDialog from '../../core/components/ConfirmationDialog'
 import { deleteProject, getAllProjects } from '../../services/project-service'
-import './Projects.scss'
 import AddProjectDialog from './AddProjectDialog'
 import SettingsIcon from '@mui/icons-material/Settings'
 import { useProjectSelectionStore } from '../../services/project-selection-service'
 import { useNavigate } from 'react-router-dom'
+import "./Projects.scss"
 
 const ProjectActions = memo(
   ({ projects, goToSettings, onDelete }: ProjectsActionsProps) => (
@@ -150,9 +150,9 @@ export default function Projects () {
 
   return (
     <>
-      <div className='project-container h-100 p-2 p-lg-3'>
+      <div className='projects-container h-100 p-2 p-lg-4'>
         {/* Header */}
-        <div className='project-header d-flex flex-column flex-md-row justify-content-between align-items-start mb-3 pb-3'>
+        <div className='projects-header d-flex flex-column flex-md-row justify-content-between align-items-start mb-3 pb-3'>
           <div className='header-left'>
             <h1 className='page-title fs-2'>Projects</h1>
             <p className='page-subtitle m-0'>Manage all projects</p>
@@ -162,6 +162,7 @@ export default function Projects () {
               variant='contained'
               startIcon={<AddIcon />}
               onClick={handleAddProject}
+              className='add-project-btn d-flex align-items-center gap-2'
             >
               Add Project
             </Button>

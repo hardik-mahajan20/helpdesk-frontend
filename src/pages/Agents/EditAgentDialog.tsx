@@ -53,7 +53,6 @@ export default function EditAgentDialog ({
         adminProjects: []
       }
 
-      console.log(payload)
       await updateAgent(payload)
       onClose()
     } catch (error) {

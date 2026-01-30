@@ -97,7 +97,6 @@ export default function Departments () {
 
   const handleAddDepartment = async () => {
     setIsAddADepartmentOpen(true)
-    console.log(isAddADepartmentOpen)
   }
 
   // Table Structure
@@ -127,7 +126,6 @@ export default function Departments () {
     const loadDepartments: () => Promise<void> = async () => {
       try {
         setDepartments(await getAllDepartments<AllDepartmentsGet[]>())
-        console.log('loadDepartment')
       } catch (error) {
         console.error(error)
       }
@@ -149,7 +147,7 @@ export default function Departments () {
 
   return (
     <>
-      <div className='department-container h-100 p-2 p-lg-3'>
+      <div className='department-container h-100 p-2 p-lg-4'>
         {/* Header */}
         <div className='department-header d-flex flex-column flex-md-row justify-content-between align-items-start mb-3 pb-3'>
           <div className='header-left'>
