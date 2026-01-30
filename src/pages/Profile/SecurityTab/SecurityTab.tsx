@@ -27,6 +27,7 @@ import { logout } from '../../../services/auth-service'
 import { QRCodeCanvas } from 'qrcode.react'
 import type { EnableTwoFactorAuthResponse } from '../../../interfaces/profile'
 import clsx from 'clsx'
+import { toast } from 'react-toastify'
 
 export default function Profile () {
   const navigate = useNavigate()
@@ -61,6 +62,7 @@ export default function Profile () {
       confirmPassword: confirmPassword
     }
     await changePassword(payload)
+    toast.success('Password Updated Successfully')
     await logout()
     navigate('/')
   }

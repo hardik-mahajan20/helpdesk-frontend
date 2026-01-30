@@ -24,6 +24,7 @@ import PhotoCameraIcon from '@mui/icons-material/PhotoCamera'
 import { updateProfile } from '../../services/profile-service'
 import './Profile.scss'
 import SettingsTab from './SettingsTab'
+import { toast } from 'react-toastify'
 
 function TabPanel ({ value, index, children }: any) {
   return value === index ? <Box sx={{ mt: 3 }}>{children}</Box> : null
@@ -78,7 +79,8 @@ export default function Profile () {
       email: profileForm.email,
       phoneNumber: profileForm.phoneNumber
     }
-    await updateProfile(payload)
+    var result = await updateProfile(payload)
+    toast.success(result.messages[0])
   }
 
   const handleChange =

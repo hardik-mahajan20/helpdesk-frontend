@@ -70,7 +70,7 @@ export async function verifyTwoFactorAuth (code: string) {
   return httpRequestAsync<string[]>(url, HTTP_METHOD.POST, code)
 }
 
-export async function updateProfile<T> (payload: any) {
+export async function updateProfile<T> (payload: any) : Promise<ApiResponse<T>>{
   // This api endpoint need the payload in the FORM formate
   const BASE_URL = API_BASE_URL
   const url = `${PROFILE_URL}/profile-update`
@@ -95,7 +95,7 @@ export async function updateProfile<T> (payload: any) {
 }
 
 // Helper Function
-async function handleResponse<T> (response: Response): Promise<T> {
+async function handleResponse<T> (response: Response): Promise<ApiResponse<T>> {
   const responseJson: ApiResponse<T> = await response.json()
 
   if (!response.ok) {
@@ -103,5 +103,5 @@ async function handleResponse<T> (response: Response): Promise<T> {
     const errorMessage = messages?.join(', ') ?? 'Request failed'
     throw new Error(errorMessage)
   }
-  return responseJson.data
+  return responseJson
 }
