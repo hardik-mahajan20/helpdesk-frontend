@@ -21,7 +21,9 @@ export async function getAllDepartmentsSearched<T> (search: string) {
   return httpRequestAsync<T>(url, HTTP_METHOD.GET)
 }
 
-export async function addProject<T> (payload: AddProjectRequest) {
+export async function addProject<T> (
+  payload: AddProjectRequest
+): Promise<ApiResponse<T>> {
   // This api endpoint need the payload in the FORM formate
   const BASE_URL = API_BASE_URL
   const url = `${PROJECT_URL}`
@@ -51,7 +53,7 @@ export async function deleteProject<T> (id: number) {
 }
 
 // Helper Function
-async function handleResponse<T> (response: Response): Promise<T> {
+async function handleResponse<T> (response: Response): Promise<ApiResponse<T>> {
   const responseJson: ApiResponse<T> = await response.json()
 
   if (!response.ok) {
@@ -59,5 +61,5 @@ async function handleResponse<T> (response: Response): Promise<T> {
     const errorMessage = messages?.join(', ') ?? 'Request failed'
     throw new Error(errorMessage)
   }
-  return responseJson.data
+  return responseJson
 }

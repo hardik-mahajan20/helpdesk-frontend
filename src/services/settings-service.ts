@@ -57,7 +57,7 @@ export async function createChatShortCut (
   return httpRequestAsync<ChatShortCutMessages>(url, HTTP_METHOD.POST, chatShortcut)
 }
 
-export async function updateProjectDetails<T> (payload: any) {
+export async function updateProjectDetails<T> (payload: any) : Promise<ApiResponse<T>>{
   const BASE_URL = API_BASE_URL
   const url = `${PROJECT_URL}`
   const token = getToken()
@@ -80,7 +80,7 @@ export async function updateProjectDetails<T> (payload: any) {
   return handleResponse<T>(response)
 }
 
-async function handleResponse<T> (response: Response): Promise<T> {
+async function handleResponse<T> (response: Response): Promise<ApiResponse<T>> {
   const responseJson: ApiResponse<T> = await response.json()
 
   if (!response.ok) {
@@ -88,5 +88,5 @@ async function handleResponse<T> (response: Response): Promise<T> {
     const errorMessage = messages?.join(', ') ?? 'Request failed'
     throw new Error(errorMessage)
   }
-  return responseJson.data
+  return responseJson
 }

@@ -161,6 +161,7 @@ export default function Settings () {
     setCopied(true)
 
     setTimeout(() => setCopied(false), 1500)
+    toast.success('Copied : Direct Chat Link')
   }
   const handleCodeCopy = async () => {
     if (!linkvalue) return
@@ -168,6 +169,15 @@ export default function Settings () {
     setCopied(true)
 
     setTimeout(() => setCopied(false), 1500)
+    toast.success('Copied : Widget Code')
+  }
+  const handleEmailCopy = async () => {
+    if (!linkvalue) return
+    await navigator.clipboard.writeText(linkvalue)
+    setCopied(true)
+
+    setTimeout(() => setCopied(false), 1500)
+    toast.success('Copied : Ticket Forwarding Email')
   }
 
   const selectedProjectId = useProjectSelectionStore(
@@ -231,8 +241,8 @@ export default function Settings () {
       projectId: selectedProjectId,
       widgetSetting: JSON.stringify(formVlaue)
     }
-    await updateChatWidgetSetting(payload)
-    toast.success('Request processes successfully.')
+    var result: any = await updateChatWidgetSetting(payload)
+    toast.success(result.messages[0])
   }
   const saveProjectSettings = async () => {
     if (!project) return
@@ -255,7 +265,8 @@ export default function Settings () {
       IsPrechatFormEnable: project?.preChatFormEnabled
     }
 
-    await updateProjectDetails(payload)
+    var result: any = await updateProjectDetails(payload)
+    toast.success(result.messages[0])
   }
   const cancelProjectSetting = () => {
     setProject(originalproject)
@@ -269,6 +280,7 @@ export default function Settings () {
       isPublic: newShortcut.isPublic
     }
     await updateChatShortCut(updatedData)
+    toast.success('Chat ShortCut updated successfully')
 
     setChatShorCutForm(prev =>
       prev.map(shortcut =>
@@ -290,6 +302,7 @@ export default function Settings () {
     const createdShortcut: ChatShortCutMessages = (
       await createChatShortCut(shortcut)
     ).data
+    toast.success('Chat ShortCut created successfully.')
 
     setChatShorCutForm(prev =>
       [...prev, createdShortcut].sort((a, b) => b.id - a.id)
@@ -318,6 +331,7 @@ export default function Settings () {
   const handleConfirmDelete = async (): Promise<void> => {
     if (!selectedShortcut) return
     await deleteChatShortCut(selectedShortcut.id)
+    toast.success('Chat shortcut deleted successfully')
 
     setChatShorCutForm(prev =>
       prev.filter(shortcut => shortcut.id !== selectedShortcut.id)
@@ -343,7 +357,8 @@ export default function Settings () {
   }
 
   const toggleShortCutVisibility = async (id: number): Promise<void> => {
-    await toggleChatShortCutVisibility(id)
+    var result = await toggleChatShortCutVisibility(id)
+    toast.success(result.messages[0])
     setChatShorCutForm(prev =>
       prev.map(shortcut =>
         shortcut.id === id
@@ -1130,7 +1145,7 @@ export default function Settings () {
                 endAdornment={
                   <InputAdornment position='end'>
                     <Tooltip title={copied ? 'Copied!' : 'Copy'}>
-                      <IconButton edge='end' onClick={saveProjectSettings}>
+                      <IconButton edge='end' onClick={handleEmailCopy}>
                         <ContentCopyIcon color='primary' />
                       </IconButton>
                     </Tooltip>
