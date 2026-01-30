@@ -25,6 +25,7 @@ import SettingsIcon from '@mui/icons-material/Settings'
 import { useProjectSelectionStore } from '../../services/project-selection-service'
 import { useNavigate } from 'react-router-dom'
 import './Projects.scss'
+import { toast } from 'react-toastify'
 
 const ProjectActions = memo(
   ({ projects, goToSettings, onDelete }: ProjectsActionsProps) => (
@@ -72,7 +73,8 @@ export default function Projects () {
     if (!selectedProject) return
 
     try {
-      await deleteProject(selectedProject.projectId)
+      var result = await deleteProject(selectedProject.projectId)
+      toast.success(result.messages[0])
 
       setProjects(prev =>
         prev.filter(d => d.projectId !== selectedProject.projectId)
