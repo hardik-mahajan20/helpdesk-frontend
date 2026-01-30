@@ -16,6 +16,7 @@ import {
   getDepartmentById,
   updateDepartment
 } from '../../services/department-service'
+import { toast } from 'react-toastify'
 
 export default function EditDepartmentDialog ({
   id,
@@ -44,6 +45,7 @@ export default function EditDepartmentDialog ({
       }
 
       await updateDepartment(payload)
+      toast.success('Department Update Successfully')
       onClose()
     } catch (error) {
       console.error('Failed to invite agent', error)
