@@ -17,6 +17,7 @@ import {
 import { useEffect, useState } from 'react'
 import { updateAgent } from '../../services/agent-service'
 import type UpdateAgentRequest from '../../interfaces/agent/update-agent-request'
+import { toast } from 'react-toastify'
 
 export default function EditAgentDialog ({
   open,
@@ -53,7 +54,8 @@ export default function EditAgentDialog ({
         adminProjects: []
       }
 
-      await updateAgent(payload)
+      var result = await updateAgent(payload)
+      toast.success(result.messages[0])
       onClose()
     } catch (error) {
       console.error('Failed to invite agent', error)

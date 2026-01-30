@@ -1,2 +1,2 @@
 export * from "./endpoints";
-export * from "./http-Client";
+export * from "./api-client";

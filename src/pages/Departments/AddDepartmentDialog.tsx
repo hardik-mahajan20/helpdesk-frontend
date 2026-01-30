@@ -12,6 +12,7 @@ import type {
   AddDepartmentRequest
 } from '../../interfaces'
 import { addDepartment } from '../../services/department-service'
+import { toast } from 'react-toastify'
 
 export default function AddDepartmentDialog ({
   open,
@@ -27,7 +28,8 @@ export default function AddDepartmentDialog ({
         description
       }
 
-      await addDepartment(payload)
+     var result =  await addDepartment(payload)
+      toast.success(result.messages[0])
       onClose()
     } catch (error) {
       console.error('Failed to invite agent', error)
