@@ -73,7 +73,9 @@ export default function Profile () {
     setIsTwoFactorEnabled(enabled)
 
     if (enabled) {
-      const response: EnableTwoFactorAuthResponse = await enableTwoFactorAuth()
+      const response: EnableTwoFactorAuthResponse = (
+        await enableTwoFactorAuth()
+      ).data
 
       setOtpPathUri(response.otpauthUri)
       setSecret(response.secret)
@@ -87,7 +89,7 @@ export default function Profile () {
 
   const verifyCode = async () => {
     const payload = securityCode
-    const response: string[] = await verifyTwoFactorAuth(payload)
+    const response: string[] = (await verifyTwoFactorAuth(payload)).data
     const backUpCodes = response
     setBackupCodes(backUpCodes)
 

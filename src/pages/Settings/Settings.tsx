@@ -178,10 +178,12 @@ export default function Settings () {
     const loadProject: () => Promise<void> = async () => {
       try {
         setProject(
-          await getProjectById<ProjectDetailsRequestDTO>(selectedProjectId)
+          (await getProjectById<ProjectDetailsRequestDTO>(selectedProjectId))
+            .data
         )
         setOriginalProject(
-          await getProjectById<ProjectDetailsRequestDTO>(selectedProjectId)
+          (await getProjectById<ProjectDetailsRequestDTO>(selectedProjectId))
+            .data
         )
       } catch (error) {
         console.error(error)
@@ -189,12 +191,16 @@ export default function Settings () {
     }
     const loadChatWidget = async () => {
       try {
-        const data = await getChatWidgetByProjectId<ChatWidgetSettingsDto>(
-          selectedProjectId
-        )
-        const chatShortCutMessages = await getChatShortCutMessages<
-          ChatShortCutMessages[]
-        >(selectedProjectId)
+        const data = (
+          await getChatWidgetByProjectId<ChatWidgetSettingsDto>(
+            selectedProjectId
+          )
+        ).data
+        const chatShortCutMessages = (
+          await getChatShortCutMessages<ChatShortCutMessages[]>(
+            selectedProjectId
+          )
+        ).data
 
         setChatWidget(data)
         setChatShortCutMessages(chatShortCutMessages)
@@ -281,9 +287,9 @@ export default function Settings () {
       shortCutMessage: newShortcut.shortCutMessage,
       isPublic: true
     }
-    const createdShortcut: ChatShortCutMessages = await createChatShortCut(
-      shortcut
-    )
+    const createdShortcut: ChatShortCutMessages = (
+      await createChatShortCut(shortcut)
+    ).data
 
     setChatShorCutForm(prev =>
       [...prev, createdShortcut].sort((a, b) => b.id - a.id)

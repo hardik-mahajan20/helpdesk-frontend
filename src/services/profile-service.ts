@@ -1,40 +1,39 @@
-import { API_BASE_URL } from '../api'
-import { httpRequest } from '../api/http-Client'
-import { HTTP_METHOD } from '../enums'
+import { API_BASE_URL, httpRequestAsync } from '../api'
+// import { httpRequest } from '../api/http-Client'
+import { ColorOption, HTTP_METHOD, ThemeOption } from '../enums'
 import type { ApiResponse } from '../interfaces'
 import type UpdateAgentRequest from '../interfaces/agent/update-agent-request'
-import type { UpdatePassword } from '../interfaces/profile'
 import type {
-  ThemeOption,
-  ColorOption
-} from '../pages/Profile/SettingsTab/SettingsTab'
+  EnableTwoFactorAuthResponse,
+  UpdatePassword
+} from '../interfaces/profile'
 import { getToken } from './auth-service'
 
 const PROFILE_URL = 'profile'
 
 export async function getAllAgents<T> (isActive: boolean) {
   const url = `${PROFILE_URL}?&isActive=${isActive}`
-  return httpRequest<T>(url, HTTP_METHOD.GET)
+  return httpRequestAsync<T>(url, HTTP_METHOD.GET)
 }
 
 export async function getAllPendingAgents<T> () {
   const url = `${PROFILE_URL}/invitations`
-  return httpRequest<T>(url, HTTP_METHOD.GET)
+  return httpRequestAsync<T>(url, HTTP_METHOD.GET)
 }
 
 export async function getAllDepartments<T> () {
   const url = `${PROFILE_URL}/departments`
-  return httpRequest<T>(url, HTTP_METHOD.GET)
+  return httpRequestAsync<T>(url, HTTP_METHOD.GET)
 }
 
 export function getAllReportsTos<T> (roleId: number, departmentId: number) {
   const url = `${PROFILE_URL}/reports-to?roleId=${roleId}&departmentId=${departmentId}`
-  return httpRequest<T>(url, HTTP_METHOD.GET)
+  return httpRequestAsync<T>(url, HTTP_METHOD.GET)
 }
 
 export async function changePassword<T> (payload: UpdatePassword) {
   const url = `${PROFILE_URL}/change-password`
-  return httpRequest<T>(url, HTTP_METHOD.POST, payload)
+  return httpRequestAsync<T>(url, HTTP_METHOD.POST, payload)
 }
 
 export async function updateUserPreferences<T> (payload: {
@@ -44,31 +43,31 @@ export async function updateUserPreferences<T> (payload: {
   }
 }) {
   const url = `${PROFILE_URL}/update-preference-settings`
-  return httpRequest<T>(url, HTTP_METHOD.POST, payload)
+  return httpRequestAsync<T>(url, HTTP_METHOD.POST, payload)
 }
 
 export async function updateAgent<T> (payload: UpdateAgentRequest) {
   const url = `${PROFILE_URL}/update-agent`
-  return httpRequest<T>(url, HTTP_METHOD.POST, payload)
+  return httpRequestAsync<T>(url, HTTP_METHOD.POST, payload)
 }
 
 export async function deleteAgent<T> (id: number) {
   const url = `${PROFILE_URL}/${id}`
-  return httpRequest<T>(url, HTTP_METHOD.DELETE)
+  return httpRequestAsync<T>(url, HTTP_METHOD.DELETE)
 }
-export async function enableTwoFactorAuth<T> () {
+export async function enableTwoFactorAuth () {
   const url = `${PROFILE_URL}/enable-2fa`
-  return httpRequest<T>(url, HTTP_METHOD.POST)
+  return httpRequestAsync<EnableTwoFactorAuthResponse>(url, HTTP_METHOD.POST)
 }
 
 export async function disableTwoFactorAuth<T> () {
   const url = `${PROFILE_URL}/disable-2fa`
-  return httpRequest<T>(url, HTTP_METHOD.POST)
+  return httpRequestAsync<T>(url, HTTP_METHOD.POST)
 }
 
-export async function verifyTwoFactorAuth<ApiResponse> (code: string) {
+export async function verifyTwoFactorAuth (code: string) {
   const url = `${PROFILE_URL}/verify-2fa-setup`
-  return httpRequest<ApiResponse>(url, HTTP_METHOD.POST, code)
+  return httpRequestAsync<string[]>(url, HTTP_METHOD.POST, code)
 }
 
 export async function updateProfile<T> (payload: any) {

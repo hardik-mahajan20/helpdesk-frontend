@@ -43,7 +43,7 @@ import EditAgentDialog from './EditAgentDialog'
 import { getToken } from '../../services/auth-service'
 import FileDownloadIcon from '@mui/icons-material/FileDownload'
 import FileUploadIcon from '@mui/icons-material/FileUpload'
-import FilterListIcon from '@mui/icons-material/FilterList';
+import FilterListIcon from '@mui/icons-material/FilterList'
 
 function a11yProps (index: number) {
   return {
@@ -77,7 +77,6 @@ export default function Agents () {
   const [searchText, setSearchText] = useState('')
 
   const handleDeleteAgent = useCallback(async (agent: Agent) => {
-
     await deleteAgent(agent.userId)
   }, [])
 
@@ -138,7 +137,7 @@ export default function Agents () {
   }, [])
 
   const handleAddAgent = useCallback(async () => {
-    const data: DepartmentsGet[] = await getAllDepartments<DepartmentsGet[]>()
+    const data: DepartmentsGet[] = (await getAllDepartments<DepartmentsGet[]>()).data
     setDepartments(data)
     setIsAddAgentOpen(true)
   }, [])
@@ -149,7 +148,7 @@ export default function Agents () {
     reportsTo: string
   }) => {
     setIsAddAgentOpen(false)
-    setAgents(await getAllAgents<AgentsGet[]>(true))
+    setAgents((await getAllAgents<AgentsGet[]>(true)).data)
   }
 
   const AgentActions = ({ agent, onEdit, onDelete }: AgentActionsProps) => (
@@ -208,12 +207,12 @@ export default function Agents () {
     const loadAgents: () => Promise<void> = async () => {
       try {
         if (value == 0) {
-          setAgents(await getAllAgents<AgentsGet[]>(true))
+          setAgents((await getAllAgents<AgentsGet[]>(true)).data)
         } else if (value == 1) {
-          setAgents(await getAllAgents<AgentsGet[]>(false))
+          setAgents((await getAllAgents<AgentsGet[]>(false)).data)
         } else {
           setInvitedAgents(
-            await getAllPendingAgents<AgentPendingInvitations[]>()
+            (await getAllPendingAgents<AgentPendingInvitations[]>()).data
           )
         }
       } catch (error) {

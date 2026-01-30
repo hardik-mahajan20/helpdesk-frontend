@@ -101,12 +101,14 @@ export default function SettingsTab () {
   }
 
   const saveThemeAndColor = async () => {
-    await updateUserPreferences({
-      preferences: {
-        theme: mode,
-        color: color
-      }
-    })
+    ;(
+      await updateUserPreferences({
+        preferences: {
+          theme: mode as ThemeOption,
+          color: color as ColorOption
+        }
+      })
+    ).data
   }
 
   return (

@@ -125,7 +125,7 @@ export default function Departments () {
   useEffect(() => {
     const loadDepartments: () => Promise<void> = async () => {
       try {
-        setDepartments(await getAllDepartments<AllDepartmentsGet[]>())
+        setDepartments((await getAllDepartments<AllDepartmentsGet[]>()).data)
       } catch (error) {
         console.error(error)
       }

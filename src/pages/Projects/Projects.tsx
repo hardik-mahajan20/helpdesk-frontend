@@ -24,7 +24,7 @@ import AddProjectDialog from './AddProjectDialog'
 import SettingsIcon from '@mui/icons-material/Settings'
 import { useProjectSelectionStore } from '../../services/project-selection-service'
 import { useNavigate } from 'react-router-dom'
-import "./Projects.scss"
+import './Projects.scss'
 
 const ProjectActions = memo(
   ({ projects, goToSettings, onDelete }: ProjectsActionsProps) => (
@@ -128,7 +128,7 @@ export default function Projects () {
   useEffect(() => {
     const loadProjects: () => Promise<void> = async () => {
       try {
-        setProjects(await getAllProjects<AllProjectsGet[]>())
+        setProjects((await getAllProjects<AllProjectsGet[]>()).data)
       } catch (error) {
         console.error(error)
       }

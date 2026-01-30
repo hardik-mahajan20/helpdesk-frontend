@@ -1,5 +1,5 @@
-import { API_BASE_URL } from '../api'
-import { httpRequest } from '../api/http-Client'
+import { API_BASE_URL, httpRequestAsync } from '../api'
+// import { httpRequest } from '../api/http-Client'
 import { HTTP_METHOD } from '../enums'
 import type { AddProjectRequest, ApiResponse } from '../interfaces'
 import { getToken } from './auth-service'
@@ -8,17 +8,17 @@ const PROJECT_URL = 'projects'
 
 export async function getAllProjects<T> () {
   const url = `${PROJECT_URL}`
-  return httpRequest<T>(url, HTTP_METHOD.GET)
+  return httpRequestAsync<T>(url, HTTP_METHOD.GET)
 }
 
 export async function getAllUsersProjects<T> () {
   const url = `${PROJECT_URL}/users-projects`
-  return httpRequest<T>(url, HTTP_METHOD.GET)
+  return httpRequestAsync<T>(url, HTTP_METHOD.GET)
 }
 
 export async function getAllDepartmentsSearched<T> (search: string) {
   const url = `${PROJECT_URL}?&search=${search}`
-  return httpRequest<T>(url, HTTP_METHOD.GET)
+  return httpRequestAsync<T>(url, HTTP_METHOD.GET)
 }
 
 export async function addProject<T> (payload: AddProjectRequest) {
@@ -47,10 +47,10 @@ export async function addProject<T> (payload: AddProjectRequest) {
 
 export async function deleteProject<T> (id: number) {
   const url = `${PROJECT_URL}/?projectId=${id}`
-  return httpRequest<T>(url, HTTP_METHOD.DELETE)
+  return httpRequestAsync<T>(url, HTTP_METHOD.DELETE)
 }
 
-// Heler Function
+// Helper Function
 async function handleResponse<T> (response: Response): Promise<T> {
   const responseJson: ApiResponse<T> = await response.json()
 
