@@ -1,50 +1,49 @@
-* {
-  margin: 0;
-  padding: 0;
-}
-
 .auth-container {
-  // background: #94BEE8;
+  min-height: 100%;
+  background-color: var(--auth-bg);
 }
 
 .auth-wrapper {
   display: flex;
   width: 100%;
   min-height: 100vh;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.auth-form {
+  .auth-options-row {
+    margin: 10px 0;
+
+    .remember-me-checkbox {
+      font-size: 14px;
+      left: -11px;
+    }
+  }
 }
 
 .auth-image-section {
-  width: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 40px;
-  box-sizing: border-box;
+  flex: 1;
+  padding: 0px 40px;
 
   .image-content {
     z-index: 2;
 
     .main-illustration {
       max-width: 100%;
-      max-height: 100vh;
       border-radius: 50%;
-      object-fit: contain;
     }
   }
 }
 
 .auth-form-section {
-  width: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 40px;
-  box-sizing: border-box;
+  flex: 1;
+  padding: 0px 40px;
 }
 
 .form-container {
   width: 100%;
-  max-width: 480px;
+  max-width: 500px;
 }
 
 .brand-header {
@@ -52,11 +51,11 @@
 
   .brand-info {
     .left-hand {
-      /* fill: var(--primary-color); */
+      fill: var(--primary-color);
     }
 
     .right-hand {
-      /* fill: var(--text-primary); */
+      fill: var(--text-primary);
     }
 
     .brand-logo {
@@ -68,14 +67,14 @@
       font-size: 24px;
       font-weight: 600;
       margin: 0;
-      /* color: var(--text-primary); */
+      color: var(--text-primary);
     }
   }
 
   .brand-description {
     font-size: 17px;
     line-height: 1.5;
-    /* color: var(--text-secondary); */
+    color: var(--text-secondary);
     margin: 0;
   }
 }
@@ -86,7 +85,7 @@
   h1 {
     font-size: 20px;
     font-weight: 500;
-    /* color: var(--text-primary); */
+    color: var(--text-primary);
     margin: 0;
   }
 }
@@ -103,7 +102,7 @@
 
   .auth-footer {
     span {
-      /* color: var(--text-secondary); */
+      color: var(--text-secondary);
       font-size: 14px;
     }
   }
@@ -146,32 +145,6 @@
   }
 }
 
-@media (max-width: 991.98px) {
-  .auth-wrapper {
-    flex-direction: column;
-  }
-
-  .auth-image-section,
-  .auth-form-section {
-    width: 100%;
-  }
-
-  .auth-image-section {
-    padding: 20px;
-
-    .main-illustration {
-      max-height: 280px;
-    }
-  }
-}
-
-/* Hide image on very small height */
-@media (max-width: 991.98px) and (max-height: 844.98px) {
-  .auth-image-section {
-    display: none !important;
-  }
-
-  .auth-form-section {
-    width: 100%;
-  }
+.text-color {
+  color: var(--text-primary);
 }

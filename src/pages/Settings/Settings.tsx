@@ -17,8 +17,7 @@ import {
   Tooltip,
   MenuItem,
   Card,
-  Select,
-  type SelectChangeEvent
+  Select
 } from '@mui/material'
 import SettingsIcon from '@mui/icons-material/Settings'
 import './Settings.scss'
@@ -60,7 +59,7 @@ import AddIcon from '@mui/icons-material/Add'
 import CancelIcon from '@mui/icons-material/Cancel'
 import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
-import { Description, VisibilityOff } from '@mui/icons-material'
+import { VisibilityOff } from '@mui/icons-material'
 import { useProfileSelectionStore } from '../../services/profile-selection-service'
 import SaveIcon from '@mui/icons-material/Save'
 import ConfirmDeleteDialog from '../../core/components/ConfirmationDialog'
@@ -346,11 +345,11 @@ export default function Settings () {
   }
 
   return (
-    <div className='profile-container h-100 p-2 p-lg-3'>
-      <div className='profile-header d-flex justify-content-between align-items-start mb-3 pb-3'>
+    <div className='settings-container h-100 p-2 p-lg-4'>
+      <div className='settings-header d-flex justify-content-between align-items-start mb-3 pb-3'>
         <div className='header-left'>
           <h1 className='page-title fs-2'>Settings</h1>
-          <p className='page-subtitle m-0'>
+          <p className='page-subtitle'>
             Manage Projects and Chat Widget Settings
           </p>
         </div>
@@ -364,27 +363,36 @@ export default function Settings () {
           indicatorColor='primary'
           textColor='primary'
         >
-          <Tab icon={<ChatIcon />} iconPosition='start' label='Chat Widget' />
           <Tab
-            icon={<ContentCutIcon />}
+            icon={<ChatIcon color='primary' />}
+            iconPosition='start'
+            label='Chat Widget'
+          />
+          <Tab
+            icon={<ContentCutIcon color='primary' />}
             iconPosition='start'
             label='ShortCut Messagess'
           />
           <Tab
-            icon={<SettingsIcon />}
+            icon={<SettingsIcon color='primary' />}
             iconPosition='start'
             label='General Settings'
           />
         </Tabs>
 
         <TabPanel value={tabIndex} index={0}>
-          <div>
+          <div className='p-1'>
             <div className='d-flex flex-row xxl-flex-column gap-3 py-0 my-4'>
               <div className='card d-flex flex-column gap-3 w-50'>
                 <div className='d-flex justify-content-between align-items-center'>
                   <div className='d-flex align-items-center gap-1'>
-                    <PaletteIcon className='d-none d-sm-inline' />
-                    <h1 className='fw-medium fs-4 my-0'>Widget Appearance</h1>
+                    <PaletteIcon
+                      className='d-none d-sm-inline'
+                      color='primary'
+                    />
+                    <h1 className='title fw-medium fs-4 my-0'>
+                      Widget Appearance
+                    </h1>
                   </div>
                 </div>
                 <div className='d-flex flex-column flex-grow-1 gap-3'>
@@ -421,7 +429,7 @@ export default function Settings () {
                     }
                   />
                   <div className='chat-position-card p-2'>
-                    <h3 className='fs-6 fw-medium mb-3 mt-0'>
+                    <h3 className='fs-6 fw-medium mb-3 mt-0 '>
                       Chat Widget Position
                     </h3>
                     <div className='d-flex gap-2 flex-wrap'>
@@ -461,7 +469,7 @@ export default function Settings () {
                         key={colorField.key}
                         className='d-flex flex-column gap-1 position-relative'
                       >
-                        <label className='fw-medium small'>
+                        <label className='fw-medium small text-color'>
                           {colorField.label}
                         </label>
 
@@ -515,6 +523,7 @@ export default function Settings () {
                   <div className='d-flex flex-column gap-2 mt-1'>
                     <FormGroup>
                       <FormControlLabel
+                        className='toggle-text'
                         control={
                           <Switch
                             checked={widgetForm?.enablePhoto ?? false}
@@ -533,7 +542,7 @@ export default function Settings () {
                         label='Show agent photos'
                       />
                       <FormControlLabel
-                        required
+                        className='toggle-text'
                         control={
                           <Switch
                             checked={widgetForm?.enableAttachment ?? false}
@@ -553,6 +562,7 @@ export default function Settings () {
                         label='Enable file uploads'
                       />
                       <FormControlLabel
+                        className='toggle-text'
                         control={
                           <Switch
                             checked={widgetForm?.enableEditOption ?? false}
@@ -572,6 +582,7 @@ export default function Settings () {
                         label='Enable Chat Message Edit'
                       />
                       <FormControlLabel
+                        className='toggle-text'
                         control={
                           <Switch
                             checked={widgetForm?.enableDeleteOption ?? false}
@@ -638,7 +649,7 @@ export default function Settings () {
             </div>
             <div className='card w-100 mt-3 d-flex flex-column gap-3'>
               <div className='d-flex align-items-center gap-1'>
-                <CodeIcon />
+                <CodeIcon color='primary' />
                 <h1 className='title fw-medium fs-4 mt-0 mb-0'>
                   Installation Code
                 </h1>
@@ -658,7 +669,7 @@ export default function Settings () {
                     <InputAdornment position='end'>
                       <Tooltip title={copied ? 'Copied!' : 'Copy'}>
                         <IconButton edge='end' onClick={handleLinkCopy}>
-                          <ContentCopyIcon />
+                          <ContentCopyIcon color='primary' />
                         </IconButton>
                       </Tooltip>
                     </InputAdornment>
@@ -678,7 +689,7 @@ export default function Settings () {
                     <InputAdornment position='end'>
                       <Tooltip title={copied ? 'Copied!' : 'Copy'}>
                         <IconButton edge='end' onClick={handleCodeCopy}>
-                          <ContentCopyIcon />
+                          <ContentCopyIcon color='primary' />
                         </IconButton>
                       </Tooltip>
                     </InputAdornment>
@@ -690,9 +701,9 @@ export default function Settings () {
         </TabPanel>
 
         <TabPanel value={tabIndex} index={1}>
-          <div className='d-flex flex-column gap-3 mt-4 card new-shortcut-container'>
+          <div className='card d-flex flex-column gap-3 mt-4 card new-shortcut-container'>
             <div className='d-flex align-items-center gap-1'>
-              <ContentCutIcon></ContentCutIcon>
+              <ContentCutIcon color='primary'></ContentCutIcon>
               <h1 className='fw-medium fs-4 mx-0 title'>Shortcut Messages</h1>
             </div>
             <div className='d-flex flex-column gap-3'>
@@ -791,9 +802,9 @@ export default function Settings () {
                               color='primary'
                             >
                               {shortcut.isPublic ? (
-                                <VisibilityIcon />
+                                <VisibilityIcon color='primary' />
                               ) : (
-                                <VisibilityOff />
+                                <VisibilityOff color='primary' />
                               )}
                             </IconButton>
                             <IconButton
@@ -808,7 +819,7 @@ export default function Settings () {
                               onClick={() => handleDeleteShortcut(shortcut.id)}
                               color='primary'
                             >
-                              <DeleteIcon />
+                              <DeleteIcon color='primary' />
                             </IconButton>
                           </div>
                         )}
@@ -827,7 +838,7 @@ export default function Settings () {
           <div className='card mt-4'>
             <div className='project-info-card d-flex flex-column gap-3'>
               <div className='d-flex align-items-center gap-1'>
-                <FolderIcon></FolderIcon>
+                <FolderIcon color='primary'></FolderIcon>
                 <h1 className='title fw-medium fs-4 mx-0'>Project Settings</h1>
               </div>
 
@@ -994,15 +1005,15 @@ export default function Settings () {
             </div>
             <div className='mt-3 d-flex flex-column gap-3'>
               <div className='d-flex align-items-center gap-1'>
-                <NotificationsIcon></NotificationsIcon>
+                <NotificationsIcon color='primary'></NotificationsIcon>
                 <h1 className='title fw-medium fs-4 mx-0'>
                   Notification Settings
                 </h1>
               </div>
               <div className='d-flex align-self-center justify-content-between gap-3 w-100'>
                 <div className='d-flex flex-column gap-1'>
-                  <h6 className='m-0'>New Chat Notificaions</h6>
-                  <p className='m-0'>Get notified when new chats arrive</p>
+                  <h6 className='m-0 toggle-text'>New Chat Notificaions</h6>
+                  <p className='m-0 toggle-text'>Get notified when new chats arrive</p>
                 </div>
                 <div className='notification toggle'>
                   <Switch
@@ -1022,8 +1033,8 @@ export default function Settings () {
               </div>
               <div className='d-flex align-self-center justify-content-between gap-3 w-100'>
                 <div className='d-flex flex-column gap-1'>
-                  <h6 className='m-0'>Email Notifications</h6>
-                  <p className='m-0'>Receive notifications via email</p>
+                  <h6 className='m-0 toggle-text'>Email Notifications</h6>
+                  <p className='m-0 toggle-text'>Receive notifications via email</p>
                 </div>
                 <div className='notification toggle'>
                   <Switch
@@ -1043,8 +1054,8 @@ export default function Settings () {
               </div>
               <div className='d-flex align-self-center justify-content-between gap-3 w-100'>
                 <div className='d-flex flex-column gap-1'>
-                  <h6 className='m-0'>Sound Notificaions</h6>
-                  <p className='m-0'>Play sound for new messages</p>
+                  <h6 className='m-0 toggle-text'>Sound Notificaions</h6>
+                  <p className='m-0 toggle-text'>Play sound for new messages</p>
                 </div>
                 <div className='notification toggle'>
                   <Switch
@@ -1079,7 +1090,7 @@ export default function Settings () {
           </div>
           <div className='mt-4 card d-flex flex-column gap-3'>
             <div className='d-flex align-items-center gap-1'>
-              <EmailIcon></EmailIcon>
+              <EmailIcon color='primary'></EmailIcon>
 
               <h1 className='title fw-medium fs-4 mx-0'>Email Integration</h1>
             </div>
@@ -1102,7 +1113,7 @@ export default function Settings () {
                   <InputAdornment position='end'>
                     <Tooltip title={copied ? 'Copied!' : 'Copy'}>
                       <IconButton edge='end' onClick={saveProjectSettings}>
-                        <ContentCopyIcon />
+                        <ContentCopyIcon color='primary' />
                       </IconButton>
                     </Tooltip>
                   </InputAdornment>

@@ -4,6 +4,10 @@ import { HTTP_METHOD } from '../enums'
 import type { ApiResponse } from '../interfaces'
 import type UpdateAgentRequest from '../interfaces/agent/update-agent-request'
 import type { UpdatePassword } from '../interfaces/profile'
+import type {
+  ThemeOption,
+  ColorOption
+} from '../pages/Profile/SettingsTab/SettingsTab'
 import { getToken } from './auth-service'
 
 const PROFILE_URL = 'profile'
@@ -30,6 +34,16 @@ export function getAllReportsTos<T> (roleId: number, departmentId: number) {
 
 export async function changePassword<T> (payload: UpdatePassword) {
   const url = `${PROFILE_URL}/change-password`
+  return httpRequest<T>(url, HTTP_METHOD.POST, payload)
+}
+
+export async function updateUserPreferences<T> (payload: {
+  preferences: {
+    theme: ThemeOption
+    color: ColorOption
+  }
+}) {
+  const url = `${PROFILE_URL}/update-preference-settings`
   return httpRequest<T>(url, HTTP_METHOD.POST, payload)
 }
 

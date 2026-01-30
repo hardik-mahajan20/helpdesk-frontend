@@ -14,6 +14,7 @@ import {
 import { useState, useEffect } from 'react'
 import type { AddAgentDialogProps, ReportsToDropdown } from '../../interfaces'
 import { getAllReportsTos, inviteAgent } from '../../services/agent-service'
+import "./AddAgentDialog.scss"
 
 export default function AddAgentDialog ({
   open,
@@ -28,7 +29,6 @@ export default function AddAgentDialog ({
 
   const handleSubmit = async () => {
     try {
-      console.log(department)
 
       if (!department) return
 
