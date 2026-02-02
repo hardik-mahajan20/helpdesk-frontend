@@ -245,28 +245,33 @@ export default function Settings () {
     toast.success(result.messages[0])
   }
   const saveProjectSettings = async () => {
-    if (!project) return
+    try {
+      if (!project) return
 
-    setOriginalProject(project)
+      setOriginalProject(project)
 
-    const toggleSettings = {
-      enableNewChatNotifications: project?.enableNewChatNotifications || false,
-      enableEmailNotifications: project?.enableEmailNotifications || false,
-      enableSoundNotifications: project?.enableSoundNotifications || false
+      const toggleSettings = {
+        enableNewChatNotifications:
+          project?.enableNewChatNotifications || false,
+        enableEmailNotifications: project?.enableEmailNotifications || false,
+        enableSoundNotifications: project?.enableSoundNotifications || false
+      }
+
+      const payload = {
+        Id: selectedProjectId,
+        Name: project?.projectName.toString(),
+        Description: project?.description.toString(),
+        LiveProjectUrl: project?.projectURL.toString(),
+        Settings: JSON.stringify(toggleSettings),
+        IsProjectEnable: project?.projectStatus,
+        IsPrechatFormEnable: project?.preChatFormEnabled
+      }
+
+      var result: any = await updateProjectDetails(payload)
+      toast.success(result.messages[0])
+    } catch (error: any) {
+      toast.error(error.message || 'Something went wrong')
     }
-
-    const payload = {
-      Id: selectedProjectId,
-      Name: project?.projectName.toString(),
-      Description: project?.description.toString(),
-      LiveProjectUrl: project?.projectURL.toString(),
-      Settings: JSON.stringify(toggleSettings),
-      IsProjectEnable: project?.projectStatus,
-      IsPrechatFormEnable: project?.preChatFormEnabled
-    }
-
-    var result: any = await updateProjectDetails(payload)
-    toast.success(result.messages[0])
   }
   const cancelProjectSetting = () => {
     setProject(originalproject)

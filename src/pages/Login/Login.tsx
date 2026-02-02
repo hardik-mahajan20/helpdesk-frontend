@@ -3,11 +3,9 @@ import {
   Button,
   Checkbox,
   FormControlLabel,
-  TextField,
   Typography,
   CircularProgress,
   InputAdornment,
-  OutlinedInput,
   IconButton,
   FormControl,
   InputLabel,
@@ -21,6 +19,7 @@ import { setAuthSession } from '../../utils/storage'
 import EmailIcon from '@mui/icons-material/Email'
 import VisibilityIcon from '@mui/icons-material/Visibility'
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
+import { toast } from 'react-toastify'
 
 export default function Login () {
   const navigate = useNavigate()
@@ -49,7 +48,8 @@ export default function Login () {
         turnstileToken: ''
       })
 
-      await setAuthSession(data.accessToken)
+      setAuthSession(data.accessToken)
+      toast.success('Login Successful!')
       navigate('/dashboard')
     } catch (err: any) {
       setError(err.message || 'Something went wrong')
@@ -232,6 +232,7 @@ export default function Login () {
                             : 'display the password'
                         }
                         edge='end'
+                        onClick={() => setShowPassword(!showPassword)}
                       >
                         {showPassword ? (
                           <VisibilityIcon />

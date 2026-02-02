@@ -29,6 +29,7 @@ export * from "./project/edit-project-dialog-props";
 export * from "./project/user-project-get";
 export * from "./project/project-selection-store";
 export * from "./project/profile-selection-store";
+export * from "./project/add-project-form";
 export * from './settings/chat-widget-settings-dto'
 export * from './settings/project-details'
 export * from './settings/update-chat-widget-request-dto'
