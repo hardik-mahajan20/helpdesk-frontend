@@ -14,8 +14,8 @@ import ChatIcon from '@mui/icons-material/Chat'
 import NotificationsIcon from '@mui/icons-material/Notifications'
 import { useProjectSelectionStore } from '../../services/project-selection-service'
 import './Header.scss'
-import type { HeaderProps } from '../../interfaces/header/HeaderProps'
 import { useEffect } from 'react'
+import type { HeaderProps } from '../../interfaces'
 
 export default function Header ({ onLeftToggle, onRightToggle }: HeaderProps) {
   // For state management
