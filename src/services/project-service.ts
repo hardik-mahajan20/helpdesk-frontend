@@ -2,7 +2,6 @@ import { API_BASE_URL, httpRequestAsync } from '../api'
 // import { httpRequest } from '../api/http-Client'
 import { HTTP_METHOD } from '../enums'
 import type { AddProjectRequest, ApiResponse } from '../interfaces'
-import type { EditProjectRequest } from '../interfaces/project/edit-project-request'
 import { getToken } from './auth-service'
 
 const PROJECT_URL = 'projects'
@@ -12,14 +11,9 @@ export async function getAllProjects<T> () {
   return httpRequestAsync<T>(url, HTTP_METHOD.GET)
 }
 
-export async function getAllUsersProjects<T> () {
-  const url = `${PROJECT_URL}/users-projects`
-  return httpRequestAsync<T>(url, HTTP_METHOD.GET)
-}
-
-export async function getAllDepartmentsSearched<T> (search: string) {
-  const url = `${PROJECT_URL}?&search=${search}`
-  return httpRequestAsync<T>(url, HTTP_METHOD.GET)
+export async function deleteProject<T> (id: number) {
+  const url = `${PROJECT_URL}/?projectId=${id}`
+  return httpRequestAsync<T>(url, HTTP_METHOD.DELETE)
 }
 
 export async function addProject<T> (
@@ -44,40 +38,8 @@ export async function addProject<T> (
     },
     body: formData
   })
-  
 
   return handleResponse<T>(response)
-}
-export async function editProject<T> (
-  payload: EditProjectRequest
-): Promise<ApiResponse<T>> {
-  // This api endpoint need the payload in the FORM formate
-  const BASE_URL = API_BASE_URL
-  const url = `${PROJECT_URL}/update-project`
-  const token = getToken()
-
-  const formData = new FormData()
-  Object.entries(payload).forEach(([key, value]) => {
-    if (value !== undefined && value !== null) {
-      formData.append(key, value as any)
-    }
-  })
-
-  const response = await fetch(`${BASE_URL}/${url}`, {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${token}`
-    },
-    body: formData
-  })
-  
-
-  return handleResponse<T>(response)
-}
-
-export async function deleteProject<T> (id: number) {
-  const url = `${PROJECT_URL}/?projectId=${id}`
-  return httpRequestAsync<T>(url, HTTP_METHOD.DELETE)
 }
 
 // Helper Function

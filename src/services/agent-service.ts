@@ -1,5 +1,4 @@
 import { httpRequestAsync } from '../api'
-// import { httpRequest } from '../api/http-Client'
 import { HTTP_METHOD } from '../enums'
 import type { InviteAgentRequest } from '../interfaces'
 import type UpdateAgentRequest from '../interfaces/agent/update-agent-request'

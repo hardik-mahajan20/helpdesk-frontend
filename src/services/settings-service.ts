@@ -1,5 +1,4 @@
 import { API_BASE_URL, httpRequestAsync } from '../api'
-// import { httpRequest } from '../api/http-Client'
 import { HTTP_METHOD } from '../enums'
 import type {
   ApiResponse,
@@ -50,14 +49,18 @@ export async function updateChatShortCut<T> (chatShortcut: ChatShortCutUpdate) {
   return httpRequestAsync<T>(url, HTTP_METHOD.PATCH, chatShortcut)
 }
 
-export async function createChatShortCut (
-  chatShortcut: ChatShortCutCreate
-) {
+export async function createChatShortCut (chatShortcut: ChatShortCutCreate) {
   const url = `${CHAT_SHORTCUT_URL}`
-  return httpRequestAsync<ChatShortCutMessages>(url, HTTP_METHOD.POST, chatShortcut)
+  return httpRequestAsync<ChatShortCutMessages>(
+    url,
+    HTTP_METHOD.POST,
+    chatShortcut
+  )
 }
 
-export async function updateProjectDetails<T> (payload: any) : Promise<ApiResponse<T>>{
+export async function updateProjectDetails<T> (
+  payload: any
+): Promise<ApiResponse<T>> {
   const BASE_URL = API_BASE_URL
   const url = `${PROJECT_URL}`
   const token = getToken()

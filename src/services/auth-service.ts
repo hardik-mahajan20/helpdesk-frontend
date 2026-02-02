@@ -78,26 +78,8 @@ export async function refreshToken (): Promise<
   }
 }
 
-export async function getCurrentUser<T> () {
-  const response = await fetch(`${AUTH_URL}/me`, {
-    headers: {
-      Authorization: `Bearer ${getToken()}`
-    }
-  })
-
-  return handleResponse<T>(response)
-}
-
 export function getToken (): string | null {
   return localStorage.getItem(LOCAL_STORAGE_KEYS.ACCESS_TOKEN)
-}
-
-export function setToken (token: string): void {
-  localStorage.setItem(LOCAL_STORAGE_KEYS.ACCESS_TOKEN, token)
-}
-
-export function clearToken (): void {
-  localStorage.removeItem(LOCAL_STORAGE_KEYS.ACCESS_TOKEN)
 }
 
 export function isTokenExpired (): boolean {
