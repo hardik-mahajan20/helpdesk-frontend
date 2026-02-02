@@ -1,5 +1,6 @@
 export * from "./agent/agent-get-response";
 export * from "./other/api-response";
+export * from "./other/confirm-delete-dialog-props";
 export * from "./auth/login-request";
 export * from "./auth/login-response";
 export * from "./agent/agent-pending-invitations";
@@ -13,7 +14,7 @@ export * from "./department/reports-to-dropdown";
 export * from "./agent/invite-agent-request";
 export * from "./agent/update-agent-request";
 export * from "./department/add-department-request";
-export * from "./department/departments-get-resopse";
+export * from "./department/departments-get-response";
 export * from "./department/update-department-request";
 export * from "./department/department";
 export * from "./department/department-action-props";

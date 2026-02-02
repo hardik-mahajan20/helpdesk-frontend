@@ -1,5 +1,4 @@
 export interface AddProjectDialogProps {
-    open: boolean;
-    onClose: () => void;
-  }
-  
+  open: boolean
+  onClose: () => void
+}

@@ -1,9 +1,9 @@
-import { Navigate, Outlet } from "react-router-dom";
-import { isAuthenticated } from "../services/auth-service";
+import { Navigate, Outlet } from 'react-router-dom'
+import { isAuthenticated } from '../services/auth-service'
 
-export default function ProtectedRoute() {
+export default function ProtectedRoute () {
   if (!isAuthenticated()) {
-    return <Navigate to="/" replace />;
+    return <Navigate to='/' replace />
   }
-  return <Outlet />;
+  return <Outlet />
 }

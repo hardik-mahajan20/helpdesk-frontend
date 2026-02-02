@@ -1,5 +1,5 @@
 export interface ShortCutMessage {
-  id: number 
+  id: number
   projectId: number
   shortCutKey: string
   shortCutMessage: string

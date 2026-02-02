@@ -1,5 +1,5 @@
 export interface AddProjectRequest {
-  name: string;
-  liveProjectUrl: string;
-  description: string;
+  name: string
+  liveProjectUrl: string
+  description: string
 }
