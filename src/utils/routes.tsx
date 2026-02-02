@@ -1,4 +1,3 @@
-import Login from '../pages/Login/Login'
 import PageNotFound from '../pages/PageNotFound'
 import ProtectedRoute from '../guard/ProtectedRoute'
 import Layout from '../layouts'
@@ -13,6 +12,7 @@ import Agents from '../pages/Agents'
 import Profile from '../pages/Profile'
 import Settings from '../pages/Settings'
 import { Route, Routes } from 'react-router-dom'
+import Login from '../pages/Login'
 
 export default function Router () {
   return (

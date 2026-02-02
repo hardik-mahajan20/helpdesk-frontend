@@ -18,8 +18,8 @@ export default function AddDepartmentDialog ({
   open,
   onClose
 }: AddDepartmentDialogProps) {
-  const [name, setName] = useState('')
-  const [description, setDescription] = useState('')
+  const [name, setName] = useState<string>('')
+  const [description, setDescription] = useState<string>('')
 
   const handleSubmit = async () => {
     try {
@@ -28,7 +28,7 @@ export default function AddDepartmentDialog ({
         description
       }
 
-     var result =  await addDepartment(payload)
+      var result = await addDepartment(payload)
       toast.success(result.messages[0])
       onClose()
     } catch (error) {

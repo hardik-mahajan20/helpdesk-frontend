@@ -46,7 +46,6 @@ import {
   updateProjectDetails
 } from '../../services/settings-service'
 import type {
-  ApiResponse,
   ChatShortCutCreate,
   ChatShortCutMessages,
   ChatWidgetSettingsDto,
@@ -122,14 +121,14 @@ export default function Settings () {
   const [widgetForm, setWidgetForm] = useState<ChatWidgetSettingsDto | null>(
     null
   )
-  const [chatShorCutForm, setChatShorCutForm] = useState<
+  const [chatShortCutForm, setChatShortCutForm] = useState<
     ChatShortCutMessages[]
   >([])
 
   const [tabIndex, setTabIndex] = useState(0)
 
   const [project, setProject] = useState<ProjectDetailsRequestDTO>()
-  const [originalproject, setOriginalProject] =
+  const [originalProject, setOriginalProject] =
     useState<ProjectDetailsRequestDTO>()
   const [, setChatWidget] = useState<ChatWidgetSettingsDto>()
 
@@ -141,7 +140,7 @@ export default function Settings () {
     setActivePicker(prev => (prev === key ? null : key))
   }
 
-  const linkvalue = project?.directChatLink
+  const linkValue = project?.directChatLink
   const codeValue = `<script type="text/javascript" data-project-code="${project?.projectCode}">
             (function() {
               var s1 = document.createElement("script"),
@@ -156,24 +155,24 @@ export default function Settings () {
   const [copied, setCopied] = useState<boolean>(false)
 
   const handleLinkCopy: () => Promise<void> = async () => {
-    if (!linkvalue) return
-    await navigator.clipboard.writeText(linkvalue)
+    if (!linkValue) return
+    await navigator.clipboard.writeText(linkValue)
     setCopied(true)
 
     setTimeout(() => setCopied(false), 1500)
     toast.success('Copied : Direct Chat Link')
   }
   const handleCodeCopy = async () => {
-    if (!linkvalue) return
-    await navigator.clipboard.writeText(linkvalue)
+    if (!linkValue) return
+    await navigator.clipboard.writeText(linkValue)
     setCopied(true)
 
     setTimeout(() => setCopied(false), 1500)
     toast.success('Copied : Widget Code')
   }
   const handleEmailCopy = async () => {
-    if (!linkvalue) return
-    await navigator.clipboard.writeText(linkvalue)
+    if (!linkValue) return
+    await navigator.clipboard.writeText(linkValue)
     setCopied(true)
 
     setTimeout(() => setCopied(false), 1500)
@@ -215,7 +214,7 @@ export default function Settings () {
         setChatWidget(data)
         setChatShortCutMessages(chatShortCutMessages)
         setWidgetForm(data)
-        setChatShorCutForm(chatShortCutMessages)
+        setChatShortCutForm(chatShortCutMessages)
         setCurrentUserId(getCurrentUserId())
       } catch (error) {
         console.error(error)
@@ -236,10 +235,10 @@ export default function Settings () {
   const navigate = useNavigate()
 
   const saveChatWidget = async () => {
-    const formVlaue = widgetForm
+    const formValue = widgetForm
     const payload: UpdateChatWidgetRequestDTO = {
       projectId: selectedProjectId,
-      widgetSetting: JSON.stringify(formVlaue)
+      widgetSetting: JSON.stringify(formValue)
     }
     var result: any = await updateChatWidgetSetting(payload)
     toast.success(result.messages[0])
@@ -264,7 +263,7 @@ export default function Settings () {
         LiveProjectUrl: project?.projectURL.toString(),
         Settings: JSON.stringify(toggleSettings),
         IsProjectEnable: project?.projectStatus,
-        IsPrechatFormEnable: project?.preChatFormEnabled
+        IsPreChatFormEnable: project?.preChatFormEnabled
       }
 
       var result: any = await updateProjectDetails(payload)
@@ -274,7 +273,7 @@ export default function Settings () {
     }
   }
   const cancelProjectSetting = () => {
-    setProject(originalproject)
+    setProject(originalProject)
   }
   const saveShortCut = async () => {
     const updatedData = {
@@ -287,7 +286,7 @@ export default function Settings () {
     await updateChatShortCut(updatedData)
     toast.success('Chat ShortCut updated successfully')
 
-    setChatShorCutForm(prev =>
+    setChatShortCutForm(prev =>
       prev.map(shortcut =>
         shortcut.id === updatedData.id
           ? { ...shortcut, ...updatedData }
@@ -309,7 +308,7 @@ export default function Settings () {
     ).data
     toast.success('Chat ShortCut created successfully.')
 
-    setChatShorCutForm(prev =>
+    setChatShortCutForm(prev =>
       [...prev, createdShortcut].sort((a, b) => b.id - a.id)
     )
     setNewShortcut(DEFAULT_SHORTCUT)
@@ -338,7 +337,7 @@ export default function Settings () {
     await deleteChatShortCut(selectedShortcut.id)
     toast.success('Chat shortcut deleted successfully')
 
-    setChatShorCutForm(prev =>
+    setChatShortCutForm(prev =>
       prev.filter(shortcut => shortcut.id !== selectedShortcut.id)
     )
     setIsDeleteDialogOpen(false)
@@ -346,17 +345,17 @@ export default function Settings () {
   }
 
   const handleDeleteShortcut = (id: number): void => {
-    const index = chatShorCutForm.findIndex(s => s.id === id)
+    const index = chatShortCutForm.findIndex(s => s.id === id)
     if (index === -1) return
-    const currentShortCut = chatShorCutForm[index]
+    const currentShortCut = chatShortCutForm[index]
     setSelectedShortcut(currentShortCut)
     setIsDeleteDialogOpen(true)
   }
 
   const editShortCut = (id: number): void => {
-    const index = chatShorCutForm.findIndex(s => s.id === id)
+    const index = chatShortCutForm.findIndex(s => s.id === id)
     if (index === -1) return
-    const currentShortCut = chatShorCutForm[index]
+    const currentShortCut = chatShortCutForm[index]
     setNewShortcut(currentShortCut)
     setIsEditing(true)
   }
@@ -364,7 +363,7 @@ export default function Settings () {
   const toggleShortCutVisibility = async (id: number): Promise<void> => {
     var result = await toggleChatShortCutVisibility(id)
     toast.success(result.messages[0])
-    setChatShorCutForm(prev =>
+    setChatShortCutForm(prev =>
       prev.map(shortcut =>
         shortcut.id === id
           ? { ...shortcut, isPublic: !shortcut.isPublic }
@@ -400,7 +399,7 @@ export default function Settings () {
           <Tab
             icon={<ContentCutIcon color='primary' />}
             iconPosition='start'
-            label='ShortCut Messagess'
+            label='ShortCut Messages'
           />
           <Tab
             icon={<SettingsIcon color='primary' />}
@@ -803,7 +802,7 @@ export default function Settings () {
                   className='add-shortcut'
                   startIcon={<CancelIcon></CancelIcon>}
                 >
-                  Cancle
+                  Cancel
                 </Button>
               </div>
             </div>
@@ -811,7 +810,7 @@ export default function Settings () {
 
           <div className='mt-4 pe-2 shortcut-list-container'>
             <div className='d-flex flex-column gap-3'>
-              {chatShorCutForm.map(
+              {chatShortCutForm.map(
                 shortcut =>
                   (shortcut.isPublic === true ||
                     shortcut.userId === currentUserId) && (
@@ -992,12 +991,12 @@ export default function Settings () {
                       margin='dense'
                       required
                     >
-                      <InputLabel id='project-prechat-status-label'>
+                      <InputLabel id='project-pre-chat-status-label'>
                         PreChat Form
                       </InputLabel>
 
                       <Select
-                        labelId='project-prechat-status-label'
+                        labelId='project-pre-chat-status-label'
                         value={project?.preChatFormEnabled ? 'true' : 'false'}
                         label='PreChat Form'
                         onChange={e =>
@@ -1046,7 +1045,7 @@ export default function Settings () {
               </div>
               <div className='d-flex align-self-center justify-content-between gap-3 w-100'>
                 <div className='d-flex flex-column gap-1'>
-                  <h6 className='m-0 toggle-text'>New Chat Notificaions</h6>
+                  <h6 className='m-0 toggle-text'>New Chat Notifications</h6>
                   <p className='m-0 toggle-text'>
                     Get notified when new chats arrive
                   </p>
@@ -1092,7 +1091,7 @@ export default function Settings () {
               </div>
               <div className='d-flex align-self-center justify-content-between gap-3 w-100'>
                 <div className='d-flex flex-column gap-1'>
-                  <h6 className='m-0 toggle-text'>Sound Notificaions</h6>
+                  <h6 className='m-0 toggle-text'>Sound Notifications</h6>
                   <p className='m-0 toggle-text'>Play sound for new messages</p>
                 </div>
                 <div className='notification toggle'>

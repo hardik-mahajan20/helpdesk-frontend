@@ -1,6 +1,6 @@
 import { Button } from '@mui/material'
 import './KnowledgeBase.scss'
-import AddIcon from '@mui/icons-material/Add';
+import AddIcon from '@mui/icons-material/Add'
 export default function KnowledgeBase () {
   return (
     <>

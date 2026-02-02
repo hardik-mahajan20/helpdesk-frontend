@@ -56,9 +56,9 @@ function a11yProps (index: number) {
 export default function Agents () {
   const [agents, setAgents] = useState<AgentsGet[]>([])
   const [departments, setDepartments] = useState<DepartmentsGet[]>([])
-  const [isAddAgentOpen, setIsAddAgentOpen] = useState(false)
+  const [isAddAgentOpen, setIsAddAgentOpen] = useState<boolean>(false)
 
-  const [isEditAgentOpen, setIsEditAgentOpen] = useState(false)
+  const [isEditAgentOpen, setIsEditAgentOpen] = useState<boolean>(false)
   const [selectedAgent, setSelectedAgent] = useState<Agent | null>(null)
 
   const [roles, setRoles] = useState<any[]>([])
@@ -69,7 +69,7 @@ export default function Agents () {
     []
   )
 
-  const [value, setValue] = useState(0)
+  const [value, setValue] = useState<number>(0)
 
   const handleChange = async (_event: SyntheticEvent, newValue: number) => {
     setValue(newValue)
@@ -82,7 +82,7 @@ export default function Agents () {
     toast.success(result.messages[0])
   }, [])
 
-  const handleEditAgent = useCallback(async (agent: Agent) => {
+  const handleEditAgent = useCallback(async () => {
     try {
       // Fetch agent details
       const token = getToken()
@@ -139,7 +139,8 @@ export default function Agents () {
   }, [])
 
   const handleAddAgent = useCallback(async () => {
-    const data: DepartmentsGet[] = (await getAllDepartments<DepartmentsGet[]>()).data
+    const data: DepartmentsGet[] = (await getAllDepartments<DepartmentsGet[]>())
+      .data
     setDepartments(data)
     setIsAddAgentOpen(true)
   }, [])
@@ -340,7 +341,7 @@ export default function Agents () {
         departments={departments}
         reportsTo={reportsTo}
         onClose={() => setIsEditAgentOpen(false)}
-        onSubmit={(data: any) => {
+        onSubmit={() => {
           setIsEditAgentOpen(false)
         }}
       />

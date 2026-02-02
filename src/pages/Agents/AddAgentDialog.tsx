@@ -22,9 +22,9 @@ export default function AddAgentDialog ({
   departments,
   onClose
 }: AddAgentDialogProps) {
-  const [email, setEmail] = useState('')
-  const [department, setDepartment] = useState<number | ''>('')
-  const [reportsTo, setReportsTo] = useState<number | ''>('')
+  const [email, setEmail] = useState<string>('')
+  const [department, setDepartment] = useState<number>()
+  const [reportsTo, setReportsTo] = useState<number>()
 
   const [reportPersons, setReportPersons] = useState<ReportsToDropdown[]>([])
 
@@ -36,33 +36,16 @@ export default function AddAgentDialog ({
         email,
         roleId: 3,
         departmentId: Number(department),
-        reportsToId: Number(reportsTo) || 0
+        reportsToId: Number(reportsTo)
       }
 
       var result = await inviteAgent(payload)
       toast.success(result.messages[0])
       onClose()
-    } catch (error) {
-      console.error('Failed to invite agent', error)
+    } catch (error: any) {
+      toast.error(error)
     }
   }
-
-  useEffect(() => {
-    const fetchReports = async () => {
-      if (!department) return
-
-      try {
-        const data = (
-          await getAllReportsTos<ReportsToDropdown[]>(3, Number(department))
-        ).data
-        setReportPersons(data)
-      } catch (error) {
-        console.error('Failed to fetch reports to:', error)
-      }
-    }
-
-    fetchReports()
-  }, [department])
 
   const groupedReports = reportPersons.reduce((acc: any, person) => {
     const group = person.groupName || 'Department Member'
@@ -70,6 +53,24 @@ export default function AddAgentDialog ({
     acc[group].push(person)
     return acc
   }, {})
+
+  useEffect(() => {
+    const fetchReports = async () => {
+      if (!department) return
+
+      try {
+        const result = await getAllReportsTos<ReportsToDropdown[]>(
+          3,
+          Number(department)
+        )
+        setReportPersons(result.data)
+      } catch (error: any) {
+        toast.error(error)
+      }
+    }
+
+    fetchReports()
+  }, [department])
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth='sm'>
