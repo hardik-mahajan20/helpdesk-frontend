@@ -17,6 +17,7 @@
     "@mui/material": "^7.3.7",
     "@mui/system": "^7.3.7",
     "@popperjs/core": "^2.11.8",
+    "axios": "^1.13.4",
     "bootstrap": "^5.3.8",
     "jwt-decode": "^4.0.0",
     "qrcode.react": "^4.2.0",
