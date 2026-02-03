@@ -1,8 +1,8 @@
-import { httpRequestAsync } from '../api'
-import { HTTP_METHOD } from '../enums'
+import api from '../api/axios'
 import type {
   AddDepartmentRequest,
   AllDepartmentsGet,
+  ApiResponse,
   UpdateDepartmentRequest
 } from '../interfaces'
 
@@ -10,25 +10,30 @@ const DEPARTMENT_URL = 'department'
 
 export async function getAllDepartments<T> () {
   const url = `${DEPARTMENT_URL}/get-departments`
-  return httpRequestAsync<T>(url, HTTP_METHOD.GET)
+  const res = await api.get<ApiResponse<T>>(url)
+  return res.data
 }
 
 export async function addDepartment<T> (payload: AddDepartmentRequest) {
   const url = `${DEPARTMENT_URL}/add-department`
-  return httpRequestAsync<T>(url, HTTP_METHOD.POST, payload)
+  const res = await api.post<ApiResponse<T>>(url, payload)
+  return res.data
 }
 
 export async function getDepartmentById (id: number) {
   const url = `${DEPARTMENT_URL}/get-department-by-id/${id}`
-  return httpRequestAsync<AllDepartmentsGet>(url, HTTP_METHOD.GET)
+  const res = await api.get<ApiResponse<AllDepartmentsGet>>(url)
+  return res.data
 }
 
 export async function updateDepartment<T> (payload: UpdateDepartmentRequest) {
   const url = `${DEPARTMENT_URL}/update-department`
-  return httpRequestAsync<T>(url, HTTP_METHOD.PUT, payload)
+  const res = await api.put<ApiResponse<T>>(url, payload)
+  return res.data
 }
 
 export async function deleteDepartment<T> (id: number) {
   const url = `${DEPARTMENT_URL}/delete-department/${id}`
-  return httpRequestAsync<T>(url, HTTP_METHOD.DELETE)
+  const res = await api.delete<ApiResponse<T>>(url)
+  return res.data
 }
