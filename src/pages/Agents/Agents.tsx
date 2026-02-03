@@ -28,7 +28,15 @@ import {
   InputAdornment,
   InputLabel,
   OutlinedInput,
+  Paper,
+  Skeleton,
   Tab,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
   Tabs,
   Tooltip
 } from '@mui/material'
@@ -70,6 +78,8 @@ export default function Agents () {
   )
 
   const [value, setValue] = useState<number>(0)
+
+  const [loading, setLoading] = useState<boolean>(true)
 
   const handleChange = async (_event: SyntheticEvent, newValue: number) => {
     setValue(newValue)
@@ -209,6 +219,7 @@ export default function Agents () {
   useEffect(() => {
     const loadAgents: () => Promise<void> = async () => {
       try {
+        setLoading(true)
         if (value == 0) {
           setAgents((await getAllAgents<AgentsGet[]>(true)).data)
         } else if (value == 1) {
@@ -220,6 +231,8 @@ export default function Agents () {
         }
       } catch (error) {
         console.error(error)
+      } finally {
+        setLoading(false)
       }
     }
     loadAgents()
@@ -313,7 +326,9 @@ export default function Agents () {
           </Box>
         </div>
         <div className='table-container'>
-          {value === 0 || value === 1 ? (
+          {loading ? (
+            <AgentsSkeleton />
+          ) : value === 0 || value === 1 ? (
             <StickyHeadTable columns={columns} rows={filteredRows} />
           ) : (
             <StickyHeadTable
@@ -346,5 +361,39 @@ export default function Agents () {
         }}
       />
     </>
+  )
+}
+function AgentsSkeleton () {
+  const rows = Array.from({ length: 10 })
+  const cols = 6
+
+  return (
+    <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+      <TableContainer sx={{ maxHeight: 440 }}>
+        <Table stickyHeader>
+          <TableHead>
+            <TableRow>
+              {Array.from({ length: cols }).map((_, i) => (
+                <TableCell key={i}>
+                  <Skeleton variant='text' width='60%' />
+                </TableCell>
+              ))}
+            </TableRow>
+          </TableHead>
+
+          <TableBody>
+            {rows.map((_, rowIndex) => (
+              <TableRow key={rowIndex}>
+                {Array.from({ length: cols }).map((_, colIndex) => (
+                  <TableCell key={colIndex}>
+                    <Skeleton variant='text' />
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Paper>
   )
 }

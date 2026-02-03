@@ -39,7 +39,7 @@ type ProfileForm = {
 }
 
 export default function Profile () {
-  const [tabIndex, setTabIndex] = useState<number>()
+  const [tabIndex, setTabIndex] = useState<number>(0)
 
   const { getProfile } = useProfileSelectionStore()
 
