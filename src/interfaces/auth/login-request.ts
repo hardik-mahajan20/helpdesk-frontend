@@ -1,6 +1,6 @@
 export interface LoginRequest {
-  email: string;
-  password: string;
-  rememberMe: boolean;
-  turnstileToken: string;
+  email: string
+  password: string
+  rememberMe: boolean
+  turnstileToken: string
 }

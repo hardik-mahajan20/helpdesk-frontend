@@ -1,34 +1,23 @@
-import { API_BASE_URL, httpRequestAsync } from '../api'
-// import { httpRequest } from '../api/http-Client'
-import { HTTP_METHOD } from '../enums'
+import api from '../api/axios'
 import type { AddProjectRequest, ApiResponse } from '../interfaces'
-import { getToken } from './auth-service'
 
 const PROJECT_URL = 'projects'
 
 export async function getAllProjects<T> () {
-  const url = `${PROJECT_URL}`
-  return httpRequestAsync<T>(url, HTTP_METHOD.GET)
+  const res = await api.get<ApiResponse<T>>(PROJECT_URL)
+  return res.data
 }
 
-export async function getAllUsersProjects<T> () {
-  const url = `${PROJECT_URL}/users-projects`
-  return httpRequestAsync<T>(url, HTTP_METHOD.GET)
-}
-
-export async function getAllDepartmentsSearched<T> (search: string) {
-  const url = `${PROJECT_URL}?&search=${search}`
-  return httpRequestAsync<T>(url, HTTP_METHOD.GET)
+export async function deleteProject<T> (id: number) {
+  const url = `${PROJECT_URL}/?projectId=${id}`
+  const res = await api.delete<ApiResponse<T>>(`${url}`)
+  return res.data
 }
 
 export async function addProject<T> (
   payload: AddProjectRequest
 ): Promise<ApiResponse<T>> {
-  // This api endpoint need the payload in the FORM formate
-  const BASE_URL = API_BASE_URL
-  const url = `${PROJECT_URL}`
-  const token = getToken()
-
+  // Converting data to formdata
   const formData = new FormData()
   Object.entries(payload).forEach(([key, value]) => {
     if (value !== undefined && value !== null) {
@@ -36,30 +25,7 @@ export async function addProject<T> (
     }
   })
 
-  const response = await fetch(`${BASE_URL}/${url}`, {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${token}`
-    },
-    body: formData
-  })
+  const res = await api.post<ApiResponse<T>>(PROJECT_URL, formData)
 
-  return handleResponse<T>(response)
-}
-
-export async function deleteProject<T> (id: number) {
-  const url = `${PROJECT_URL}/?projectId=${id}`
-  return httpRequestAsync<T>(url, HTTP_METHOD.DELETE)
-}
-
-// Helper Function
-async function handleResponse<T> (response: Response): Promise<ApiResponse<T>> {
-  const responseJson: ApiResponse<T> = await response.json()
-
-  if (!response.ok) {
-    const messages = responseJson.messages
-    const errorMessage = messages?.join(', ') ?? 'Request failed'
-    throw new Error(errorMessage)
-  }
-  return responseJson
+  return res.data
 }

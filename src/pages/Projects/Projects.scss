@@ -62,14 +62,14 @@
     .avatar-img {
       width: 40px;
       height: 40px;
-      // border: 1px solid var(--border-color);
+      border: 1px solid var(--border-color);
       object-fit: cover;
     }
 
     .avatar-initials {
       width: 40px;
       height: 40px;
-      // border: 1px solid var(--border-color);
+      border: 1px solid var(--border-color);
     }
   }
 
@@ -96,7 +96,7 @@
 //   }
 // }
 
-// // Column Widths
+ // Column Widths
 // .mat-column-project {
 //   min-width: 250px;
 // }

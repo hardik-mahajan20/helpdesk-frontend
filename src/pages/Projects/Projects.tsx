@@ -5,7 +5,15 @@ import {
   FormControl,
   InputLabel,
   OutlinedInput,
-  InputAdornment
+  InputAdornment,
+  Skeleton,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow
 } from '@mui/material'
 import { useState, useCallback, useMemo, useEffect, memo } from 'react'
 import StickyHeadTable from '../../core/components/StickyHeadTable'
@@ -59,6 +67,8 @@ export default function Projects () {
   const [isAddProjectOpen, setIsAddProjectOpen] = useState(false)
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const [selectedProject, setSelectedProject] = useState<Project | null>(null)
+  const [loading, setLoading] = useState(true)
+
   const navigate = useNavigate()
 
   const { setProjectId } = useProjectSelectionStore()
@@ -130,9 +140,12 @@ export default function Projects () {
   useEffect(() => {
     const loadProjects: () => Promise<void> = async () => {
       try {
+        setLoading(true)
         setProjects((await getAllProjects<AllProjectsGet[]>()).data)
       } catch (error) {
         console.error(error)
+      } finally {
+        setLoading(false)
       }
     }
     loadProjects()
@@ -190,7 +203,12 @@ export default function Projects () {
           </FormControl>
         </div>
         <div className='table-container'>
-          <StickyHeadTable columns={columns} rows={filteredRows} />
+          {/* <StickyHeadTable columns={columns} rows={filteredRows} /> */}
+          {loading ? (
+            <ProjectsSkeleton />
+          ) : (
+            <StickyHeadTable columns={columns} rows={filteredRows} />
+          )}
         </div>
       </div>
       <div>
@@ -209,5 +227,40 @@ export default function Projects () {
         />
       </div>
     </>
+  )
+}
+
+function ProjectsSkeleton () {
+  const rows = Array.from({ length: 10 })
+  const cols = 5
+
+  return (
+    <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+      <TableContainer sx={{ maxHeight: 440 }}>
+        <Table stickyHeader>
+          <TableHead>
+            <TableRow>
+              {Array.from({ length: cols }).map((_, i) => (
+                <TableCell key={i}>
+                  <Skeleton variant='text' width='60%' />
+                </TableCell>
+              ))}
+            </TableRow>
+          </TableHead>
+
+          <TableBody>
+            {rows.map((_, rowIndex) => (
+              <TableRow key={rowIndex}>
+                {Array.from({ length: cols }).map((_, colIndex) => (
+                  <TableCell key={colIndex}>
+                    <Skeleton variant='text' />
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Paper>
   )
 }

@@ -65,20 +65,6 @@ export default function SettingsTab () {
     }
   }
 
-  useEffect(() => {
-    if (!profile) return
-
-    const { theme, color } = getPreferences()
-
-    setCurrentTheme(theme)
-    setPendingTheme(theme)
-
-    setCurrentColor(color)
-    setPendingColor(color)
-
-    setThemeAndColor(theme, color)
-  }, [profile])
-
   const cancelTheme = () => {
     const { theme, color } = getPreferences()
 
@@ -110,6 +96,20 @@ export default function SettingsTab () {
     })
     toast.success('Preference Updated Successfully')
   }
+
+  useEffect(() => {
+    if (!profile) return
+
+    const { theme, color } = getPreferences()
+
+    setCurrentTheme(theme)
+    setPendingTheme(theme)
+
+    setCurrentColor(color)
+    setPendingColor(color)
+
+    setThemeAndColor(theme, color)
+  }, [profile])
 
   return (
     <div className='tab-content settings-tab py-3 py-sm-4 px-0'>

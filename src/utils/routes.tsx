@@ -1,6 +1,4 @@
-import Login from '../pages/Login/Login'
 import PageNotFound from '../pages/PageNotFound'
-import ProtectedRoute from '../guard/ProtectedRoute'
 import Layout from '../layouts'
 import Dashboard from '../pages/Dashboard'
 import Inbox from '../pages/Inbox'
@@ -12,28 +10,46 @@ import Departments from '../pages/Departments'
 import Agents from '../pages/Agents'
 import Profile from '../pages/Profile'
 import Settings from '../pages/Settings'
-import { Route, Routes } from 'react-router-dom'
+import { Navigate, Route, Routes } from 'react-router-dom'
+import Login from '../pages/Login'
+import { AuthGuard } from '../guard/auth-guard'
+import { RoleGuard } from '../guard/role-guard'
+import { Roles } from '../enums'
+import UnAuthorize from '../pages/UnAuthorize'
 
 export default function Router () {
   return (
     <>
       <Routes>
-        <Route path='/' element={<Login />} />
-        <Route path='/*' element={<PageNotFound />} />
-        <Route element={<ProtectedRoute />}>
+        {/* Public */}
+        <Route path='/' element={<Navigate to='/login' replace />} />
+        <Route path='/login' element={<Login />} />
+        <Route path='unauthorized' element={<UnAuthorize />} />
+
+        {/* Authenticated */}
+        <Route element={<AuthGuard />}>
           <Route element={<Layout />}>
             <Route path='/dashboard' element={<Dashboard />} />
-            <Route path='/inbox' element={<Inbox />} />
             <Route path='/contacts' element={<Contacts />} />
-            <Route path='/projects' element={<Projects />} />
+            <Route path='/inbox' element={<Inbox />} />
             <Route path='/knowledge-base' element={<KnowledgeBase />} />
             <Route path='/reporting' element={<Reporting />} />
-            <Route path='/department' element={<Departments />} />
-            <Route path='/agents' element={<Agents />} />
+            {/* Authorized */}
+            <Route
+              element={
+                <RoleGuard allowedRoles={[Roles.SuperAdmin, Roles.Admin]} />
+              }
+            >
+              <Route path='/agents' element={<Agents />} />
+              <Route path='/department' element={<Departments />} />
+              <Route path='/settings' element={<Settings />} />
+              <Route path='/projects' element={<Projects />} />
+            </Route>
             <Route path='/profile' element={<Profile />} />
-            <Route path='/settings' element={<Settings />} />
           </Route>
         </Route>
+        {/* 404 */}
+        <Route path='*' element={<PageNotFound />} />
       </Routes>
     </>
   )

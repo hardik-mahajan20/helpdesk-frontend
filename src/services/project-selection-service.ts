@@ -1,7 +1,10 @@
 import { create } from 'zustand'
-import type { ProjectSelectionStore, UserProjectGet } from '../interfaces'
-import { HTTP_METHOD } from '../enums'
-import { httpRequestAsync } from '../api'
+import type {
+  ApiResponse,
+  ProjectSelectionStore,
+  UserProjectGet
+} from '../interfaces'
+import api from '../api/axios'
 
 const STORAGE_KEY = 'selectedProjectId'
 
@@ -28,11 +31,8 @@ export const useProjectSelectionStore = create<ProjectSelectionStore>(
 
     getProjectsByUserId: async (): Promise<UserProjectGet[]> => {
       var result: UserProjectGet[] = (
-        await httpRequestAsync<UserProjectGet[]>(
-          'projects/users-projects',
-          HTTP_METHOD.GET
-        )
-      ).data
+        await api.get<ApiResponse<UserProjectGet[]>>(`projects/users-projects`)
+      ).data.data
       return result
     },
 

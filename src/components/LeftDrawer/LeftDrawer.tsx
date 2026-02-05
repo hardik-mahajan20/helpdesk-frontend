@@ -1,6 +1,4 @@
 import {
-  List,
-  ListItem,
   ListItemButton,
   ListItemIcon,
   ListItemText,
@@ -10,8 +8,12 @@ import {
   Switch,
   IconButton
 } from '@mui/material'
-import { useLocation, useNavigate } from 'react-router-dom'
-import { useEffect, useState, type JSX } from 'react'
+import {
+  useLocation,
+  useNavigate,
+  type NavigateFunction
+} from 'react-router-dom'
+import { useEffect, useMemo, useState, type JSX } from 'react'
 import DashboardIcon from '@mui/icons-material/Dashboard'
 import InboxIcon from '@mui/icons-material/Inbox'
 import MoreVertIcon from '@mui/icons-material/MoreVert'
@@ -31,15 +33,10 @@ import { useProjectSelectionStore } from '../../services/project-selection-servi
 import './LeftDrawer.scss'
 import { useThemeContext } from '../../context/ThemeContext'
 import { ColorOption, LOCAL_STORAGE_KEYS, ThemeOption } from '../../enums'
-interface menuItems_interface {
-  label: string
-  icon: JSX.Element
-  path: string
-  badge?: number
-  active?: boolean
-}
+import type { MenuItems } from '../../interfaces'
+import { toast } from 'react-toastify'
 
-const allProjectMenuItems: menuItems_interface[] = [
+const allProjectMenuItems: MenuItems[] = [
   {
     label: 'Dashboard',
     icon: <DashboardIcon />,
@@ -49,14 +46,13 @@ const allProjectMenuItems: menuItems_interface[] = [
   { label: 'Inbox', icon: <InboxIcon />, path: '/inbox', badge: 12 },
   { label: 'Contacts', icon: <ContactsIcon />, path: '/contacts' },
   { label: 'Projects', icon: <FolderIcon />, path: '/projects' },
-  // { label: 'Knowledge Base', icon: <BookIcon />, path: '/knowledge-base' },
   { label: 'Reporting', icon: <AssessmentIcon />, path: '/reporting' },
   { label: 'Departments', icon: <BusinessIcon />, path: '/department' },
   { label: 'Agents', icon: <PeopleIcon />, path: '/agents' },
   { label: 'Admins', icon: <SettingsIcon />, path: '/settings' }
 ]
 
-const projectSpecificMenuItems: menuItems_interface[] = [
+const projectSpecificMenuItems: MenuItems[] = [
   {
     label: 'Dashboard',
     icon: <DashboardIcon />,
@@ -71,27 +67,21 @@ const projectSpecificMenuItems: menuItems_interface[] = [
 ]
 
 export default function LeftDrawer () {
-  const navigate = useNavigate()
+  const navigate: NavigateFunction = useNavigate()
+  const location = useLocation()
 
-  const selectedProjectId = useProjectSelectionStore(
+  const selectedProjectId: number = useProjectSelectionStore(
     state => state.selectedProjectId
   )
 
   const { getProfile } = useProfileSelectionStore()
 
-  const [profile, setProfileData] = useState<UserProfileResponse | null>(null)
-
-  const [menuItems, setMenuItems] = useState<menuItems_interface[]>([])
-
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
-  const [isActive, setIsActive] = useState(true)
-  const location = useLocation()
-
   const { setMode, setColor } = useThemeContext()
 
-  const handleClick = (path: string) => {
-    navigate(path)
-  }
+  const [profile, setProfileData] = useState<UserProfileResponse | null>(null)
+
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+  const [isActive, setIsActive] = useState<boolean>(true)
 
   useEffect(() => {
     const loadProfile = async () => {
@@ -113,57 +103,53 @@ export default function LeftDrawer () {
           setColor(color)
           localStorage.setItem(LOCAL_STORAGE_KEYS.COLOR_PREFERENCE, color)
         } catch (e) {
-          console.error('Failed to parse user preferences:', e)
-        }
-      }
-
-      let items: menuItems_interface[] = []
-
-      if (selectedProjectId === 0) {
-        if (profile.roleId === 1) {
-          items = allProjectMenuItems
-        } else if (profile.roleId === 2) {
-          items = allProjectMenuItems.filter(item =>
-            [
-              'Dashboard',
-              'Inbox',
-              'Contacts',
-              'Projects',
-              'Reporting',
-              'Agents',
-              'Departments'
-            ].includes(item.label)
-          )
-        } else {
-          items = allProjectMenuItems.filter(item =>
-            [
-              'Dashboard',
-              'Inbox',
-              'Contacts',
-              'Knowledge Base',
-              'Reporting'
-            ].includes(item.label)
-          )
-        }
-      } else {
-        if (profile.roleId === 1) {
-          items = projectSpecificMenuItems
-        } else if (profile.roleId === 2) {
-          items = projectSpecificMenuItems
-        } else {
-          items = projectSpecificMenuItems.filter(
-            item => item.label !== 'Settings'
-          )
+          toast.error('Failed to parse user preference:')
         }
       }
 
       setProfileData(profile)
-      setMenuItems(items)
     }
 
     loadProfile()
   }, [selectedProjectId])
 
+  const menuItems = useMemo(() => {
+    if (!profile) return []
+
+    if (selectedProjectId === 0) {
+      if (profile.roleId === 1) return allProjectMenuItems
+      if (profile.roleId === 2)
+        return allProjectMenuItems.filter(item =>
+          [
+            'Dashboard',
+            'Inbox',
+            'Contacts',
+            'Projects',
+            'Reporting',
+            'Agents',
+            'Departments'
+          ].includes(item.label)
+        )
+      return allProjectMenuItems.filter(item =>
+        [
+          'Dashboard',
+          'Inbox',
+          'Contacts',
+          'Knowledge Base',
+          'Reporting'
+        ].includes(item.label)
+      )
+    }
+
+    if (profile.roleId === 3)
+      return projectSpecificMenuItems.filter(item => item.label !== 'Settings')
+
+    return projectSpecificMenuItems
+  }, [profile, selectedProjectId])
+
+  const handleClick = (path: string) => {
+    navigate(path)
+  }
   return (
     <>
       <div className='sidebar h-100 d-flex flex-column'>

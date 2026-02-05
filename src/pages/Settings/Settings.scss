@@ -145,7 +145,7 @@
   background-color: var(--surface-color);
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  // border: 1px solid black;
+  border: 1px solid black;
 
   .custom-card-header {
     gap: 0.3rem;
@@ -201,7 +201,7 @@
 
   .shortcut-message {
     margin: 0;
-    // color: var(--text-secondary);
+    color: var(--text-secondary);
     white-space: pre-wrap;
     font-size: small;
   }

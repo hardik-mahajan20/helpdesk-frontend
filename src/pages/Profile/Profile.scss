@@ -36,7 +36,7 @@
         height: 120px;
         border-radius: 50%;
         overflow: hidden;
-        // border: 3px solid var(--primary-color);
+        border: 3px solid var(--primary-color);
 
         .avatar-img {
           width: 100%;
@@ -48,14 +48,14 @@
           font-size: 2.5rem;
           font-weight: 600;
           color: var(--primary-color);
-          // background: rgba(var(--primary-color-rgb), 0.2);
+          background: rgba(var(--primary-color-rgb), 0.2);
         }
       }
 
       .camera-btn {
         bottom: -4px;
         right: -8px;
-        // background: var(--primary-color);
+        background: var(--primary-color);
         border-radius: 50%;
         width: 40px;
         height: 40px;
@@ -65,7 +65,7 @@
 
         &:hover {
           transform: scale(1.1);
-          // background: var(--primary-dark);
+          background: var(--primary-dark);
         }
 
         // mat-icon {
@@ -80,7 +80,7 @@
       h3 {
         font-size: 1.5rem;
         font-weight: 600;
-        // color: var(--text-primary);
+        color: var(--text-primary);
         margin: 0 0 0.5rem 0;
         word-break: break-word;
         max-width: 16rem;
@@ -88,15 +88,15 @@
 
       .user-email {
         font-size: 1rem;
-        // color: var(--text-secondary);
+        color: var(--text-secondary);
         margin: 0 0 0.5rem 0;
         word-break: break-word;
         max-width: 16rem;
       }
 
       .user-role {
-        // background: rgba(var(--primary-color-rgb), 0.15);
-        // color: var(--primary-color);
+        background: rgba(var(--primary-color-rgb), 0.15);
+        color: var(--primary-color);
         padding: 0.25rem 0.75rem;
         border-radius: 16px;
         font-size: 0.875rem;
