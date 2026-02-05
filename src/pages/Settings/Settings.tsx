@@ -266,7 +266,14 @@ export default function Settings () {
         IsPreChatFormEnable: project?.preChatFormEnabled
       }
 
-      var result: any = await updateProjectDetails(payload)
+      const formData = new FormData()
+      Object.entries(payload).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          formData.append(key, value as any)
+        }
+      })
+
+      const result: any = await updateProjectDetails(formData)
       toast.success(result.messages[0])
     } catch (error: any) {
       toast.error(error.message || 'Something went wrong')
