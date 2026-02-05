@@ -1,6 +1,5 @@
 export interface RolesDropdown {
-    id: number;
-    name: string;
-    groupName: string;
-  }
-  
+  id: number;
+  name: string;
+  groupName: string;
+}

@@ -63,6 +63,7 @@ This structure follows scalable, enterprise-level frontend patterns commonly use
 ## 🛠️ Getting Started
 
 ### Prerequisites
+
 - Node.js (LTS recommended)
 - npm or yarn
 
@@ -88,6 +89,7 @@ http://localhost:5173
 ## 📌 Disclaimer
 
 This project is intended for:
+
 - Learning
 - Frontend architecture practice
 - Team collaboration
@@ -100,6 +102,7 @@ It is not a production-ready system and should not be used as-is in live environ
 ## ⭐ Acknowledgements
 
 Built with a focus on:
+
 - Clean UI
 - Maintainable code
 - Real-world frontend practices

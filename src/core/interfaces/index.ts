@@ -1,2 +1,2 @@
-export * from './Column'
-export * from './table-props'
+export * from "./Column";
+export * from "./table-props";

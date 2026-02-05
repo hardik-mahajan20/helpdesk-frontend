@@ -1,9 +1,9 @@
-import type { JSX } from 'react'
+import type { JSX } from "react";
 
 export interface MenuItems {
-  label: string
-  icon: JSX.Element
-  path: string
-  badge?: number
-  active?: boolean
+  label: string;
+  icon: JSX.Element;
+  path: string;
+  badge?: number;
+  active?: boolean;
 }

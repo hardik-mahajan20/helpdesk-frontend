@@ -1,8 +1,8 @@
 export interface AllProjectsGet {
-  projectId: number
-  projectImage: string
-  name: string
-  isActive: boolean
-  createdBy: string
-  createdAt: Date
+  projectId: number;
+  projectImage: string;
+  name: string;
+  isActive: boolean;
+  createdBy: string;
+  createdAt: Date;
 }

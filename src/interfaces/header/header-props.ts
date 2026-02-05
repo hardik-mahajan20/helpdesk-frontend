@@ -1,4 +1,4 @@
 export interface HeaderProps {
-  onLeftToggle: () => void
-  onRightToggle: () => void
+  onLeftToggle: () => void;
+  onRightToggle: () => void;
 }

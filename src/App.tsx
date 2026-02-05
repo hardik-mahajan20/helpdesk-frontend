@@ -1,20 +1,20 @@
-import { BrowserRouter } from 'react-router-dom'
-import './App.scss'
-import Router from './utils/routes'
-import './theme/cssVariables.scss'
-import { ToastContainer } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
-import { ThemeContextProvider } from './context/ThemeProvider'
+import { BrowserRouter } from "react-router-dom";
+import "./App.scss";
+import Router from "./utils/routes";
+import "./theme/cssVariables.scss";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { ThemeContextProvider } from "./context/ThemeProvider";
 
-export default function App () {
+export default function App() {
   return (
     <>
       <ThemeContextProvider>
         <BrowserRouter>
-            <Router />
-            <ToastContainer />
+          <Router />
+          <ToastContainer />
         </BrowserRouter>
       </ThemeContextProvider>
     </>
-  )
+  );
 }

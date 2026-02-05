@@ -1,4 +1,4 @@
 export interface EnableTwoFactorAuthResponse {
-  secret: string
-  otpauthUri: string
+  secret: string;
+  otpauthUri: string;
 }

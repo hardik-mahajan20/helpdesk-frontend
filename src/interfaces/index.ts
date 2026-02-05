@@ -31,10 +31,10 @@ export * from "./project/user-project-get";
 export * from "./project/project-selection-store";
 export * from "./project/profile-selection-store";
 export * from "./project/add-project-form";
-export * from './settings/chat-widget-settings-dto'
-export * from './settings/project-details'
-export * from './settings/update-chat-widget-request-dto'
-export * from './settings/short-cut-message'
-export * from './settings/chat-shortcut-message'
-export * from './header/header-props'
-export * from './left-sidebar/menu-items'
+export * from "./settings/chat-widget-settings-dto";
+export * from "./settings/project-details";
+export * from "./settings/update-chat-widget-request-dto";
+export * from "./settings/short-cut-message";
+export * from "./settings/chat-shortcut-message";
+export * from "./header/header-props";
+export * from "./left-sidebar/menu-items";

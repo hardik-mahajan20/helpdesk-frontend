@@ -1,71 +1,71 @@
-import { Box, Drawer, Toolbar } from '@mui/material'
-import { useState } from 'react'
-import Header from '../components/Header'
-import LeftDrawer from '../components/LeftDrawer'
-import RightDrawer from '../components/RightDrawer'
-import { Outlet } from 'react-router-dom'
-import './Layout.scss'
+import { Box, Drawer, Toolbar } from "@mui/material";
+import { useState } from "react";
+import Header from "../components/Header";
+import LeftDrawer from "../components/LeftDrawer";
+import RightDrawer from "../components/RightDrawer";
+import { Outlet } from "react-router-dom";
+import "./Layout.scss";
 
-const drawerWidth = 250
+const drawerWidth = 250;
 
-export default function Layout () {
-  const [leftOpen, setLeftOpen] = useState<boolean>(true)
-  const [rightOpen, setRightOpen] = useState<boolean>(false)
+export default function Layout() {
+  const [leftOpen, setLeftOpen] = useState<boolean>(true);
+  const [rightOpen, setRightOpen] = useState<boolean>(false);
 
   return (
-    <Box display='flex' flexDirection='column' height='100vh'>
+    <Box display="flex" flexDirection="column" height="100vh">
       <Header
-        onLeftToggle={() => setLeftOpen(prev => !prev)}
+        onLeftToggle={() => setLeftOpen((prev) => !prev)}
         onRightToggle={() => setRightOpen(true)}
       />
       <Toolbar />
 
-      <Box display='flex' flexGrow={1}>
+      <Box display="flex" flexGrow={1}>
         <Drawer
-          variant='persistent'
+          variant="persistent"
           open={leftOpen}
           sx={{
             flexShrink: 0,
-            '& .MuiDrawer-paper': {
-              mt: '64px',
-              height: 'calc(100% - 64px)'
-            }
+            "& .MuiDrawer-paper": {
+              mt: "64px",
+              height: "calc(100% - 64px)",
+            },
           }}
         >
           <LeftDrawer />
         </Drawer>
 
         <Box
-          component='main'
+          component="main"
           sx={{
             flexGrow: 1,
-            bgcolor: '#f5f5f5',
-            transition: theme => theme.transitions.create('margin', {}),
-            marginLeft: leftOpen ? `${drawerWidth}px` : 0
+            bgcolor: "#f5f5f5",
+            transition: (theme) => theme.transitions.create("margin", {}),
+            marginLeft: leftOpen ? `${drawerWidth}px` : 0,
           }}
-          className='content-area'
+          className="content-area"
         >
           <Outlet />
         </Box>
 
         <Drawer
-          variant='temporary'
-          anchor='right'
+          variant="temporary"
+          anchor="right"
           open={rightOpen}
           onClose={() => setRightOpen(false)}
           ModalProps={{ keepMounted: true }}
           slotProps={{
             paper: {
               sx: {
-                mt: '66px',
-                height: 'calc(100% - 66px)'
-              }
-            }
+                mt: "66px",
+                height: "calc(100% - 66px)",
+              },
+            },
           }}
         >
           <RightDrawer />
         </Drawer>
       </Box>
     </Box>
-  )
+  );
 }

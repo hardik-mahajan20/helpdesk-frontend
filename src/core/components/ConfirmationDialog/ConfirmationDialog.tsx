@@ -4,16 +4,16 @@ import {
   DialogContent,
   DialogContentText,
   DialogActions,
-  Button
-} from '@mui/material'
-import type { ConfirmDeleteDialogProps } from '../../../interfaces'
+  Button,
+} from "@mui/material";
+import type { ConfirmDeleteDialogProps } from "../../../interfaces";
 
-export default function ConfirmDeleteDialog ({
+export default function ConfirmDeleteDialog({
   open,
-  title = 'Delete Confirmation',
-  description = 'Are you sure you want to delete this item? This action cannot be undone.',
+  title = "Delete Confirmation",
+  description = "Are you sure you want to delete this item? This action cannot be undone.",
   onCancel,
-  onConfirm
+  onConfirm,
 }: ConfirmDeleteDialogProps) {
   return (
     <Dialog open={open} onClose={onCancel}>
@@ -25,10 +25,10 @@ export default function ConfirmDeleteDialog ({
 
       <DialogActions>
         <Button onClick={onCancel}>Cancel</Button>
-        <Button color='error' variant='contained' onClick={onConfirm} autoFocus>
+        <Button color="error" variant="contained" onClick={onConfirm} autoFocus>
           Delete
         </Button>
       </DialogActions>
     </Dialog>
-  )
+  );
 }

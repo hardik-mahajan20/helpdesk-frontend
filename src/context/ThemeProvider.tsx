@@ -13,12 +13,12 @@ const ThemeCtx = createContext<ThemeContextType>(DEFAULT_THEME_CONTEXT);
 export const ThemeContextProvider = ({ children }: { children: ReactNode }) => {
   const [mode, setMode] = useState<ThemeMode>(
     (localStorage.getItem(LOCAL_STORAGE_KEYS.THEME_PREFERENCE) as ThemeMode) ??
-      ThemeOption.Light
+      ThemeOption.Light,
   );
 
   const [color, setColor] = useState<ThemeColor>(
     (localStorage.getItem(LOCAL_STORAGE_KEYS.COLOR_PREFERENCE) as ThemeColor) ??
-      ColorOption.Blue
+      ColorOption.Blue,
   );
 
   // MUI theme
@@ -110,7 +110,7 @@ export const ThemeContextProvider = ({ children }: { children: ReactNode }) => {
       "color-blue",
       "color-green",
       "color-purple",
-      "color-orange"
+      "color-orange",
     );
 
     body.classList.add(`theme-${mode}`, `color-${color}`);
