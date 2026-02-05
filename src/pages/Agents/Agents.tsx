@@ -79,7 +79,7 @@ export default function Agents() {
   const [projects, setProjects] = useState<ProjectsDropdown[]>([]);
   const [reportsTo, setReportsTo] = useState<ReportsToDropdown[]>([]);
 
-  const [invitedAgents, setInvitedAgents] = useState<AgentPendingInvitations[]>(
+  const [invitedAgents, setInvitedAgents] = useState<unknown[]>(
     [],
   );
 
