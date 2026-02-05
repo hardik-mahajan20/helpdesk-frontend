@@ -83,7 +83,7 @@ export default function Projects () {
     if (!selectedProject) return
 
     try {
-      var result = await deleteProject(selectedProject.projectId)
+      const result = await deleteProject(selectedProject.projectId)
       toast.success(result.messages[0])
 
       setProjects(prev =>
@@ -106,7 +106,7 @@ export default function Projects () {
       if (project.projectId > 0) setProjectId(project.projectId)
       navigate('/settings')
     },
-    []
+    [navigate, setProjectId]
   )
 
   const handleAddProject = async () => {
