@@ -9,7 +9,7 @@ import TableRow from '@mui/material/TableRow'
 import type { TableProps } from '../../interfaces'
 import { useState } from 'react'
 
-export default function StickyHeadTable<T extends { [key: string]: any }> ({
+export default function StickyHeadTable<T> ({
   columns,
   rows,
   rowsPerPageOptions = [10, 25, 100],
@@ -56,7 +56,7 @@ export default function StickyHeadTable<T extends { [key: string]: any }> ({
                       <TableCell key={String(column.id)} align={column.align}>
                         {column.render
                           ? column.render(row)
-                          : String(row[column.id])}
+                          : String(row[column.id as keyof T])}
                       </TableCell>
                     )
                   })}
