@@ -83,7 +83,7 @@ export default function Agents() {
     [],
   );
 
-  const [value, setValue] = useState<any>(0);
+  const [value, setValue] = useState<number>(0);
 
   const [loading, setLoading] = useState<boolean>(true);
 
