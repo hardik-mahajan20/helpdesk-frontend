@@ -31,10 +31,10 @@ import { useProfileSelectionStore } from '../../services/profile-selection-servi
 import type { UserProfileResponse } from '../../interfaces/profile'
 import { useProjectSelectionStore } from '../../services/project-selection-service'
 import './LeftDrawer.scss'
-import { useThemeContext } from '../../context/ThemeContext'
 import { ColorOption, LOCAL_STORAGE_KEYS, ThemeOption } from '../../enums'
 import type { MenuItems } from '../../interfaces'
 import { toast } from 'react-toastify'
+import { useThemeContext } from '../../context/useThemeContext'
 
 const allProjectMenuItems: MenuItems[] = [
   {
