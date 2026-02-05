@@ -25,8 +25,9 @@ import { updateProfile } from '../../services/profile-service'
 import './Profile.scss'
 import SettingsTab from './SettingsTab'
 import { toast } from 'react-toastify'
+import type { TabPanelProps } from '../../interfaces'
 
-function TabPanel ({ value, index, children }: any) {
+function TabPanel ({ value, index, children }: TabPanelProps) {
   return value === index ? <Box sx={{ mt: 3 }}>{children}</Box> : null
 }
 type ProfileForm = {
@@ -83,7 +84,7 @@ export default function Profile () {
     const formData = new FormData();
     Object.entries(payload).forEach(([key, value]) => {
       if (value !== undefined && value !== null) {
-        formData.append(key, value as any);
+        formData.append(key, value as string);
       }
     });
 
