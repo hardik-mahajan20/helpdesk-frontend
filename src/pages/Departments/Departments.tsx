@@ -84,7 +84,7 @@ export default function Departments () {
     if (!selectedDepartment) return
 
     try {
-      var result = await deleteDepartment(selectedDepartment.id)
+      const result = await deleteDepartment(selectedDepartment.id)
       toast.success(result.messages[0])
 
       setDepartments(prev => prev.filter(d => d.id !== selectedDepartment.id))

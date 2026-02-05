@@ -21,7 +21,7 @@ export async function addProject<T> (
   const formData = new FormData()
   Object.entries(payload).forEach(([key, value]) => {
     if (value !== undefined && value !== null) {
-      formData.append(key, value as any)
+      formData.append(key, value as string)
     }
   })
 

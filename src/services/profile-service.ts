@@ -43,15 +43,8 @@ export async function verifyTwoFactorAuth (code: string) {
   return res.data
 }
 
-export async function updateProfile<T> (payload: any): Promise<ApiResponse<T>> {
+export async function updateProfile<T> (formData: FormData): Promise<ApiResponse<T>> {
   const url = `${PROFILE_URL}/profile-update`
-
-  const formData = new FormData()
-  Object.entries(payload).forEach(([key, value]) => {
-    if (value !== undefined && value !== null) {
-      formData.append(key, value as any)
-    }
-  })
 
   const res = await api.post<ApiResponse<T>>(url, formData)
   return res.data

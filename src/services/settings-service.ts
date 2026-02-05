@@ -65,16 +65,9 @@ export async function createChatShortCut (chatShortcut: ChatShortCutCreate) {
 }
 
 export async function updateProjectDetails<T> (
-  payload: any
+  formData: FormData
 ): Promise<ApiResponse<T>> {
   const url = `${PROJECT_URL}/update-project`
-
-  const formData = new FormData()
-  Object.entries(payload).forEach(([key, value]) => {
-    if (value !== undefined && value !== null) {
-      formData.append(key, value as any)
-    }
-  })
 
   const res = await api.post<ApiResponse<T>>(url, formData)
   return res.data

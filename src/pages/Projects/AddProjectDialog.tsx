@@ -10,7 +10,8 @@ import { useForm, Controller } from 'react-hook-form'
 import type {
   AddProjectDialogProps,
   AddProjectForm,
-  AddProjectRequest
+  AddProjectRequest,
+  ApiResponse
 } from '../../interfaces'
 import { addProject } from '../../services/project-service'
 import { toast } from 'react-toastify'
@@ -35,12 +36,12 @@ export default function AddProjectDialog ({
   const onSubmit = async (data: AddProjectForm) => {
     try {
       const payload: AddProjectRequest = { ...data }
-      const result: any = await addProject(payload)
+      const result: ApiResponse<unknown> = await addProject(payload)
       toast.success(result.messages[0])
       reset()
       onClose()
-    } catch (err: any) {
-      toast.error(err.message || 'Something went wrong')
+    } catch  {
+      toast.error('Something went wrong')
     }
   }
 

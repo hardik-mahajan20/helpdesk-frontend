@@ -52,8 +52,8 @@ export default function Login () {
       setAuthSession(data.accessToken)
       toast.success('Login Successful!')
       navigate('/dashboard')
-    } catch (err: any) {
-      setError(err.message || 'Something went wrong')
+    } catch {
+      setError('Something went wrong')
     } finally {
       setLoading(false)
     }

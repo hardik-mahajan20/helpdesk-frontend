@@ -39,15 +39,15 @@ export default function AddAgentDialog ({
         reportsToId: Number(reportsTo)
       }
 
-      var result = await inviteAgent(payload)
+      const result = await inviteAgent(payload)
       toast.success(result.messages[0])
       onClose()
-    } catch (error: any) {
-      toast.error(error)
+    } catch {
+      toast.error("error")
     }
   }
 
-  const groupedReports = reportPersons.reduce((acc: any, person) => {
+  const groupedReports = reportPersons.reduce< Record<string, ReportsToDropdown[]>>((acc, person) => {
     const group = person.groupName || 'Department Member'
     if (!acc[group]) acc[group] = []
     acc[group].push(person)
@@ -64,8 +64,8 @@ export default function AddAgentDialog ({
           Number(department)
         )
         setReportPersons(result.data)
-      } catch (error: any) {
-        toast.error(error)
+      } catch {
+        toast.error("error")
       }
     }
 

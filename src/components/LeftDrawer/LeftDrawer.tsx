@@ -13,7 +13,7 @@ import {
   useNavigate,
   type NavigateFunction
 } from 'react-router-dom'
-import { useEffect, useMemo, useState, type JSX } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import DashboardIcon from '@mui/icons-material/Dashboard'
 import InboxIcon from '@mui/icons-material/Inbox'
 import MoreVertIcon from '@mui/icons-material/MoreVert'
@@ -31,10 +31,10 @@ import { useProfileSelectionStore } from '../../services/profile-selection-servi
 import type { UserProfileResponse } from '../../interfaces/profile'
 import { useProjectSelectionStore } from '../../services/project-selection-service'
 import './LeftDrawer.scss'
-import { useThemeContext } from '../../context/ThemeContext'
 import { ColorOption, LOCAL_STORAGE_KEYS, ThemeOption } from '../../enums'
 import type { MenuItems } from '../../interfaces'
 import { toast } from 'react-toastify'
+import { useThemeContext } from '../../context/useThemeContext'
 
 const allProjectMenuItems: MenuItems[] = [
   {
@@ -102,7 +102,7 @@ export default function LeftDrawer () {
           const color = preference.color || ColorOption.Blue
           setColor(color)
           localStorage.setItem(LOCAL_STORAGE_KEYS.COLOR_PREFERENCE, color)
-        } catch (e) {
+        } catch {
           toast.error('Failed to parse user preference:')
         }
       }
@@ -111,7 +111,7 @@ export default function LeftDrawer () {
     }
 
     loadProfile()
-  }, [selectedProjectId])
+  }, [selectedProjectId,getProfile, setMode, setColor])
 
   const menuItems = useMemo(() => {
     if (!profile) return []
