@@ -7,7 +7,7 @@ import {
   ListItemIcon,
   ListItemText
 } from '@mui/material'
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import PaletteIcon from '@mui/icons-material/Palette'
 import DarkModeIcon from '@mui/icons-material/DarkMode'
 import LightModeIcon from '@mui/icons-material/LightMode'
@@ -16,10 +16,10 @@ import clsx from 'clsx'
 import './SettingsTab.scss'
 import InfoIcon from '@mui/icons-material/Info'
 import { useProfileSelectionStore } from '../../../services/profile-selection-service'
-import { useThemeContext } from '../../../context/ThemeContext'
 import { updateUserPreferences } from '../../../services/profile-service'
 import { ColorOption, ThemeOption } from '../../../enums'
 import { toast } from 'react-toastify'
+import { useThemeContext } from '../../../context/useThemeContext'
 
 export default function SettingsTab () {
   const { mode, color, setThemeAndColor, setMode, setColor } = useThemeContext()
@@ -54,7 +54,7 @@ export default function SettingsTab () {
 
   const { profile } = useProfileSelectionStore()
 
-  const getPreferences = () => {
+  const getPreferences =  useCallback(() => {
     const preferences = profile?.userPreferenceSettings
       ? JSON.parse(profile.userPreferenceSettings)
       : {}
@@ -63,7 +63,7 @@ export default function SettingsTab () {
       theme: (preferences.theme || mode) as ThemeOption,
       color: (preferences.color || color) as ColorOption
     }
-  }
+  }, [profile, mode, color])
 
   const cancelTheme = () => {
     const { theme, color } = getPreferences()
@@ -98,7 +98,8 @@ export default function SettingsTab () {
   }
 
   useEffect(() => {
-    if (!profile) return
+    const loadTheme = async () => {
+      if (!profile) return
 
     const { theme, color } = getPreferences()
 
@@ -109,7 +110,9 @@ export default function SettingsTab () {
     setPendingColor(color)
 
     setThemeAndColor(theme, color)
-  }, [profile])
+    }
+    loadTheme()
+  }, [profile, getPreferences, setThemeAndColor])
 
   return (
     <div className='tab-content settings-tab py-3 py-sm-4 px-0'>
