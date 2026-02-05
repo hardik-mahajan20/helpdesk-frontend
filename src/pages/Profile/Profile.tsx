@@ -79,7 +79,15 @@ export default function Profile () {
       email: profileForm.email,
       phoneNumber: profileForm.phoneNumber
     }
-    var result = await updateProfile(payload)
+
+    const formData = new FormData();
+    Object.entries(payload).forEach(([key, value]) => {
+      if (value !== undefined && value !== null) {
+        formData.append(key, value as any);
+      }
+    });
+
+    const result = await updateProfile(formData)
     toast.success(result.messages[0])
   }
 
