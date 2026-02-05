@@ -25,8 +25,9 @@ import { updateProfile } from '../../services/profile-service'
 import './Profile.scss'
 import SettingsTab from './SettingsTab'
 import { toast } from 'react-toastify'
+import type { TabPanelProps } from '../../interfaces'
 
-function TabPanel ({ value, index, children }: any) {
+function TabPanel ({ value, index, children }: TabPanelProps) {
   return value === index ? <Box sx={{ mt: 3 }}>{children}</Box> : null
 }
 type ProfileForm = {
@@ -79,7 +80,15 @@ export default function Profile () {
       email: profileForm.email,
       phoneNumber: profileForm.phoneNumber
     }
-    var result = await updateProfile(payload)
+
+    const formData = new FormData();
+    Object.entries(payload).forEach(([key, value]) => {
+      if (value !== undefined && value !== null) {
+        formData.append(key, value as string);
+      }
+    });
+
+    const result = await updateProfile(formData)
     toast.success(result.messages[0])
   }
 

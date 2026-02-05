@@ -30,7 +30,7 @@ export const useProjectSelectionStore = create<ProjectSelectionStore>(
     getCurrentProjectId: () => get().selectedProjectId,
 
     getProjectsByUserId: async (): Promise<UserProjectGet[]> => {
-      var result: UserProjectGet[] = (
+      const result: UserProjectGet[] = (
         await api.get<ApiResponse<UserProjectGet[]>>(`projects/users-projects`)
       ).data.data
       return result

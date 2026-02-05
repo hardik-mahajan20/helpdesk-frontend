@@ -2,7 +2,6 @@ import type { ChatWidgetProps } from '../../interfaces'
 import './ChatWidget.scss'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
-import Button from '@mui/material/Button'
 import {
   CardActions,
   CardHeader,

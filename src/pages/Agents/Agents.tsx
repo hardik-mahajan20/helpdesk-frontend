@@ -18,7 +18,8 @@ import type {
   AgentPendingInvitations,
   AgentsGet,
   DepartmentsGet,
-  Invitations_Agent
+  Invitations_Agent,
+  ReportsToDropdown
 } from '../../interfaces'
 import {
   Box,
@@ -53,6 +54,8 @@ import FileDownloadIcon from '@mui/icons-material/FileDownload'
 import FileUploadIcon from '@mui/icons-material/FileUpload'
 import FilterListIcon from '@mui/icons-material/FilterList'
 import { toast } from 'react-toastify'
+import type { RolesDropdown } from '../../interfaces/agent/roles-dropdown'
+import type { ProjectsDropdown } from '../../interfaces/agent/projects-dropdown'
 
 function a11yProps (index: number) {
   return {
@@ -69,9 +72,9 @@ export default function Agents () {
   const [isEditAgentOpen, setIsEditAgentOpen] = useState<boolean>(false)
   const [selectedAgent, setSelectedAgent] = useState<Agent | null>(null)
 
-  const [roles, setRoles] = useState<any[]>([])
-  const [projects, setProjects] = useState<any[]>([])
-  const [reportsTo, setReportsTo] = useState<any[]>([])
+  const [roles, setRoles] = useState<RolesDropdown[]>([])
+  const [projects, setProjects] = useState<ProjectsDropdown[]>([])
+  const [reportsTo, setReportsTo] = useState<ReportsToDropdown[]>([])
 
   const [invitedAgents, setInvitedAgents] = useState<AgentPendingInvitations[]>(
     []
@@ -88,7 +91,7 @@ export default function Agents () {
   const [searchText, setSearchText] = useState('')
 
   const handleDeleteAgent = useCallback(async (agent: Agent) => {
-    var result = await deleteAgent(agent.userId)
+    const result = await deleteAgent(agent.userId)
     toast.success(result.messages[0])
   }, [])
 
@@ -155,11 +158,7 @@ export default function Agents () {
     setIsAddAgentOpen(true)
   }, [])
 
-  const handleSubmitAddAgent = async (data: {
-    email: string
-    department: string
-    reportsTo: string
-  }) => {
+  const handleSubmitAddAgent = async () => {
     setIsAddAgentOpen(false)
     setAgents((await getAllAgents<AgentsGet[]>(true)).data)
   }
@@ -243,7 +242,7 @@ export default function Agents () {
 
     const search = searchText.toLowerCase()
 
-    return rows.filter((agent: any) => {
+    return rows.filter((agent: Agent) => {
       return (
         agent.fullName?.toLowerCase().includes(search) ||
         agent.departmentName?.toLowerCase().includes(search) ||

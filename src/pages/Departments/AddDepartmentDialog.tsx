@@ -28,7 +28,7 @@ export default function AddDepartmentDialog ({
         description
       }
 
-      var result = await addDepartment(payload)
+      const result = await addDepartment(payload)
       toast.success(result.messages[0])
       onClose()
     } catch (error) {
