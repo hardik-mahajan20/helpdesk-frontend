@@ -56,6 +56,7 @@ import FilterListIcon from "@mui/icons-material/FilterList";
 import { toast } from "react-toastify";
 import type { RolesDropdown } from "../../interfaces/agent/roles-dropdown";
 import type { ProjectsDropdown } from "../../interfaces/agent/projects-dropdown";
+import type { AgentsGetById } from "../../interfaces/agent/agent-get-by-id";
 
 function a11yProps(index: number) {
   return {
@@ -70,7 +71,9 @@ export default function Agents() {
   const [isAddAgentOpen, setIsAddAgentOpen] = useState<boolean>(false);
 
   const [isEditAgentOpen, setIsEditAgentOpen] = useState<boolean>(false);
-  const [selectedAgent, setSelectedAgent] = useState<Agent | null>(null);
+  const [selectedAgent, setSelectedAgent] = useState<AgentsGetById | null>(
+    null,
+  );
 
   const [roles, setRoles] = useState<RolesDropdown[]>([]);
   const [projects, setProjects] = useState<ProjectsDropdown[]>([]);
@@ -347,18 +350,20 @@ export default function Agents() {
           />
         )}
       </div>
-      <EditAgentDialog
-        open={isEditAgentOpen}
-        agent={selectedAgent}
-        roles={roles}
-        projects={projects}
-        departments={departments}
-        reportsTo={reportsTo}
-        onClose={() => setIsEditAgentOpen(false)}
-        onSubmit={() => {
-          setIsEditAgentOpen(false);
-        }}
-      />
+      {selectedAgent && (
+        <EditAgentDialog
+          open={isEditAgentOpen}
+          agent={selectedAgent}
+          roles={roles}
+          projects={projects}
+          departments={departments}
+          reportsTo={reportsTo}
+          onClose={() => setIsEditAgentOpen(false)}
+          onSubmit={() => {
+            setIsEditAgentOpen(false);
+          }}
+        />
+      )}
     </>
   );
 }
