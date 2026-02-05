@@ -2,6 +2,11 @@ import axios from 'axios'
 import { getToken, refreshToken, logout } from '../services/auth-service'
 import { API_BASE_URL } from './endpoints'
 
+type FailedRequest = {
+  resolve: (token: string) => void
+  reject: (error: unknown) => void
+}
+
 const api = axios.create({
   baseURL: API_BASE_URL,
   withCredentials: true
@@ -16,12 +21,12 @@ api.interceptors.request.use(config => {
 })
 
 let isRefreshing = false
-let failedQueue: any[] = []
+let failedQueue: FailedRequest[] = []
 
-const processQueue = (error: any, token: string | null = null) => {
+const processQueue = (error: unknown, token: string | null = null) => {
   failedQueue.forEach(prom => {
     if (error) prom.reject(error)
-    else prom.resolve(token)
+    else if(token) prom.resolve(token)
   })
   failedQueue = []
 }
