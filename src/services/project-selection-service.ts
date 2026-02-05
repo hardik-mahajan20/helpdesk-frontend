@@ -1,12 +1,12 @@
-import { create } from 'zustand'
+import { create } from "zustand";
 import type {
   ApiResponse,
   ProjectSelectionStore,
-  UserProjectGet
-} from '../interfaces'
-import api from '../api/axios'
+  UserProjectGet,
+} from "../interfaces";
+import api from "../api/axios";
 
-const STORAGE_KEY = 'selectedProjectId'
+const STORAGE_KEY = "selectedProjectId";
 
 export const useProjectSelectionStore = create<ProjectSelectionStore>(
   (set, get) => ({
@@ -17,14 +17,14 @@ export const useProjectSelectionStore = create<ProjectSelectionStore>(
 
     // ---- HELPERS ----
     getStoredProjectId: () => {
-      const stored = localStorage.getItem(STORAGE_KEY)
-      return stored ? Number(stored) : 0
+      const stored = localStorage.getItem(STORAGE_KEY);
+      return stored ? Number(stored) : 0;
     },
 
     // ---- METHODS ----
-    setProjectId: id => {
-      set({ selectedProjectId: id })
-      localStorage.setItem(STORAGE_KEY, String(id))
+    setProjectId: (id) => {
+      set({ selectedProjectId: id });
+      localStorage.setItem(STORAGE_KEY, String(id));
     },
 
     getCurrentProjectId: () => get().selectedProjectId,
@@ -32,23 +32,23 @@ export const useProjectSelectionStore = create<ProjectSelectionStore>(
     getProjectsByUserId: async (): Promise<UserProjectGet[]> => {
       const result: UserProjectGet[] = (
         await api.get<ApiResponse<UserProjectGet[]>>(`projects/users-projects`)
-      ).data.data
-      return result
+      ).data.data;
+      return result;
     },
 
     refreshProjects: async () => {
-      const data = await get().getProjectsByUserId()
+      const data = await get().getProjectsByUserId();
 
       if (data?.length) {
-        set({ projectsList: data })
+        set({ projectsList: data });
 
-        const exists = data.some(p => p.id === get().selectedProjectId)
+        const exists = data.some((p) => p.id === get().selectedProjectId);
 
         if (!exists) {
-          set({ selectedProjectId: 0 })
+          set({ selectedProjectId: 0 });
         }
       } else {
-        set({ projectsList: [] })
+        set({ projectsList: [] });
       }
     },
 
@@ -62,6 +62,6 @@ export const useProjectSelectionStore = create<ProjectSelectionStore>(
     // ---- FLAGS ----
     disableAllProjectsOption: () => set({ allProjectsDisabled: true }),
 
-    enableAllProjectsOption: () => set({ allProjectsDisabled: false })
-  })
-)
+    enableAllProjectsOption: () => set({ allProjectsDisabled: false }),
+  }),
+);

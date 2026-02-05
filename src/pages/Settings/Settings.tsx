@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from "react";
 import {
   Box,
   Tabs,
@@ -17,23 +17,23 @@ import {
   Tooltip,
   MenuItem,
   Card,
-  Select
-} from '@mui/material'
-import SettingsIcon from '@mui/icons-material/Settings'
-import './Settings.scss'
-import ChatIcon from '@mui/icons-material/Chat'
-import ContentCutIcon from '@mui/icons-material/ContentCut'
-import PaletteIcon from '@mui/icons-material/Palette'
-import './Settings.scss'
-import { SketchPicker } from 'react-color'
-import CodeIcon from '@mui/icons-material/Code'
-import ContentCopyIcon from '@mui/icons-material/ContentCopy'
-import VisibilityIcon from '@mui/icons-material/Visibility'
-import FolderIcon from '@mui/icons-material/Folder'
-import NotificationsIcon from '@mui/icons-material/Notifications'
-import EmailIcon from '@mui/icons-material/Email'
-import AddAPhotoIcon from '@mui/icons-material/AddAPhoto'
-import ChatWidget from '../ChatWidget'
+  Select,
+} from "@mui/material";
+import SettingsIcon from "@mui/icons-material/Settings";
+import "./Settings.scss";
+import ChatIcon from "@mui/icons-material/Chat";
+import ContentCutIcon from "@mui/icons-material/ContentCut";
+import PaletteIcon from "@mui/icons-material/Palette";
+import "./Settings.scss";
+import { SketchPicker } from "react-color";
+import CodeIcon from "@mui/icons-material/Code";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import FolderIcon from "@mui/icons-material/Folder";
+import NotificationsIcon from "@mui/icons-material/Notifications";
+import EmailIcon from "@mui/icons-material/Email";
+import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
+import ChatWidget from "../ChatWidget";
 import {
   createChatShortCut,
   deleteChatShortCut,
@@ -43,8 +43,8 @@ import {
   toggleChatShortCutVisibility,
   updateChatShortCut,
   updateChatWidgetSetting,
-  updateProjectDetails
-} from '../../services/settings-service'
+  updateProjectDetails,
+} from "../../services/settings-service";
 import type {
   ApiResponse,
   ChatShortCutCreate,
@@ -53,96 +53,96 @@ import type {
   ProjectDetailsRequestDTO,
   ShortCutMessage,
   TabPanelProps,
-  UpdateChatWidgetRequestDTO
-} from '../../interfaces'
-import { useProjectSelectionStore } from '../../services/project-selection-service'
-import { useNavigate } from 'react-router-dom'
-import AddIcon from '@mui/icons-material/Add'
-import CancelIcon from '@mui/icons-material/Cancel'
-import EditIcon from '@mui/icons-material/Edit'
-import DeleteIcon from '@mui/icons-material/Delete'
-import { VisibilityOff } from '@mui/icons-material'
-import { useProfileSelectionStore } from '../../services/profile-selection-service'
-import SaveIcon from '@mui/icons-material/Save'
-import ConfirmDeleteDialog from '../../core/components/ConfirmationDialog'
-import { toast } from 'react-toastify'
-function TabPanel ({ value, index, children }: TabPanelProps) {
-  return value === index ? <Box sx={{ mt: 3 }}>{children}</Box> : null
+  UpdateChatWidgetRequestDTO,
+} from "../../interfaces";
+import { useProjectSelectionStore } from "../../services/project-selection-service";
+import { useNavigate } from "react-router-dom";
+import AddIcon from "@mui/icons-material/Add";
+import CancelIcon from "@mui/icons-material/Cancel";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { VisibilityOff } from "@mui/icons-material";
+import { useProfileSelectionStore } from "../../services/profile-selection-service";
+import SaveIcon from "@mui/icons-material/Save";
+import ConfirmDeleteDialog from "../../core/components/ConfirmationDialog";
+import { toast } from "react-toastify";
+function TabPanel({ value, index, children }: TabPanelProps) {
+  return value === index ? <Box sx={{ mt: 3 }}>{children}</Box> : null;
 }
 
 const positions: {
-  label: string
-  value: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'
+  label: string;
+  value: "top-left" | "top-right" | "bottom-left" | "bottom-right";
 }[] = [
-  { label: 'Top Left', value: 'top-left' },
-  { label: 'Top Right', value: 'top-right' },
-  { label: 'Bottom Left', value: 'bottom-left' },
-  { label: 'Bottom Right', value: 'bottom-right' }
-]
+  { label: "Top Left", value: "top-left" },
+  { label: "Top Right", value: "top-right" },
+  { label: "Bottom Left", value: "bottom-left" },
+  { label: "Bottom Right", value: "bottom-right" },
+];
 
 const positionMatrix: (
-  | 'top-left'
-  | 'top-center'
-  | 'top-right'
-  | 'middle-left'
-  | 'middle-center'
-  | 'middle-right'
-  | 'bottom-left'
-  | 'bottom-center'
-  | 'bottom-right'
+  | "top-left"
+  | "top-center"
+  | "top-right"
+  | "middle-left"
+  | "middle-center"
+  | "middle-right"
+  | "bottom-left"
+  | "bottom-center"
+  | "bottom-right"
 )[] = [
-  'top-left',
-  'top-center',
-  'top-right',
-  'middle-left',
-  'middle-center',
-  'middle-right',
-  'bottom-left',
-  'bottom-center',
-  'bottom-right'
-]
+  "top-left",
+  "top-center",
+  "top-right",
+  "middle-left",
+  "middle-center",
+  "middle-right",
+  "bottom-left",
+  "bottom-center",
+  "bottom-right",
+];
 
 const colorFields = [
-  { key: 'headerTextColor', label: 'Header Text Color' },
-  { key: 'headerBackground', label: 'Header Background Color' },
-  { key: 'agentTextColor', label: 'Agent Text Color' },
-  { key: 'agentMessageBackground', label: 'Agent Message Background' },
-  { key: 'customerTextColor', label: 'Customer Text Color' },
-  { key: 'customerMessageBackground', label: 'Customer Message Background' }
-] as { key: ColorFieldKeys; label: string }[]
+  { key: "headerTextColor", label: "Header Text Color" },
+  { key: "headerBackground", label: "Header Background Color" },
+  { key: "agentTextColor", label: "Agent Text Color" },
+  { key: "agentMessageBackground", label: "Agent Message Background" },
+  { key: "customerTextColor", label: "Customer Text Color" },
+  { key: "customerMessageBackground", label: "Customer Message Background" },
+] as { key: ColorFieldKeys; label: string }[];
 
 type ColorFieldKeys =
-  | 'headerTextColor'
-  | 'headerBackground'
-  | 'agentTextColor'
-  | 'agentMessageBackground'
-  | 'customerTextColor'
-  | 'customerMessageBackground'
+  | "headerTextColor"
+  | "headerBackground"
+  | "agentTextColor"
+  | "agentMessageBackground"
+  | "customerTextColor"
+  | "customerMessageBackground";
 
-export default function Settings () {
+export default function Settings() {
   const [widgetForm, setWidgetForm] = useState<ChatWidgetSettingsDto | null>(
-    null
-  )
+    null,
+  );
   const [chatShortCutForm, setChatShortCutForm] = useState<
     ChatShortCutMessages[]
-  >([])
+  >([]);
 
-  const [tabIndex, setTabIndex] = useState(0)
+  const [tabIndex, setTabIndex] = useState(0);
 
-  const [project, setProject] = useState<ProjectDetailsRequestDTO>()
+  const [project, setProject] = useState<ProjectDetailsRequestDTO>();
   const [originalProject, setOriginalProject] =
-    useState<ProjectDetailsRequestDTO>()
-  const [, setChatWidget] = useState<ChatWidgetSettingsDto>()
+    useState<ProjectDetailsRequestDTO>();
+  const [, setChatWidget] = useState<ChatWidgetSettingsDto>();
 
-  const [activePicker, setActivePicker] = useState<string | null>(null)
-  const [, setChatShortCutMessages] = useState<ChatShortCutMessages[]>([])
-  const [currentUserId, setCurrentUserId] = useState<number>(0)
+  const [activePicker, setActivePicker] = useState<string | null>(null);
+  const [, setChatShortCutMessages] = useState<ChatShortCutMessages[]>([]);
+  const [currentUserId, setCurrentUserId] = useState<number>(0);
 
   const togglePicker = (key: string) => {
-    setActivePicker(prev => (prev === key ? null : key))
-  }
+    setActivePicker((prev) => (prev === key ? null : key));
+  };
 
-  const linkValue = project?.directChatLink
+  const linkValue = project?.directChatLink;
   const codeValue = `<script type="text/javascript" data-project-code="${project?.projectCode}">
             (function() {
               var s1 = document.createElement("script"),
@@ -153,110 +153,110 @@ export default function Settings () {
               s1.setAttribute("crossorigin","*");
               s0.parentNode.insertBefore(s1, s0);
             })();
-          </script>`
-  const [copied, setCopied] = useState<boolean>(false)
+          </script>`;
+  const [copied, setCopied] = useState<boolean>(false);
 
   const handleLinkCopy: () => Promise<void> = async () => {
-    if (!linkValue) return
-    await navigator.clipboard.writeText(linkValue)
-    setCopied(true)
+    if (!linkValue) return;
+    await navigator.clipboard.writeText(linkValue);
+    setCopied(true);
 
-    setTimeout(() => setCopied(false), 1500)
-    toast.success('Copied : Direct Chat Link')
-  }
+    setTimeout(() => setCopied(false), 1500);
+    toast.success("Copied : Direct Chat Link");
+  };
   const handleCodeCopy = async () => {
-    if (!linkValue) return
-    await navigator.clipboard.writeText(linkValue)
-    setCopied(true)
+    if (!linkValue) return;
+    await navigator.clipboard.writeText(linkValue);
+    setCopied(true);
 
-    setTimeout(() => setCopied(false), 1500)
-    toast.success('Copied : Widget Code')
-  }
+    setTimeout(() => setCopied(false), 1500);
+    toast.success("Copied : Widget Code");
+  };
   const handleEmailCopy = async () => {
-    if (!linkValue) return
-    await navigator.clipboard.writeText(linkValue)
-    setCopied(true)
+    if (!linkValue) return;
+    await navigator.clipboard.writeText(linkValue);
+    setCopied(true);
 
-    setTimeout(() => setCopied(false), 1500)
-    toast.success('Copied : Ticket Forwarding Email')
-  }
+    setTimeout(() => setCopied(false), 1500);
+    toast.success("Copied : Ticket Forwarding Email");
+  };
 
   const selectedProjectId = useProjectSelectionStore(
-    state => state.selectedProjectId
-  )
+    (state) => state.selectedProjectId,
+  );
 
   const getCurrentUserId = useProfileSelectionStore(
-    state => state.getCurrentUserId
-  )
+    (state) => state.getCurrentUserId,
+  );
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   useEffect(() => {
     const loadProject: () => Promise<void> = async () => {
       try {
         setProject(
           (await getProjectById<ProjectDetailsRequestDTO>(selectedProjectId))
-            .data
-        )
+            .data,
+        );
         setOriginalProject(
           (await getProjectById<ProjectDetailsRequestDTO>(selectedProjectId))
-            .data
-        )
+            .data,
+        );
       } catch (error) {
-        console.error(error)
+        console.error(error);
       }
-    }
+    };
     const loadChatWidget = async () => {
       try {
         const data = (
           await getChatWidgetByProjectId<ChatWidgetSettingsDto>(
-            selectedProjectId
+            selectedProjectId,
           )
-        ).data
+        ).data;
         const chatShortCutMessages = (
           await getChatShortCutMessages<ChatShortCutMessages[]>(
-            selectedProjectId
+            selectedProjectId,
           )
-        ).data
+        ).data;
 
-        setChatWidget(data)
-        setChatShortCutMessages(chatShortCutMessages)
-        setWidgetForm(data)
-        setChatShortCutForm(chatShortCutMessages)
-        setCurrentUserId(getCurrentUserId())
+        setChatWidget(data);
+        setChatShortCutMessages(chatShortCutMessages);
+        setWidgetForm(data);
+        setChatShortCutForm(chatShortCutMessages);
+        setCurrentUserId(getCurrentUserId());
       } catch (error) {
-        console.error(error)
+        console.error(error);
       }
-    }
+    };
     if (selectedProjectId > 0) {
-      loadProject()
-      loadChatWidget()
+      loadProject();
+      loadChatWidget();
     } else {
-      navigate('/dashboard')
+      navigate("/dashboard");
     }
-  }, [selectedProjectId, navigate, getCurrentUserId])
+  }, [selectedProjectId, navigate, getCurrentUserId]);
 
   const saveChatWidget = async () => {
-    const formValue = widgetForm
+    const formValue = widgetForm;
     const payload: UpdateChatWidgetRequestDTO = {
       projectId: selectedProjectId,
-      widgetSetting: JSON.stringify(formValue)
-    }
-    const result: ApiResponse<unknown> = await updateChatWidgetSetting(payload)
-    toast.success(result.messages[0])
-  }
+      widgetSetting: JSON.stringify(formValue),
+    };
+    const result: ApiResponse<unknown> = await updateChatWidgetSetting(payload);
+    toast.success(result.messages[0]);
+  };
   const saveProjectSettings = async () => {
     try {
-      if (!project) return
+      if (!project) return;
 
-      setOriginalProject(project)
+      setOriginalProject(project);
 
       const toggleSettings = {
         enableNewChatNotifications:
           project?.enableNewChatNotifications || false,
         enableEmailNotifications: project?.enableEmailNotifications || false,
-        enableSoundNotifications: project?.enableSoundNotifications || false
-      }
+        enableSoundNotifications: project?.enableSoundNotifications || false,
+      };
 
       const payload = {
         Id: selectedProjectId,
@@ -265,128 +265,128 @@ export default function Settings () {
         LiveProjectUrl: project?.projectURL.toString(),
         Settings: JSON.stringify(toggleSettings),
         IsProjectEnable: project?.projectStatus,
-        IsPreChatFormEnable: project?.preChatFormEnabled
-      }
+        IsPreChatFormEnable: project?.preChatFormEnabled,
+      };
 
-      const formData = new FormData()
+      const formData = new FormData();
       Object.entries(payload).forEach(([key, value]) => {
         if (value !== undefined && value !== null) {
-          formData.append(key, value as string)
+          formData.append(key, value as string);
         }
-      })
+      });
 
-      const result: ApiResponse<unknown> = await updateProjectDetails(formData)
-      toast.success(result.messages[0])
-    } catch  {
-      toast.error('Something went wrong')
+      const result: ApiResponse<unknown> = await updateProjectDetails(formData);
+      toast.success(result.messages[0]);
+    } catch {
+      toast.error("Something went wrong");
     }
-  }
+  };
   const cancelProjectSetting = () => {
-    setProject(originalProject)
-  }
+    setProject(originalProject);
+  };
   const saveShortCut = async () => {
     const updatedData = {
       id: newShortcut.id,
       projectId: selectedProjectId,
       shortCutKey: newShortcut.shortCutKey,
       shortCutMessage: newShortcut.shortCutMessage,
-      isPublic: newShortcut.isPublic
-    }
-    await updateChatShortCut(updatedData)
-    toast.success('Chat ShortCut updated successfully')
+      isPublic: newShortcut.isPublic,
+    };
+    await updateChatShortCut(updatedData);
+    toast.success("Chat ShortCut updated successfully");
 
-    setChatShortCutForm(prev =>
-      prev.map(shortcut =>
+    setChatShortCutForm((prev) =>
+      prev.map((shortcut) =>
         shortcut.id === updatedData.id
           ? { ...shortcut, ...updatedData }
-          : shortcut
-      )
-    )
-    setNewShortcut(DEFAULT_SHORTCUT)
-    setIsEditing(false)
-  }
+          : shortcut,
+      ),
+    );
+    setNewShortcut(DEFAULT_SHORTCUT);
+    setIsEditing(false);
+  };
   const addShortCut = async () => {
     const shortcut: ChatShortCutCreate = {
       projectId: selectedProjectId,
       shortCutKey: newShortcut.shortCutKey,
       shortCutMessage: newShortcut.shortCutMessage,
-      isPublic: true
-    }
+      isPublic: true,
+    };
     const createdShortcut: ChatShortCutMessages = (
       await createChatShortCut(shortcut)
-    ).data
-    toast.success('Chat ShortCut created successfully.')
+    ).data;
+    toast.success("Chat ShortCut created successfully.");
 
-    setChatShortCutForm(prev =>
-      [...prev, createdShortcut].sort((a, b) => b.id - a.id)
-    )
-    setNewShortcut(DEFAULT_SHORTCUT)
-  }
+    setChatShortCutForm((prev) =>
+      [...prev, createdShortcut].sort((a, b) => b.id - a.id),
+    );
+    setNewShortcut(DEFAULT_SHORTCUT);
+  };
 
-  const [isEditing, setIsEditing] = useState<boolean>(false)
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState<boolean>(false)
+  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState<boolean>(false);
   const [selectedShortcut, setSelectedShortcut] =
-    useState<ShortCutMessage | null>(null)
+    useState<ShortCutMessage | null>(null);
   const DEFAULT_SHORTCUT: ShortCutMessage = {
     id: 0,
     projectId: 0,
-    shortCutKey: '',
-    shortCutMessage: '',
-    isPublic: true
-  }
+    shortCutKey: "",
+    shortCutMessage: "",
+    isPublic: true,
+  };
   const [newShortcut, setNewShortcut] =
-    useState<ShortCutMessage>(DEFAULT_SHORTCUT)
+    useState<ShortCutMessage>(DEFAULT_SHORTCUT);
 
   const handleCancelDelete = () => {
-    setIsDeleteDialogOpen(false)
-  }
+    setIsDeleteDialogOpen(false);
+  };
 
   const handleConfirmDelete = async (): Promise<void> => {
-    if (!selectedShortcut) return
-    await deleteChatShortCut(selectedShortcut.id)
-    toast.success('Chat shortcut deleted successfully')
+    if (!selectedShortcut) return;
+    await deleteChatShortCut(selectedShortcut.id);
+    toast.success("Chat shortcut deleted successfully");
 
-    setChatShortCutForm(prev =>
-      prev.filter(shortcut => shortcut.id !== selectedShortcut.id)
-    )
-    setIsDeleteDialogOpen(false)
-    setSelectedShortcut(null)
-  }
+    setChatShortCutForm((prev) =>
+      prev.filter((shortcut) => shortcut.id !== selectedShortcut.id),
+    );
+    setIsDeleteDialogOpen(false);
+    setSelectedShortcut(null);
+  };
 
   const handleDeleteShortcut = (id: number): void => {
-    const index = chatShortCutForm.findIndex(s => s.id === id)
-    if (index === -1) return
-    const currentShortCut = chatShortCutForm[index]
-    setSelectedShortcut(currentShortCut)
-    setIsDeleteDialogOpen(true)
-  }
+    const index = chatShortCutForm.findIndex((s) => s.id === id);
+    if (index === -1) return;
+    const currentShortCut = chatShortCutForm[index];
+    setSelectedShortcut(currentShortCut);
+    setIsDeleteDialogOpen(true);
+  };
 
   const editShortCut = (id: number): void => {
-    const index = chatShortCutForm.findIndex(s => s.id === id)
-    if (index === -1) return
-    const currentShortCut = chatShortCutForm[index]
-    setNewShortcut(currentShortCut)
-    setIsEditing(true)
-  }
+    const index = chatShortCutForm.findIndex((s) => s.id === id);
+    if (index === -1) return;
+    const currentShortCut = chatShortCutForm[index];
+    setNewShortcut(currentShortCut);
+    setIsEditing(true);
+  };
 
   const toggleShortCutVisibility = async (id: number): Promise<void> => {
-    const result = await toggleChatShortCutVisibility(id)
-    toast.success(result.messages[0])
-    setChatShortCutForm(prev =>
-      prev.map(shortcut =>
+    const result = await toggleChatShortCutVisibility(id);
+    toast.success(result.messages[0]);
+    setChatShortCutForm((prev) =>
+      prev.map((shortcut) =>
         shortcut.id === id
           ? { ...shortcut, isPublic: !shortcut.isPublic }
-          : shortcut
-      )
-    )
-  }
+          : shortcut,
+      ),
+    );
+  };
 
   return (
-    <div className='settings-container h-100 p-2 p-lg-4'>
-      <div className='settings-header d-flex justify-content-between align-items-start mb-3 pb-3'>
-        <div className='header-left'>
-          <h1 className='page-title fs-2'>Settings</h1>
-          <p className='page-subtitle'>
+    <div className="settings-container h-100 p-2 p-lg-4">
+      <div className="settings-header d-flex justify-content-between align-items-start mb-3 pb-3">
+        <div className="header-left">
+          <h1 className="page-title fs-2">Settings</h1>
+          <p className="page-subtitle">
             Manage Projects and Chat Widget Settings
           </p>
         </div>
@@ -394,104 +394,106 @@ export default function Settings () {
 
       <Paper elevation={0}>
         <Tabs
-          variant='fullWidth'
+          variant="fullWidth"
           value={tabIndex}
           onChange={(_, newValue) => setTabIndex(newValue)}
-          indicatorColor='primary'
-          textColor='primary'
+          indicatorColor="primary"
+          textColor="primary"
         >
           <Tab
-            icon={<ChatIcon color='primary' />}
-            iconPosition='start'
-            label='Chat Widget'
+            icon={<ChatIcon color="primary" />}
+            iconPosition="start"
+            label="Chat Widget"
           />
           <Tab
-            icon={<ContentCutIcon color='primary' />}
-            iconPosition='start'
-            label='ShortCut Messages'
+            icon={<ContentCutIcon color="primary" />}
+            iconPosition="start"
+            label="ShortCut Messages"
           />
           <Tab
-            icon={<SettingsIcon color='primary' />}
-            iconPosition='start'
-            label='General Settings'
+            icon={<SettingsIcon color="primary" />}
+            iconPosition="start"
+            label="General Settings"
           />
         </Tabs>
 
         <TabPanel value={tabIndex} index={0}>
-          <div className='p-1'>
-            <div className='d-flex flex-row xxl-flex-column gap-3 py-0 my-4'>
-              <div className='card d-flex flex-column gap-3 w-50'>
-                <div className='d-flex justify-content-between align-items-center'>
-                  <div className='d-flex align-items-center gap-1'>
+          <div className="p-1">
+            <div className="d-flex flex-row xxl-flex-column gap-3 py-0 my-4">
+              <div className="card d-flex flex-column gap-3 w-50">
+                <div className="d-flex justify-content-between align-items-center">
+                  <div className="d-flex align-items-center gap-1">
                     <PaletteIcon
-                      className='d-none d-sm-inline'
-                      color='primary'
+                      className="d-none d-sm-inline"
+                      color="primary"
                     />
-                    <h1 className='title fw-medium fs-4 my-0'>
+                    <h1 className="title fw-medium fs-4 my-0">
                       Widget Appearance
                     </h1>
                   </div>
                 </div>
-                <div className='d-flex flex-column flex-grow-1 gap-3'>
+                <div className="d-flex flex-column flex-grow-1 gap-3">
                   <TextField
                     fullWidth
-                    label='Widget Title'
-                    type='text'
-                    variant='outlined'
-                    margin='dense'
+                    label="Widget Title"
+                    type="text"
+                    variant="outlined"
+                    margin="dense"
                     required
-                    placeholder='Enter Widget Title'
-                    value={widgetForm?.headerTitle ?? ''}
-                    onChange={e =>
-                      setWidgetForm(prev =>
-                        prev ? { ...prev, headerTitle: e.target.value } : prev
+                    placeholder="Enter Widget Title"
+                    value={widgetForm?.headerTitle ?? ""}
+                    onChange={(e) =>
+                      setWidgetForm((prev) =>
+                        prev ? { ...prev, headerTitle: e.target.value } : prev,
                       )
                     }
                   />
                   <TextField
                     fullWidth
-                    label='Welcome Message'
-                    type='text'
-                    variant='outlined'
-                    margin='dense'
+                    label="Welcome Message"
+                    type="text"
+                    variant="outlined"
+                    margin="dense"
                     required
-                    placeholder='Enter Welcome Message'
-                    value={widgetForm?.welcomeMessage ?? ''}
-                    onChange={e =>
-                      setWidgetForm(prev =>
+                    placeholder="Enter Welcome Message"
+                    value={widgetForm?.welcomeMessage ?? ""}
+                    onChange={(e) =>
+                      setWidgetForm((prev) =>
                         prev
                           ? { ...prev, welcomeMessage: e.target.value }
-                          : prev
+                          : prev,
                       )
                     }
                   />
-                  <div className='chat-position-card p-2'>
-                    <h3 className='fs-6 fw-medium mb-3 mt-0 '>
+                  <div className="chat-position-card p-2">
+                    <h3 className="fs-6 fw-medium mb-3 mt-0 ">
                       Chat Widget Position
                     </h3>
-                    <div className='d-flex gap-2 flex-wrap'>
-                      {positions.map(pos => (
+                    <div className="d-flex gap-2 flex-wrap">
+                      {positions.map((pos) => (
                         <div
                           key={pos.value}
                           className={`position-item rounded  ${
                             widgetForm?.chatPosition === pos.value
-                              ? 'active'
-                              : ''
+                              ? "active"
+                              : ""
                           }`}
                           onClick={() =>
-                            setWidgetForm(prev =>
-                              prev ? { ...prev, chatPosition: pos.value } : prev
+                            setWidgetForm((prev) =>
+                              prev
+                                ? { ...prev, chatPosition: pos.value }
+                                : prev,
                             )
                           }
                         >
-                          <div className='position-grid'>
-                            {positionMatrix.map(cell => (
+                          <div className="position-grid">
+                            {positionMatrix.map((cell) => (
                               <div
                                 key={cell}
-                                className='position-cell d-flex align-items-center justify-content-center'
+                                className="position-cell d-flex align-items-center justify-content-center"
                               >
                                 {cell === pos.value && (
-                                  <div className='widget-dot' title='Widget' />
+                                  <div className="widget-dot" title="Widget" />
                                 )}
                               </div>
                             ))}
@@ -500,20 +502,20 @@ export default function Settings () {
                       ))}
                     </div>
                   </div>
-                  <div className='color-fields color-input-field'>
-                    {colorFields.map(colorField => (
+                  <div className="color-fields color-input-field">
+                    {colorFields.map((colorField) => (
                       <div
                         key={colorField.key}
-                        className='d-flex flex-column gap-1 position-relative'
+                        className="d-flex flex-column gap-1 position-relative"
                       >
-                        <label className='fw-medium small text-color'>
+                        <label className="fw-medium small text-color">
                           {colorField.label}
                         </label>
 
-                        <div className='d-flex justify-content-center align-items-center gap-2'>
+                        <div className="d-flex justify-content-center align-items-center gap-2">
                           {/* Color preview */}
                           <div
-                            className='color-preview rounded'
+                            className="color-preview rounded"
                             style={{ background: widgetForm?.[colorField.key] }}
                             onClick={() => togglePicker(colorField.key)}
                           />
@@ -521,34 +523,34 @@ export default function Settings () {
                           <TextField
                             fullWidth
                             value={widgetForm?.[colorField.key]}
-                            onChange={e =>
-                              setWidgetForm(prev =>
+                            onChange={(e) =>
+                              setWidgetForm((prev) =>
                                 prev
                                   ? {
                                       ...prev,
-                                      [colorField.key]: e.target.value
+                                      [colorField.key]: e.target.value,
                                     }
-                                  : prev
+                                  : prev,
                               )
                             }
-                            placeholder='#HEX'
-                            variant='outlined'
-                            className='color-input'
-                            margin='dense'
-                            size='small'
+                            placeholder="#HEX"
+                            variant="outlined"
+                            className="color-input"
+                            margin="dense"
+                            size="small"
                           />
                         </div>
 
                         {/* Color Picker Popup */}
                         {activePicker === colorField.key && (
-                          <div className='color-picker-popup rounded'>
+                          <div className="color-picker-popup rounded">
                             <SketchPicker
                               color={widgetForm?.[colorField.key]}
-                              onChange={color =>
-                                setWidgetForm(prev =>
+                              onChange={(color) =>
+                                setWidgetForm((prev) =>
                                   prev
                                     ? { ...prev, [colorField.key]: color.hex }
-                                    : prev
+                                    : prev,
                                 )
                               }
                             />
@@ -557,94 +559,94 @@ export default function Settings () {
                       </div>
                     ))}
                   </div>
-                  <div className='d-flex flex-column gap-2 mt-1'>
+                  <div className="d-flex flex-column gap-2 mt-1">
                     <FormGroup>
                       <FormControlLabel
-                        className='toggle-text'
+                        className="toggle-text"
                         control={
                           <Switch
                             checked={widgetForm?.enablePhoto ?? false}
                             onClick={() =>
-                              setWidgetForm(prev =>
+                              setWidgetForm((prev) =>
                                 prev
                                   ? {
                                       ...prev,
-                                      enablePhoto: !widgetForm?.enablePhoto
+                                      enablePhoto: !widgetForm?.enablePhoto,
                                     }
-                                  : prev
+                                  : prev,
                               )
                             }
                           />
                         }
-                        label='Show agent photos'
+                        label="Show agent photos"
                       />
                       <FormControlLabel
-                        className='toggle-text'
+                        className="toggle-text"
                         control={
                           <Switch
                             checked={widgetForm?.enableAttachment ?? false}
                             onClick={() =>
-                              setWidgetForm(prev =>
+                              setWidgetForm((prev) =>
                                 prev
                                   ? {
                                       ...prev,
                                       enableAttachment:
-                                        !widgetForm?.enableAttachment
+                                        !widgetForm?.enableAttachment,
                                     }
-                                  : prev
+                                  : prev,
                               )
                             }
                           />
                         }
-                        label='Enable file uploads'
+                        label="Enable file uploads"
                       />
                       <FormControlLabel
-                        className='toggle-text'
+                        className="toggle-text"
                         control={
                           <Switch
                             checked={widgetForm?.enableEditOption ?? false}
                             onClick={() =>
-                              setWidgetForm(prev =>
+                              setWidgetForm((prev) =>
                                 prev
                                   ? {
                                       ...prev,
                                       enableEditOption:
-                                        !widgetForm?.enableEditOption
+                                        !widgetForm?.enableEditOption,
                                     }
-                                  : prev
+                                  : prev,
                               )
                             }
                           />
                         }
-                        label='Enable Chat Message Edit'
+                        label="Enable Chat Message Edit"
                       />
                       <FormControlLabel
-                        className='toggle-text'
+                        className="toggle-text"
                         control={
                           <Switch
                             checked={widgetForm?.enableDeleteOption ?? false}
                             onClick={() =>
-                              setWidgetForm(prev =>
+                              setWidgetForm((prev) =>
                                 prev
                                   ? {
                                       ...prev,
                                       enableDeleteOption:
-                                        !widgetForm?.enableDeleteOption
+                                        !widgetForm?.enableDeleteOption,
                                     }
-                                  : prev
+                                  : prev,
                               )
                             }
                           />
                         }
-                        label='Enable Chat Message Delete'
+                        label="Enable Chat Message Delete"
                       />
                     </FormGroup>
                   </div>
-                  <div className='d-flex justify-content-end flex-wrap gap-3 mt-3'>
-                    <Button variant='outlined'>Cancel</Button>
+                  <div className="d-flex justify-content-end flex-wrap gap-3 mt-3">
+                    <Button variant="outlined">Cancel</Button>
                     <Button
-                      variant='contained'
-                      color='primary'
+                      variant="contained"
+                      color="primary"
                       onClick={saveChatWidget}
                     >
                       Save
@@ -653,10 +655,10 @@ export default function Settings () {
                 </div>
               </div>
 
-              <div className='live-preview d-none d-xxl-flex flex-column gap-3 w-50'>
-                <div className='custom-card-header d-flex align-items-center'>
-                  <VisibilityIcon color='primary' />
-                  <h1 className='title fw-medium fs-4 mt-0 mb-0'>
+              <div className="live-preview d-none d-xxl-flex flex-column gap-3 w-50">
+                <div className="custom-card-header d-flex align-items-center">
+                  <VisibilityIcon color="primary" />
+                  <h1 className="title fw-medium fs-4 mt-0 mb-0">
                     Live Preview
                   </h1>
                 </div>
@@ -678,42 +680,42 @@ export default function Settings () {
                       enableAttachment: widgetForm.enableAttachment,
                       enableEmoji: widgetForm.enableEmoji,
                       enableEditOption: widgetForm.enableEditOption,
-                      enableDeleteOption: widgetForm.enableDeleteOption
+                      enableDeleteOption: widgetForm.enableDeleteOption,
                     }}
                   />
                 )}
               </div>
             </div>
-            <div className='card w-100 mt-3 d-flex flex-column gap-3'>
-              <div className='d-flex align-items-center gap-1'>
-                <CodeIcon color='primary' />
-                <h1 className='title fw-medium fs-4 mt-0 mb-0'>
+            <div className="card w-100 mt-3 d-flex flex-column gap-3">
+              <div className="d-flex align-items-center gap-1">
+                <CodeIcon color="primary" />
+                <h1 className="title fw-medium fs-4 mt-0 mb-0">
                   Installation Code
                 </h1>
               </div>
-              <FormControl variant='outlined' fullWidth>
-                <InputLabel htmlFor='outlined-adornment-direct-chat'>
+              <FormControl variant="outlined" fullWidth>
+                <InputLabel htmlFor="outlined-adornment-direct-chat">
                   Direct Chat Link
                 </InputLabel>
 
                 <OutlinedInput
-                  id='outlined-adornment-direct-chat'
-                  type='text'
-                  value={project?.directChatLink ? project?.directChatLink : ''}
+                  id="outlined-adornment-direct-chat"
+                  type="text"
+                  value={project?.directChatLink ? project?.directChatLink : ""}
                   readOnly
-                  label='Direct Chat Link'
+                  label="Direct Chat Link"
                   endAdornment={
-                    <InputAdornment position='end'>
-                      <Tooltip title={copied ? 'Copied!' : 'Copy'}>
-                        <IconButton edge='end' onClick={handleLinkCopy}>
-                          <ContentCopyIcon color='primary' />
+                    <InputAdornment position="end">
+                      <Tooltip title={copied ? "Copied!" : "Copy"}>
+                        <IconButton edge="end" onClick={handleLinkCopy}>
+                          <ContentCopyIcon color="primary" />
                         </IconButton>
                       </Tooltip>
                     </InputAdornment>
                   }
                 />
               </FormControl>
-              <FormControl variant='outlined' fullWidth>
+              <FormControl variant="outlined" fullWidth>
                 <InputLabel>Widget Code</InputLabel>
 
                 <OutlinedInput
@@ -721,12 +723,12 @@ export default function Settings () {
                   rows={4}
                   value={codeValue}
                   readOnly
-                  label='Widget Code'
+                  label="Widget Code"
                   endAdornment={
-                    <InputAdornment position='end'>
-                      <Tooltip title={copied ? 'Copied!' : 'Copy'}>
-                        <IconButton edge='end' onClick={handleCodeCopy}>
-                          <ContentCopyIcon color='primary' />
+                    <InputAdornment position="end">
+                      <Tooltip title={copied ? "Copied!" : "Copy"}>
+                        <IconButton edge="end" onClick={handleCodeCopy}>
+                          <ContentCopyIcon color="primary" />
                         </IconButton>
                       </Tooltip>
                     </InputAdornment>
@@ -738,77 +740,79 @@ export default function Settings () {
         </TabPanel>
 
         <TabPanel value={tabIndex} index={1}>
-          <div className='card d-flex flex-column gap-3 mt-4 card new-shortcut-container'>
-            <div className='d-flex align-items-center gap-1'>
-              <ContentCutIcon color='primary'></ContentCutIcon>
-              <h1 className='fw-medium fs-4 mx-0 title'>Shortcut Messages</h1>
+          <div className="card d-flex flex-column gap-3 mt-4 card new-shortcut-container">
+            <div className="d-flex align-items-center gap-1">
+              <ContentCutIcon color="primary"></ContentCutIcon>
+              <h1 className="fw-medium fs-4 mx-0 title">Shortcut Messages</h1>
             </div>
-            <div className='d-flex flex-column gap-3'>
-              <div className='d-flex flex-wrap align-items-start gap-3'>
+            <div className="d-flex flex-column gap-3">
+              <div className="d-flex flex-wrap align-items-start gap-3">
                 <TextField
-                  label='Title'
-                  type='text'
-                  variant='outlined'
-                  margin='dense'
+                  label="Title"
+                  type="text"
+                  variant="outlined"
+                  margin="dense"
                   required
-                  placeholder='Enter shortcut title'
-                  value={newShortcut?.shortCutKey ?? ''}
-                  onChange={e =>
-                    setNewShortcut(prev =>
-                      prev ? { ...prev, shortCutKey: e.target.value } : prev
+                  placeholder="Enter shortcut title"
+                  value={newShortcut?.shortCutKey ?? ""}
+                  onChange={(e) =>
+                    setNewShortcut((prev) =>
+                      prev ? { ...prev, shortCutKey: e.target.value } : prev,
                     )
                   }
-                  className='field'
+                  className="field"
                 />
                 <TextField
-                  label=''
-                  type='text'
-                  variant='outlined'
-                  margin='dense'
+                  label=""
+                  type="text"
+                  variant="outlined"
+                  margin="dense"
                   required
-                  placeholder='Enter shortcut message'
-                  value={newShortcut?.shortCutMessage ?? ''}
-                  onChange={e =>
-                    setNewShortcut(prev =>
-                      prev ? { ...prev, shortCutMessage: e.target.value } : prev
+                  placeholder="Enter shortcut message"
+                  value={newShortcut?.shortCutMessage ?? ""}
+                  onChange={(e) =>
+                    setNewShortcut((prev) =>
+                      prev
+                        ? { ...prev, shortCutMessage: e.target.value }
+                        : prev,
                     )
                   }
-                  className='field'
+                  className="field"
                 />
                 <TextField
                   select
-                  label='Visibility'
-                  variant='outlined'
-                  margin='dense'
+                  label="Visibility"
+                  variant="outlined"
+                  margin="dense"
                   value={newShortcut?.isPublic ?? true}
-                  onChange={e =>
-                    setNewShortcut(prev =>
+                  onChange={(e) =>
+                    setNewShortcut((prev) =>
                       prev
-                        ? { ...prev, isPublic: e.target.value === 'true' }
-                        : prev
+                        ? { ...prev, isPublic: e.target.value === "true" }
+                        : prev,
                     )
                   }
-                  className='field'
+                  className="field"
                 >
-                  <MenuItem value='true'>Public</MenuItem>
-                  <MenuItem value='false'>Private</MenuItem>
+                  <MenuItem value="true">Public</MenuItem>
+                  <MenuItem value="false">Private</MenuItem>
                 </TextField>
               </div>
-              <div className='d-flex align-items-center justify-content-start gap-3'>
+              <div className="d-flex align-items-center justify-content-start gap-3">
                 <Button
-                  variant='contained'
-                  color='primary'
+                  variant="contained"
+                  color="primary"
                   onClick={isEditing ? saveShortCut : addShortCut}
-                  className='add-shortcut'
+                  className="add-shortcut"
                   startIcon={
                     isEditing ? <SaveIcon></SaveIcon> : <AddIcon></AddIcon>
                   }
                 >
-                  {isEditing ? 'Save Changes' : 'Add ShortCut'}
+                  {isEditing ? "Save Changes" : "Add ShortCut"}
                 </Button>
                 <Button
-                  variant='contained'
-                  className='add-shortcut'
+                  variant="contained"
+                  className="add-shortcut"
                   startIcon={<CancelIcon></CancelIcon>}
                 >
                   Cancel
@@ -817,227 +821,229 @@ export default function Settings () {
             </div>
           </div>
 
-          <div className='mt-4 pe-2 shortcut-list-container'>
-            <div className='d-flex flex-column gap-3'>
+          <div className="mt-4 pe-2 shortcut-list-container">
+            <div className="d-flex flex-column gap-3">
               {chatShortCutForm.map(
-                shortcut =>
+                (shortcut) =>
                   (shortcut.isPublic === true ||
                     shortcut.userId === currentUserId) && (
-                    <Card key={shortcut.id} className='shortcut-card'>
-                      <div className='d-flex justify-content-between align-items-center mb-2 shortcut-card-header'>
-                        <h3 className='shortcut-title'>
+                    <Card key={shortcut.id} className="shortcut-card">
+                      <div className="d-flex justify-content-between align-items-center mb-2 shortcut-card-header">
+                        <h3 className="shortcut-title">
                           {shortcut.shortCutKey}
-                          {!shortcut.isPublic && '(Visible to you only)'}
+                          {!shortcut.isPublic && "(Visible to you only)"}
                         </h3>
                         {shortcut.userId === currentUserId && (
-                          <div className='d-flex align-items-center justify-content-end gap-3'>
+                          <div className="d-flex align-items-center justify-content-end gap-3">
                             <IconButton
-                              edge='end'
+                              edge="end"
                               onClick={() =>
                                 toggleShortCutVisibility(shortcut.id)
                               }
-                              color='primary'
+                              color="primary"
                             >
                               {shortcut.isPublic ? (
-                                <VisibilityIcon color='primary' />
+                                <VisibilityIcon color="primary" />
                               ) : (
-                                <VisibilityOff color='primary' />
+                                <VisibilityOff color="primary" />
                               )}
                             </IconButton>
                             <IconButton
-                              edge='end'
+                              edge="end"
                               onClick={() => editShortCut(shortcut.id)}
-                              color='primary'
+                              color="primary"
                             >
                               <EditIcon />
                             </IconButton>
                             <IconButton
-                              edge='end'
+                              edge="end"
                               onClick={() => handleDeleteShortcut(shortcut.id)}
-                              color='primary'
+                              color="primary"
                             >
-                              <DeleteIcon color='primary' />
+                              <DeleteIcon color="primary" />
                             </IconButton>
                           </div>
                         )}
                       </div>
-                      <p className='shortcut-message'>
+                      <p className="shortcut-message">
                         {shortcut.shortCutMessage}
                       </p>
                     </Card>
-                  )
+                  ),
               )}
             </div>
           </div>
         </TabPanel>
 
         <TabPanel value={tabIndex} index={2}>
-          <div className='card mt-4'>
-            <div className='project-info-card d-flex flex-column gap-3'>
-              <div className='d-flex align-items-center gap-1'>
-                <FolderIcon color='primary'></FolderIcon>
-                <h1 className='title fw-medium fs-4 mx-0'>Project Settings</h1>
+          <div className="card mt-4">
+            <div className="project-info-card d-flex flex-column gap-3">
+              <div className="d-flex align-items-center gap-1">
+                <FolderIcon color="primary"></FolderIcon>
+                <h1 className="title fw-medium fs-4 mx-0">Project Settings</h1>
               </div>
 
-              <div className='project-info-layout'>
-                <div className='project-image-wrapper'>
+              <div className="project-info-layout">
+                <div className="project-image-wrapper">
                   {project?.projectImage ? (
                     <img
                       src={project?.projectImage}
-                      alt='Project Image'
-                      className='project-image'
+                      alt="Project Image"
+                      className="project-image"
                     />
                   ) : (
-                    <div className='project-image avatar-initials d-flex justify-content-center align-items-center'>
+                    <div className="project-image avatar-initials d-flex justify-content-center align-items-center">
                       {project?.projectName?.[0]
                         ? project?.projectName?.[0]
-                        : ''}
+                        : ""}
                     </div>
                   )}
                   {/* Upload Button */}
-                  <div className='image-label'>Project Image</div>
-                  <label className='upload-icon'>
-                    <input type='file' accept='image/*' />
+                  <div className="image-label">Project Image</div>
+                  <label className="upload-icon">
+                    <input type="file" accept="image/*" />
                     <AddAPhotoIcon></AddAPhotoIcon>
                   </label>
                 </div>
 
                 {/* Project Fields */}
-                <div className='project-fields d-flex flex-column gap-3 flex-fill'>
-                  <div className='field-row d-flex gap-3 flex-wrap'>
+                <div className="project-fields d-flex flex-column gap-3 flex-fill">
+                  <div className="field-row d-flex gap-3 flex-wrap">
                     <FormControl
-                      variant='outlined'
-                      className='field flex-fill min-w-200px'
+                      variant="outlined"
+                      className="field flex-fill min-w-200px"
                     >
-                      <InputLabel htmlFor='outlined-adornment-project-name'>
+                      <InputLabel htmlFor="outlined-adornment-project-name">
                         Project Name
                       </InputLabel>
                       <OutlinedInput
-                        id='outlined-adornment-project-name'
-                        type='text'
-                        value={project?.projectName ? project?.projectName : ''}
-                        label='Project Name'
-                        onChange={e =>
-                          setProject(prev =>
+                        id="outlined-adornment-project-name"
+                        type="text"
+                        value={project?.projectName ? project?.projectName : ""}
+                        label="Project Name"
+                        onChange={(e) =>
+                          setProject((prev) =>
                             prev
                               ? { ...prev, projectName: e.target.value }
-                              : prev
+                              : prev,
                           )
                         }
                       />
                     </FormControl>
                     <FormControl
-                      variant='outlined'
-                      className='field'
-                      margin='dense'
+                      variant="outlined"
+                      className="field"
+                      margin="dense"
                       required
                     >
-                      <InputLabel id='project-status-label'>
+                      <InputLabel id="project-status-label">
                         Project Status
                       </InputLabel>
 
                       <Select
-                        labelId='project-status-label'
-                        label='Project Status'
-                        value={project?.projectStatus ? 'true' : 'false'}
-                        onChange={e =>
-                          setProject(prev =>
+                        labelId="project-status-label"
+                        label="Project Status"
+                        value={project?.projectStatus ? "true" : "false"}
+                        onChange={(e) =>
+                          setProject((prev) =>
                             prev
                               ? {
                                   ...prev,
-                                  projectStatus: e.target.value === 'true'
+                                  projectStatus: e.target.value === "true",
                                 }
-                              : prev
+                              : prev,
                           )
                         }
                       >
-                        <MenuItem value='true'>Active</MenuItem>
-                        <MenuItem value='false'>Inactive</MenuItem>
+                        <MenuItem value="true">Active</MenuItem>
+                        <MenuItem value="false">Inactive</MenuItem>
                       </Select>
                     </FormControl>
                   </div>
-                  <div className='field-row d-flex gap-3 flex-wrap'>
+                  <div className="field-row d-flex gap-3 flex-wrap">
                     <FormControl
-                      variant='outlined'
-                      className='field flex-fill min-w-200px'
+                      variant="outlined"
+                      className="field flex-fill min-w-200px"
                     >
-                      <InputLabel htmlFor='outlined-adornment-project-code'>
+                      <InputLabel htmlFor="outlined-adornment-project-code">
                         Project Code
                       </InputLabel>
                       <OutlinedInput
-                        id='outlined-adornment-project-code'
-                        type='text'
-                        value={project?.projectCode ? project?.projectCode : ''}
-                        label='Project Code'
+                        id="outlined-adornment-project-code"
+                        type="text"
+                        value={project?.projectCode ? project?.projectCode : ""}
+                        label="Project Code"
                         readOnly
                         disabled
                       />
                     </FormControl>
                     <FormControl
-                      variant='outlined'
-                      className='field flex-fill min-w-200px'
+                      variant="outlined"
+                      className="field flex-fill min-w-200px"
                     >
-                      <InputLabel htmlFor='outlined-adornment-property-url'>
+                      <InputLabel htmlFor="outlined-adornment-property-url">
                         Property URL
                       </InputLabel>
                       <OutlinedInput
-                        id='outlined-adornment-property-url'
-                        type='text'
-                        value={project?.projectURL ? project?.projectURL : ''}
-                        label='Property URL'
-                        onChange={e =>
-                          setProject(prev =>
+                        id="outlined-adornment-property-url"
+                        type="text"
+                        value={project?.projectURL ? project?.projectURL : ""}
+                        label="Property URL"
+                        onChange={(e) =>
+                          setProject((prev) =>
                             prev
                               ? { ...prev, projectURL: e.target.value }
-                              : prev
+                              : prev,
                           )
                         }
                       />
                     </FormControl>
                     <FormControl
-                      variant='outlined'
-                      className='field'
-                      margin='dense'
+                      variant="outlined"
+                      className="field"
+                      margin="dense"
                       required
                     >
-                      <InputLabel id='project-pre-chat-status-label'>
+                      <InputLabel id="project-pre-chat-status-label">
                         PreChat Form
                       </InputLabel>
 
                       <Select
-                        labelId='project-pre-chat-status-label'
-                        value={project?.preChatFormEnabled ? 'true' : 'false'}
-                        label='PreChat Form'
-                        onChange={e =>
-                          setProject(prev =>
+                        labelId="project-pre-chat-status-label"
+                        value={project?.preChatFormEnabled ? "true" : "false"}
+                        label="PreChat Form"
+                        onChange={(e) =>
+                          setProject((prev) =>
                             prev
                               ? {
                                   ...prev,
-                                  preChatFormEnabled: e.target.value === 'true'
+                                  preChatFormEnabled: e.target.value === "true",
                                 }
-                              : prev
+                              : prev,
                           )
                         }
                       >
-                        <MenuItem value='true'>Active</MenuItem>
-                        <MenuItem value='false'>Inactive</MenuItem>
+                        <MenuItem value="true">Active</MenuItem>
+                        <MenuItem value="false">Inactive</MenuItem>
                       </Select>
                     </FormControl>
                   </div>
-                  <FormControl variant='outlined' className='field full-width'>
-                    <InputLabel htmlFor='outlined-adornment-description'>
+                  <FormControl variant="outlined" className="field full-width">
+                    <InputLabel htmlFor="outlined-adornment-description">
                       Description
                     </InputLabel>
                     <OutlinedInput
                       multiline
                       rows={2}
-                      id='outlined-adornment-description'
-                      type='text'
-                      value={project?.description ? project?.description : ''}
-                      label='Description'
-                      onChange={e =>
-                        setProject(prev =>
-                          prev ? { ...prev, description: e.target.value } : prev
+                      id="outlined-adornment-description"
+                      type="text"
+                      value={project?.description ? project?.description : ""}
+                      label="Description"
+                      onChange={(e) =>
+                        setProject((prev) =>
+                          prev
+                            ? { ...prev, description: e.target.value }
+                            : prev,
                         )
                       }
                     />
@@ -1045,88 +1051,88 @@ export default function Settings () {
                 </div>
               </div>
             </div>
-            <div className='mt-3 d-flex flex-column gap-3'>
-              <div className='d-flex align-items-center gap-1'>
-                <NotificationsIcon color='primary'></NotificationsIcon>
-                <h1 className='title fw-medium fs-4 mx-0'>
+            <div className="mt-3 d-flex flex-column gap-3">
+              <div className="d-flex align-items-center gap-1">
+                <NotificationsIcon color="primary"></NotificationsIcon>
+                <h1 className="title fw-medium fs-4 mx-0">
                   Notification Settings
                 </h1>
               </div>
-              <div className='d-flex align-self-center justify-content-between gap-3 w-100'>
-                <div className='d-flex flex-column gap-1'>
-                  <h6 className='m-0 toggle-text'>New Chat Notifications</h6>
-                  <p className='m-0 toggle-text'>
+              <div className="d-flex align-self-center justify-content-between gap-3 w-100">
+                <div className="d-flex flex-column gap-1">
+                  <h6 className="m-0 toggle-text">New Chat Notifications</h6>
+                  <p className="m-0 toggle-text">
                     Get notified when new chats arrive
                   </p>
                 </div>
-                <div className='notification toggle'>
+                <div className="notification toggle">
                   <Switch
                     checked={project?.enableNewChatNotifications ?? false}
-                    onChange={e =>
-                      setProject(prev =>
+                    onChange={(e) =>
+                      setProject((prev) =>
                         prev
                           ? {
                               ...prev,
-                              enableNewChatNotifications: e.target.checked
+                              enableNewChatNotifications: e.target.checked,
                             }
-                          : prev
+                          : prev,
                       )
                     }
                   />
                 </div>
               </div>
-              <div className='d-flex align-self-center justify-content-between gap-3 w-100'>
-                <div className='d-flex flex-column gap-1'>
-                  <h6 className='m-0 toggle-text'>Email Notifications</h6>
-                  <p className='m-0 toggle-text'>
+              <div className="d-flex align-self-center justify-content-between gap-3 w-100">
+                <div className="d-flex flex-column gap-1">
+                  <h6 className="m-0 toggle-text">Email Notifications</h6>
+                  <p className="m-0 toggle-text">
                     Receive notifications via email
                   </p>
                 </div>
-                <div className='notification toggle'>
+                <div className="notification toggle">
                   <Switch
                     checked={project?.enableEmailNotifications ?? false}
-                    onChange={e =>
-                      setProject(prev =>
+                    onChange={(e) =>
+                      setProject((prev) =>
                         prev
                           ? {
                               ...prev,
-                              enableEmailNotifications: e.target.checked
+                              enableEmailNotifications: e.target.checked,
                             }
-                          : prev
+                          : prev,
                       )
                     }
                   />
                 </div>
               </div>
-              <div className='d-flex align-self-center justify-content-between gap-3 w-100'>
-                <div className='d-flex flex-column gap-1'>
-                  <h6 className='m-0 toggle-text'>Sound Notifications</h6>
-                  <p className='m-0 toggle-text'>Play sound for new messages</p>
+              <div className="d-flex align-self-center justify-content-between gap-3 w-100">
+                <div className="d-flex flex-column gap-1">
+                  <h6 className="m-0 toggle-text">Sound Notifications</h6>
+                  <p className="m-0 toggle-text">Play sound for new messages</p>
                 </div>
-                <div className='notification toggle'>
+                <div className="notification toggle">
                   <Switch
                     checked={project?.enableSoundNotifications ?? false}
-                    onChange={e =>
-                      setProject(prev =>
+                    onChange={(e) =>
+                      setProject((prev) =>
                         prev
                           ? {
                               ...prev,
-                              enableSoundNotifications: e.target.checked
+                              enableSoundNotifications: e.target.checked,
                             }
-                          : prev
+                          : prev,
                       )
                     }
                   />
                 </div>
               </div>
 
-              <div className='d-flex justify-content-end flex-wrap gap-3'>
-                <Button variant='outlined' onClick={cancelProjectSetting}>
+              <div className="d-flex justify-content-end flex-wrap gap-3">
+                <Button variant="outlined" onClick={cancelProjectSetting}>
                   Cancel
                 </Button>
                 <Button
-                  variant='contained'
-                  color='primary'
+                  variant="contained"
+                  color="primary"
                   onClick={saveProjectSettings}
                 >
                   Save
@@ -1134,32 +1140,32 @@ export default function Settings () {
               </div>
             </div>
           </div>
-          <div className='mt-4 card d-flex flex-column gap-3'>
-            <div className='d-flex align-items-center gap-1'>
-              <EmailIcon color='primary'></EmailIcon>
+          <div className="mt-4 card d-flex flex-column gap-3">
+            <div className="d-flex align-items-center gap-1">
+              <EmailIcon color="primary"></EmailIcon>
 
-              <h1 className='title fw-medium fs-4 mx-0'>Email Integration</h1>
+              <h1 className="title fw-medium fs-4 mx-0">Email Integration</h1>
             </div>
-            <FormControl variant='outlined' fullWidth>
-              <InputLabel htmlFor='outlined-adornment-ticket-forwarding-email'>
+            <FormControl variant="outlined" fullWidth>
+              <InputLabel htmlFor="outlined-adornment-ticket-forwarding-email">
                 Ticket Forwarding Email
               </InputLabel>
 
               <OutlinedInput
-                id='outlined-adornment-ticket-forwarding-email'
-                type='text'
+                id="outlined-adornment-ticket-forwarding-email"
+                type="text"
                 value={
                   project?.ticketForwardingEmail
                     ? project?.ticketForwardingEmail
-                    : ''
+                    : ""
                 }
                 readOnly
-                label='Ticket Forwarding Email'
+                label="Ticket Forwarding Email"
                 endAdornment={
-                  <InputAdornment position='end'>
-                    <Tooltip title={copied ? 'Copied!' : 'Copy'}>
-                      <IconButton edge='end' onClick={handleEmailCopy}>
-                        <ContentCopyIcon color='primary' />
+                  <InputAdornment position="end">
+                    <Tooltip title={copied ? "Copied!" : "Copy"}>
+                      <IconButton edge="end" onClick={handleEmailCopy}>
+                        <ContentCopyIcon color="primary" />
                       </IconButton>
                     </Tooltip>
                   </InputAdornment>
@@ -1171,11 +1177,11 @@ export default function Settings () {
       </Paper>
       <ConfirmDeleteDialog
         open={isDeleteDialogOpen}
-        title='Delete Shortcut'
+        title="Delete Shortcut"
         description={`Are you sure you want to delete this shortcut?`}
         onCancel={handleCancelDelete}
         onConfirm={handleConfirmDelete}
       />
     </div>
-  )
+  );
 }

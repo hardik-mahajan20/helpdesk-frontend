@@ -1,4 +1,4 @@
 export interface UpdateChatWidgetRequestDTO {
-  projectId: number
-  widgetSetting: string
+  projectId: number;
+  widgetSetting: string;
 }

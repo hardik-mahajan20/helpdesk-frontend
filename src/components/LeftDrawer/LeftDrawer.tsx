@@ -6,178 +6,180 @@ import {
   Menu,
   MenuItem,
   Switch,
-  IconButton
-} from '@mui/material'
+  IconButton,
+} from "@mui/material";
 import {
   useLocation,
   useNavigate,
-  type NavigateFunction
-} from 'react-router-dom'
-import { useEffect, useMemo, useState } from 'react'
-import DashboardIcon from '@mui/icons-material/Dashboard'
-import InboxIcon from '@mui/icons-material/Inbox'
-import MoreVertIcon from '@mui/icons-material/MoreVert'
-import ContactsIcon from '@mui/icons-material/Contacts'
-import FolderIcon from '@mui/icons-material/Folder'
-import BookIcon from '@mui/icons-material/Book'
-import AssessmentIcon from '@mui/icons-material/Assessment'
-import BusinessIcon from '@mui/icons-material/Business'
-import PeopleIcon from '@mui/icons-material/People'
-import PersonIcon from '@mui/icons-material/Person'
-import LogoutIcon from '@mui/icons-material/Logout'
-import SettingsIcon from '@mui/icons-material/Settings'
-import { clearAuthSession } from '../../utils/storage'
-import { useProfileSelectionStore } from '../../services/profile-selection-service'
-import type { UserProfileResponse } from '../../interfaces/profile'
-import { useProjectSelectionStore } from '../../services/project-selection-service'
-import './LeftDrawer.scss'
-import { ColorOption, LOCAL_STORAGE_KEYS, ThemeOption } from '../../enums'
-import type { MenuItems } from '../../interfaces'
-import { toast } from 'react-toastify'
-import { useThemeContext } from '../../context/useThemeContext'
+  type NavigateFunction,
+} from "react-router-dom";
+import { useEffect, useMemo, useState } from "react";
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import InboxIcon from "@mui/icons-material/Inbox";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import ContactsIcon from "@mui/icons-material/Contacts";
+import FolderIcon from "@mui/icons-material/Folder";
+import BookIcon from "@mui/icons-material/Book";
+import AssessmentIcon from "@mui/icons-material/Assessment";
+import BusinessIcon from "@mui/icons-material/Business";
+import PeopleIcon from "@mui/icons-material/People";
+import PersonIcon from "@mui/icons-material/Person";
+import LogoutIcon from "@mui/icons-material/Logout";
+import SettingsIcon from "@mui/icons-material/Settings";
+import { clearAuthSession } from "../../utils/storage";
+import { useProfileSelectionStore } from "../../services/profile-selection-service";
+import type { UserProfileResponse } from "../../interfaces/profile";
+import { useProjectSelectionStore } from "../../services/project-selection-service";
+import "./LeftDrawer.scss";
+import { ColorOption, LOCAL_STORAGE_KEYS, ThemeOption } from "../../enums";
+import type { MenuItems } from "../../interfaces";
+import { toast } from "react-toastify";
+import { useThemeContext } from "../../context/useThemeContext";
 
 const allProjectMenuItems: MenuItems[] = [
   {
-    label: 'Dashboard',
+    label: "Dashboard",
     icon: <DashboardIcon />,
-    path: '/dashboard',
-    active: true
+    path: "/dashboard",
+    active: true,
   },
-  { label: 'Inbox', icon: <InboxIcon />, path: '/inbox', badge: 12 },
-  { label: 'Contacts', icon: <ContactsIcon />, path: '/contacts' },
-  { label: 'Projects', icon: <FolderIcon />, path: '/projects' },
-  { label: 'Reporting', icon: <AssessmentIcon />, path: '/reporting' },
-  { label: 'Departments', icon: <BusinessIcon />, path: '/department' },
-  { label: 'Agents', icon: <PeopleIcon />, path: '/agents' },
-  { label: 'Admins', icon: <SettingsIcon />, path: '/settings' }
-]
+  { label: "Inbox", icon: <InboxIcon />, path: "/inbox", badge: 12 },
+  { label: "Contacts", icon: <ContactsIcon />, path: "/contacts" },
+  { label: "Projects", icon: <FolderIcon />, path: "/projects" },
+  { label: "Reporting", icon: <AssessmentIcon />, path: "/reporting" },
+  { label: "Departments", icon: <BusinessIcon />, path: "/department" },
+  { label: "Agents", icon: <PeopleIcon />, path: "/agents" },
+  { label: "Admins", icon: <SettingsIcon />, path: "/settings" },
+];
 
 const projectSpecificMenuItems: MenuItems[] = [
   {
-    label: 'Dashboard',
+    label: "Dashboard",
     icon: <DashboardIcon />,
-    path: '/dashboard',
-    active: true
+    path: "/dashboard",
+    active: true,
   },
-  { label: 'Inbox', icon: <InboxIcon />, path: '/inbox', badge: 12 },
-  { label: 'Contacts', icon: <ContactsIcon />, path: '/contacts' },
-  { label: 'Knowledge Base', icon: <BookIcon />, path: '/knowledge-base' },
-  { label: 'Reporting', icon: <AssessmentIcon />, path: '/reporting' },
-  { label: 'Settings', icon: <SettingsIcon />, path: '/settings' }
-]
+  { label: "Inbox", icon: <InboxIcon />, path: "/inbox", badge: 12 },
+  { label: "Contacts", icon: <ContactsIcon />, path: "/contacts" },
+  { label: "Knowledge Base", icon: <BookIcon />, path: "/knowledge-base" },
+  { label: "Reporting", icon: <AssessmentIcon />, path: "/reporting" },
+  { label: "Settings", icon: <SettingsIcon />, path: "/settings" },
+];
 
-export default function LeftDrawer () {
-  const navigate: NavigateFunction = useNavigate()
-  const location = useLocation()
+export default function LeftDrawer() {
+  const navigate: NavigateFunction = useNavigate();
+  const location = useLocation();
 
   const selectedProjectId: number = useProjectSelectionStore(
-    state => state.selectedProjectId
-  )
+    (state) => state.selectedProjectId,
+  );
 
-  const { getProfile } = useProfileSelectionStore()
+  const { getProfile } = useProfileSelectionStore();
 
-  const { setMode, setColor } = useThemeContext()
+  const { setMode, setColor } = useThemeContext();
 
-  const [profile, setProfileData] = useState<UserProfileResponse | null>(null)
+  const [profile, setProfileData] = useState<UserProfileResponse | null>(null);
 
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
-  const [isActive, setIsActive] = useState<boolean>(true)
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [isActive, setIsActive] = useState<boolean>(true);
 
   useEffect(() => {
     const loadProfile = async () => {
-      const profile = await getProfile()
+      const profile = await getProfile();
 
-      if (!profile) return
+      if (!profile) return;
 
       if (profile.userPreferenceSettings) {
         try {
-          const preference = JSON.parse(profile.userPreferenceSettings)
+          const preference = JSON.parse(profile.userPreferenceSettings);
 
           // Handle theme preference
-          const theme = preference.theme || ThemeOption.Light
-          setMode(theme)
-          localStorage.setItem(LOCAL_STORAGE_KEYS.THEME_PREFERENCE, theme)
+          const theme = preference.theme || ThemeOption.Light;
+          setMode(theme);
+          localStorage.setItem(LOCAL_STORAGE_KEYS.THEME_PREFERENCE, theme);
 
           // Handle color preference
-          const color = preference.color || ColorOption.Blue
-          setColor(color)
-          localStorage.setItem(LOCAL_STORAGE_KEYS.COLOR_PREFERENCE, color)
+          const color = preference.color || ColorOption.Blue;
+          setColor(color);
+          localStorage.setItem(LOCAL_STORAGE_KEYS.COLOR_PREFERENCE, color);
         } catch {
-          toast.error('Failed to parse user preference:')
+          toast.error("Failed to parse user preference:");
         }
       }
 
-      setProfileData(profile)
-    }
+      setProfileData(profile);
+    };
 
-    loadProfile()
-  }, [selectedProjectId,getProfile, setMode, setColor])
+    loadProfile();
+  }, [selectedProjectId, getProfile, setMode, setColor]);
 
   const menuItems = useMemo(() => {
-    if (!profile) return []
+    if (!profile) return [];
 
     if (selectedProjectId === 0) {
-      if (profile.roleId === 1) return allProjectMenuItems
+      if (profile.roleId === 1) return allProjectMenuItems;
       if (profile.roleId === 2)
-        return allProjectMenuItems.filter(item =>
+        return allProjectMenuItems.filter((item) =>
           [
-            'Dashboard',
-            'Inbox',
-            'Contacts',
-            'Projects',
-            'Reporting',
-            'Agents',
-            'Departments'
-          ].includes(item.label)
-        )
-      return allProjectMenuItems.filter(item =>
+            "Dashboard",
+            "Inbox",
+            "Contacts",
+            "Projects",
+            "Reporting",
+            "Agents",
+            "Departments",
+          ].includes(item.label),
+        );
+      return allProjectMenuItems.filter((item) =>
         [
-          'Dashboard',
-          'Inbox',
-          'Contacts',
-          'Knowledge Base',
-          'Reporting'
-        ].includes(item.label)
-      )
+          "Dashboard",
+          "Inbox",
+          "Contacts",
+          "Knowledge Base",
+          "Reporting",
+        ].includes(item.label),
+      );
     }
 
     if (profile.roleId === 3)
-      return projectSpecificMenuItems.filter(item => item.label !== 'Settings')
+      return projectSpecificMenuItems.filter(
+        (item) => item.label !== "Settings",
+      );
 
-    return projectSpecificMenuItems
-  }, [profile, selectedProjectId])
+    return projectSpecificMenuItems;
+  }, [profile, selectedProjectId]);
 
   const handleClick = (path: string) => {
-    navigate(path)
-  }
+    navigate(path);
+  };
   return (
     <>
-      <div className='sidebar h-100 d-flex flex-column'>
-        <nav className='sidebar-nav flex-grow-1 py-4 px-0'>
-          <ul className='nav-list list-unstyled p-0 m-0'>
-            {menuItems.map(item => {
-              const isSelected = location.pathname === item.path
+      <div className="sidebar h-100 d-flex flex-column">
+        <nav className="sidebar-nav flex-grow-1 py-4 px-0">
+          <ul className="nav-list list-unstyled p-0 m-0">
+            {menuItems.map((item) => {
+              const isSelected = location.pathname === item.path;
 
               return (
                 <li
                   key={item.path}
-                  className={`nav-item ${isSelected ? 'active' : ''}`}
+                  className={`nav-item ${isSelected ? "active" : ""}`}
                 >
                   <ListItemButton
                     selected={isSelected}
                     onClick={() => handleClick(item.path)}
-                    className='nav-link d-flex align-items-center text-decoration-none position-relative'
+                    className="nav-link d-flex align-items-center text-decoration-none position-relative"
                     disableRipple
                   >
-                    <ListItemIcon className='nav-icon'>
+                    <ListItemIcon className="nav-icon">
                       {item.icon}
                     </ListItemIcon>
 
-                    <ListItemText primary={item.label} className='nav-label' />
-                    {item.label === 'Inbox' && (
+                    <ListItemText primary={item.label} className="nav-label" />
+                    {item.label === "Inbox" && (
                       <span
                         className={`nav-badge text-center text-white ${
-                          item.label === 'Inbox' ? 'warn-badge' : ''
+                          item.label === "Inbox" ? "warn-badge" : ""
                         }`}
                       >
                         {item.badge}
@@ -185,33 +187,33 @@ export default function LeftDrawer () {
                     )}
                   </ListItemButton>
                 </li>
-              )
+              );
             })}
           </ul>
         </nav>
 
         <Divider />
 
-        <div className='sidebar-footer'>
-          <div className='user-profile d-flex align-items-center'>
-            <div className='profile-avatar d-flex justify-content-center align-items-center'>
+        <div className="sidebar-footer">
+          <div className="user-profile d-flex align-items-center">
+            <div className="profile-avatar d-flex justify-content-center align-items-center">
               HA
             </div>
-            <div className='profile-info'>
-              <div className='profile-name'>
+            <div className="profile-info">
+              <div className="profile-name">
                 {profile?.firstName} {profile?.lastName}
               </div>
-              <div className='profile-email'>{profile?.roleName}</div>
+              <div className="profile-email">{profile?.roleName}</div>
             </div>
             <IconButton
-              size='small'
-              onClick={e => {
-                e.stopPropagation()
-                setAnchorEl(e.currentTarget)
+              size="small"
+              onClick={(e) => {
+                e.stopPropagation();
+                setAnchorEl(e.currentTarget);
               }}
-              className='nav-icon-button profile-menu-btn'
+              className="nav-icon-button profile-menu-btn"
             >
-              <MoreVertIcon fontSize='small' />
+              <MoreVertIcon fontSize="small" />
             </IconButton>
           </div>
         </div>
@@ -220,17 +222,17 @@ export default function LeftDrawer () {
         anchorEl={anchorEl}
         open={Boolean(anchorEl)}
         onClose={() => setAnchorEl(null)}
-        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-        transformOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        transformOrigin={{ vertical: "bottom", horizontal: "right" }}
       >
         <MenuItem
           onClick={() => {
-            setAnchorEl(null)
-            navigate('/profile')
+            setAnchorEl(null);
+            navigate("/profile");
           }}
         >
           <ListItemIcon>
-            <PersonIcon fontSize='small' />
+            <PersonIcon fontSize="small" />
           </ListItemIcon>
           User Profile
         </MenuItem>
@@ -238,10 +240,10 @@ export default function LeftDrawer () {
         <MenuItem>
           Active
           <Switch
-            size='small'
+            size="small"
             checked={isActive}
             onChange={() => setIsActive(!isActive)}
-            sx={{ ml: 'auto' }}
+            sx={{ ml: "auto" }}
           />
         </MenuItem>
 
@@ -249,17 +251,17 @@ export default function LeftDrawer () {
 
         <MenuItem
           onClick={() => {
-            setAnchorEl(null)
-            clearAuthSession()
-            navigate('/')
+            setAnchorEl(null);
+            clearAuthSession();
+            navigate("/");
           }}
         >
           <ListItemIcon>
-            <LogoutIcon fontSize='small' />
+            <LogoutIcon fontSize="small" />
           </ListItemIcon>
           Logout
         </MenuItem>
       </Menu>
     </>
-  )
+  );
 }

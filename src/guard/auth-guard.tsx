@@ -1,12 +1,12 @@
-import { Navigate, Outlet } from 'react-router-dom'
-import { getToken } from '../services/auth-service'
+import { Navigate, Outlet } from "react-router-dom";
+import { getToken } from "../services/auth-service";
 
 export const AuthGuard = () => {
-  const token: string | null = getToken()
+  const token: string | null = getToken();
 
   if (!token) {
-    return <Navigate to='/login' replace />
+    return <Navigate to="/login" replace />;
   }
 
-  return <Outlet />
-}
+  return <Outlet />;
+};

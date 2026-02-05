@@ -9,89 +9,89 @@ import {
   IconButton,
   FormControl,
   InputLabel,
-  FilledInput
-} from '@mui/material'
-import './Login.scss'
-import { useNavigate, type NavigateFunction } from 'react-router-dom'
-import { useState } from 'react'
-import { login } from '../../services/auth-service'
-import { setAuthSession } from '../../utils/storage'
-import EmailIcon from '@mui/icons-material/Email'
-import VisibilityIcon from '@mui/icons-material/Visibility'
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
-import { toast } from 'react-toastify'
+  FilledInput,
+} from "@mui/material";
+import "./Login.scss";
+import { useNavigate, type NavigateFunction } from "react-router-dom";
+import { useState } from "react";
+import { login } from "../../services/auth-service";
+import { setAuthSession } from "../../utils/storage";
+import EmailIcon from "@mui/icons-material/Email";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import { toast } from "react-toastify";
 
-export default function Login () {
-  const navigate: NavigateFunction = useNavigate()
+export default function Login() {
+  const navigate: NavigateFunction = useNavigate();
 
-  const [email, setEmail] = useState<string>('')
-  const [password, setPassword] = useState<string>('')
-  const [error, setError] = useState<string>('')
-  const [loading, setLoading] = useState<boolean>(false)
-  const [showPassword, setShowPassword] = useState(false)
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [error, setError] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setError('')
+    e.preventDefault();
+    setError("");
 
     if (!email || !password) {
-      setError('Please enter email and password.')
-      return
+      setError("Please enter email and password.");
+      return;
     }
 
     try {
-      setLoading(true)
+      setLoading(true);
 
       const data = await login({
         email,
         password,
         rememberMe: false,
-        turnstileToken: ''
-      })
+        turnstileToken: "",
+      });
 
-      setAuthSession(data.accessToken)
-      toast.success('Login Successful!')
-      navigate('/dashboard')
+      setAuthSession(data.accessToken);
+      toast.success("Login Successful!");
+      navigate("/dashboard");
     } catch {
-      setError('Something went wrong')
+      setError("Something went wrong");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
-    <div className='d-flex justify-content-center align-items-center auth-container'>
-      <div className='auth-wrapper d-flex flex-column flex-lg-row'>
-        <div className='auth-image-section d-flex justify-content-center align-items-center position-relative'>
-          <div className='image-content text-center'>
+    <div className="d-flex justify-content-center align-items-center auth-container">
+      <div className="auth-wrapper d-flex flex-column flex-lg-row">
+        <div className="auth-image-section d-flex justify-content-center align-items-center position-relative">
+          <div className="image-content text-center">
             <img
-              className='main-illustration'
-              src='/src/assets/images/auth-left-side-img.jpg'
-              alt='Login Illustration'
+              className="main-illustration"
+              src="/src/assets/images/auth-left-side-img.jpg"
+              alt="Login Illustration"
             />
           </div>
         </div>
 
-        <div className='auth-form-section d-flex justify-content-center align-items-center m-2'>
-          <div className='form-container'>
-            <div className='brand-header mb-0 mb-sm-3 mb-lg-4'>
-              <div className='brand-info d-flex align-items-center'>
-                <div className='brand-logo'>
+        <div className="auth-form-section d-flex justify-content-center align-items-center m-2">
+          <div className="form-container">
+            <div className="brand-header mb-0 mb-sm-3 mb-lg-4">
+              <div className="brand-info d-flex align-items-center">
+                <div className="brand-logo">
                   <svg
-                    version='1.0'
-                    xmlns='http://www.w3.org/2000/svg'
-                    width='65'
-                    height='70'
-                    viewBox='0 0 500.000000 500.000000'
-                    preserveAspectRatio='xMidYMid meet'
+                    version="1.0"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="65"
+                    height="70"
+                    viewBox="0 0 500.000000 500.000000"
+                    preserveAspectRatio="xMidYMid meet"
                   >
                     <g
-                      transform='translate(0.000000,500.000000) scale(0.100000,-0.100000)'
-                      className='right-hand'
-                      stroke='none'
+                      transform="translate(0.000000,500.000000) scale(0.100000,-0.100000)"
+                      className="right-hand"
+                      stroke="none"
                     >
                       <path
-                        d='M2645 3663 c-11 -2 -69 -18 -130 -34 -60 -17 -168 -41 -240 -53 -203
+                        d="M2645 3663 c-11 -2 -69 -18 -130 -34 -60 -17 -168 -41 -240 -53 -203
                     -36 -183 -20 -301 -257 -119 -239 -116 -232 -104 -264 15 -39 59 -55 150 -55
                     102 0 139 15 213 88 95 93 106 118 81 189 -5 12 4 7 27 -14 37 -35 60 -39 124
                     -22 76 19 92 30 103 62 8 27 10 28 11 9 2 -42 22 -63 94 -98 39 -19 77 -34 84
@@ -102,17 +102,17 @@ export default function Login () {
                     82 225 182 66 67 73 78 83 133 18 94 24 395 11 530 -14 142 -41 281 -76 391
                     -26 81 -131 301 -163 342 l-18 23 -75 -74 c-96 -92 -185 -140 -330 -176 -60
                     -16 -112 -30 -115 -34 -3 -3 -1 -14 5 -26 10 -18 8 -21 -25 -27 -76 -14 -189
-                    19 -291 85 -109 70 -282 163 -396 212 -110 48 -163 58 -232 42z'
+                    19 -291 85 -109 70 -282 163 -396 212 -110 48 -163 58 -232 42z"
                       />
                     </g>
 
                     <g
-                      transform='translate(0.000000,500.000000) scale(0.100000,-0.100000)'
-                      className='left-hand'
-                      stroke='none'
+                      transform="translate(0.000000,500.000000) scale(0.100000,-0.100000)"
+                      className="left-hand"
+                      stroke="none"
                     >
                       <path
-                        d='M941 3488 c-137 -284 -198 -596 -173 -896 6 -76 18 -171 27 -211 17
+                        d="M941 3488 c-137 -284 -198 -596 -173 -896 6 -76 18 -171 27 -211 17
                     -72 17 -72 100 -144 98 -84 260 -188 280 -180 8 2 17 21 20 41 31 197 160 582
                     250 749 31 57 34 69 -53 -197 -74 -227 -137 -448 -129 -457 3 -2 49 -22 104
                     -43 l98 -38 6 63 c3 38 16 84 32 118 32 65 149 194 183 203 38 10 120 -23 154
@@ -131,72 +131,72 @@ export default function Login () {
                     -30 -83 1 -107 4 -141 22 -84 45 -96 111 -39 214 38 67 125 245 125 254 0 15
                     -92 -11 -259 -74 l-84 -31 6 30 c4 16 3 30 -1 30 -4 0 -85 7 -180 15 -148 13
                     -183 19 -242 44 -69 29 -148 81 -184 120 -11 12 -23 21 -27 21 -5 0 -31 -46
-                    -58 -102z'
+                    -58 -102z"
                       />
                     </g>
 
                     <g
-                      transform='translate(0.000000,500.000000) scale(0.100000,-0.100000)'
-                      className='right-hand'
-                      stroke='none'
+                      transform="translate(0.000000,500.000000) scale(0.100000,-0.100000)"
+                      className="right-hand"
+                      stroke="none"
                     >
                       <path
-                        d='M1650 2390 c-69 -70 -120 -177 -120 -248 0 -51 3 -58 39 -92 22 -21
+                        d="M1650 2390 c-69 -70 -120 -177 -120 -248 0 -51 3 -58 39 -92 22 -21
                     59 -44 83 -52 l44 -15 12 75 c8 48 22 91 39 119 16 25 38 61 50 81 42 69 22
-                    138 -47 166 -22 9 -43 16 -46 16 -3 0 -27 -22 -54 -50z'
+                    138 -47 166 -22 9 -43 16 -46 16 -3 0 -27 -22 -54 -50z"
                       />
                       <path
-                        d='M2038 2413 c-19 -5 -199 -225 -234 -286 -33 -58 -49 -160 -35 -214
+                        d="M2038 2413 c-19 -5 -199 -225 -234 -286 -33 -58 -49 -160 -35 -214
                     16 -59 68 -124 121 -151 l45 -22 6 83 c8 116 31 172 115 279 113 144 131 193
-                    99 263 -22 45 -64 62 -117 48z'
+                    99 263 -22 45 -64 62 -117 48z"
                       />
                       <path
-                        d='M2126 2108 c-94 -113 -116 -165 -123 -283 -4 -62 -2 -104 6 -123 16
+                        d="M2126 2108 c-94 -113 -116 -165 -123 -283 -4 -62 -2 -104 6 -123 16
                     -38 74 -70 144 -78 l57 -7 -16 32 c-13 25 -15 54 -12 124 5 101 16 130 79 210
-                    48 61 58 108 34 152 -17 33 -51 55 -83 55 -10 0 -48 -37 -86 -82z'
+                    48 61 58 108 34 152 -17 33 -51 55 -83 55 -10 0 -48 -37 -86 -82z"
                       />
                       <path
-                        d='M2287 1903 c-33 -35 -57 -92 -57 -136 0 -56 39 -156 77 -193 33 -34
+                        d="M2287 1903 c-33 -35 -57 -92 -57 -136 0 -56 39 -156 77 -193 33 -34
                     34 -34 126 -34 51 0 102 3 115 7 23 6 22 7 -21 52 -83 85 -97 114 -97 202 0
-                    74 -1 78 -31 103 -40 34 -78 33 -112 -1z'
+                    74 -1 78 -31 103 -40 34 -78 33 -112 -1z"
                       />
                     </g>
                   </svg>
                 </div>
                 <h2>HelpDesk</h2>
               </div>
-              <p className='brand-description d-none d-sm-block'>
-                We are <span className='highlight'>experts</span> in support,
+              <p className="brand-description d-none d-sm-block">
+                We are <span className="highlight">experts</span> in support,
                 service, resolution, & customer care.
               </p>
             </div>
 
-            <div className='form-header mb-3 mb-lg-4'>
+            <div className="form-header mb-3 mb-lg-4">
               <h1>Login into your account</h1>
             </div>
 
-            <Box component='form' onSubmit={handleSubmit} className='auth-form'>
+            <Box component="form" onSubmit={handleSubmit} className="auth-form">
               <FormControl
-                variant='filled'
+                variant="filled"
                 fullWidth
-                margin='normal'
+                margin="normal"
                 sx={{
-                  borderRadius: 1
+                  borderRadius: 1,
                 }}
               >
-                <InputLabel htmlFor='filled-adornment-password'>
+                <InputLabel htmlFor="filled-adornment-password">
                   Email
                 </InputLabel>
                 <FilledInput
-                  id='filled-adornment-password'
-                  type='email'
+                  id="filled-adornment-password"
+                  type="email"
                   required
                   value={email}
-                  placeholder='Enter your Email'
-                  onChange={e => setEmail(e.target.value)}
+                  placeholder="Enter your Email"
+                  onChange={(e) => setEmail(e.target.value)}
                   endAdornment={
-                    <InputAdornment position='end'>
-                      <IconButton aria-label='Enter Email' edge='end'>
+                    <InputAdornment position="end">
+                      <IconButton aria-label="Enter Email" edge="end">
                         <EmailIcon />
                       </IconButton>
                     </InputAdornment>
@@ -206,31 +206,31 @@ export default function Login () {
 
               <FormControl
                 fullWidth
-                variant='filled'
-                margin='normal'
+                variant="filled"
+                margin="normal"
                 sx={{
-                  borderRadius: 1
+                  borderRadius: 1,
                 }}
               >
-                <InputLabel htmlFor='filled-adornment-password'>
+                <InputLabel htmlFor="filled-adornment-password">
                   Password
                 </InputLabel>
                 <FilledInput
-                  id='filled-adornment-password'
-                  type={showPassword ? 'text' : 'password'}
+                  id="filled-adornment-password"
+                  type={showPassword ? "text" : "password"}
                   required
                   value={password}
-                  placeholder='Enter your Password'
-                  onChange={e => setPassword(e.target.value)}
+                  placeholder="Enter your Password"
+                  onChange={(e) => setPassword(e.target.value)}
                   endAdornment={
-                    <InputAdornment position='end'>
+                    <InputAdornment position="end">
                       <IconButton
                         aria-label={
                           showPassword
-                            ? 'hide the password'
-                            : 'display the password'
+                            ? "hide the password"
+                            : "display the password"
                         }
-                        edge='end'
+                        edge="end"
                         onClick={() => setShowPassword(!showPassword)}
                       >
                         {showPassword ? (
@@ -245,41 +245,41 @@ export default function Login () {
               </FormControl>
 
               {error && (
-                <Typography color='error' variant='body2' mt={1}>
+                <Typography color="error" variant="body2" mt={1}>
                   {error}
                 </Typography>
               )}
 
               <Box
-                display='flex'
-                justifyContent='space-between'
-                alignItems='center'
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
                 mt={1}
               >
                 <FormControlLabel
                   control={<Checkbox />}
-                  label='Remember me'
-                  className='text-color'
+                  label="Remember me"
+                  className="text-color"
                 />
-                <Typography variant='body2' color='primary'>
+                <Typography variant="body2" color="primary">
                   Forgot password?
                 </Typography>
               </Box>
 
               <Button
-                type='submit'
+                type="submit"
                 fullWidth
-                variant='contained'
-                size='large'
+                variant="contained"
+                size="large"
                 disabled={loading}
                 sx={{ mt: 2 }}
               >
-                {loading ? <CircularProgress size={24} /> : 'Login'}
+                {loading ? <CircularProgress size={24} /> : "Login"}
               </Button>
             </Box>
           </div>
         </div>
       </div>
     </div>
-  )
+  );
 }

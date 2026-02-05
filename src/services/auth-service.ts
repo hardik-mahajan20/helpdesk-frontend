@@ -1,106 +1,107 @@
-import { jwtDecode } from 'jwt-decode'
-import type { ApiResponse } from '../interfaces/other/api-response'
-import type { LoginRequest } from '../interfaces/auth/login-request'
-import type { LoginResponse } from '../interfaces/auth/login-response'
-import { API_BASE_URL } from '../api'
-import { LOCAL_STORAGE_KEYS } from '../enums'
+import { jwtDecode } from "jwt-decode";
+import type { ApiResponse } from "../interfaces/other/api-response";
+import type { LoginRequest } from "../interfaces/auth/login-request";
+import type { LoginResponse } from "../interfaces/auth/login-response";
+import { API_BASE_URL } from "../api";
+import { LOCAL_STORAGE_KEYS } from "../enums";
 
-const AUTH_URL = `${API_BASE_URL}/auth`
+const AUTH_URL = `${API_BASE_URL}/auth`;
 
-let isRefreshing: boolean = false
+let isRefreshing: boolean = false;
 
-let refreshPromise: Promise<string> | null = null
+let refreshPromise: Promise<string> | null = null;
 
-async function handleResponse<T> (response: Response): Promise<T> {
-  const responseJson: ApiResponse<T> = await response.json()
+async function handleResponse<T>(response: Response): Promise<T> {
+  const responseJson: ApiResponse<T> = await response.json();
 
   if (!response.ok) {
-    const messages = responseJson.messages
-    const errorMessage = messages?.join(', ') ?? 'Request failed'
-    throw new Error(errorMessage)
+    const messages = responseJson.messages;
+    const errorMessage = messages?.join(", ") ?? "Request failed";
+    throw new Error(errorMessage);
   }
 
-  return responseJson.data
+  return responseJson.data;
 }
 
-export async function login (payload: LoginRequest): Promise<LoginResponse> {
+export async function login(payload: LoginRequest): Promise<LoginResponse> {
   const response = await fetch(`${AUTH_URL}/login`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    credentials: 'include',
-    body: JSON.stringify(payload)
-  })
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify(payload),
+  });
 
-  return handleResponse<LoginResponse>(response)
+  return handleResponse<LoginResponse>(response);
 }
 
-export async function refreshToken (): Promise<
+export async function refreshToken(): Promise<
   ApiResponse<{ accessToken: string }>
 > {
   if (isRefreshing && refreshPromise) {
-    const token = await refreshPromise
+    const token = await refreshPromise;
     return {
       result: true,
       httpStatusCode: 200,
-      messages: ['Token refreshed from pending request'],
-      data: { accessToken: token }
-    }
+      messages: ["Token refreshed from pending request"],
+      data: { accessToken: token },
+    };
   }
 
-  isRefreshing = false
+  isRefreshing = false;
   refreshPromise = fetch(`${AUTH_URL}/refresh`, {
-    method: 'POST',
-    credentials: 'include',
+    method: "POST",
+    credentials: "include",
     headers: {
-      'Content-Type': 'application/json'
-    }
+      "Content-Type": "application/json",
+    },
   })
-    .then(async response => {
+    .then(async (response) => {
       if (!response.ok) {
-        throw new Error('Refresh Token failed')
+        throw new Error("Refresh Token failed");
       }
-      const result: ApiResponse<{ accessToken: string }> = await response.json()
-      const newToken = result.data.accessToken
-      localStorage.setItem(LOCAL_STORAGE_KEYS.ACCESS_TOKEN, newToken)
-      return newToken
+      const result: ApiResponse<{ accessToken: string }> =
+        await response.json();
+      const newToken = result.data.accessToken;
+      localStorage.setItem(LOCAL_STORAGE_KEYS.ACCESS_TOKEN, newToken);
+      return newToken;
     })
     .finally(() => {
-      isRefreshing = false
-      refreshPromise = null
-    })
-  const token = await refreshPromise
+      isRefreshing = false;
+      refreshPromise = null;
+    });
+  const token = await refreshPromise;
 
   return {
     result: true,
     httpStatusCode: 200,
-    messages: ['Token Refreshed'],
-    data: { accessToken: token }
-  }
+    messages: ["Token Refreshed"],
+    data: { accessToken: token },
+  };
 }
 
-export function getToken (): string | null {
-  return localStorage.getItem(LOCAL_STORAGE_KEYS.ACCESS_TOKEN)
+export function getToken(): string | null {
+  return localStorage.getItem(LOCAL_STORAGE_KEYS.ACCESS_TOKEN);
 }
 
-export function isTokenExpired (): boolean {
-  const token = getToken()
-  if (!token) return true
-  const decoded = jwtDecode(token)
-  return Date.now() >= decoded['exp']! * 1000
+export function isTokenExpired(): boolean {
+  const token = getToken();
+  if (!token) return true;
+  const decoded = jwtDecode(token);
+  return Date.now() >= decoded["exp"]! * 1000;
 }
 
-export function isAuthenticated (): boolean {
-  return !!getToken() && !isTokenExpired()
+export function isAuthenticated(): boolean {
+  return !!getToken() && !isTokenExpired();
 }
 
-export async function logout (): Promise<ApiResponse<void>> {
-  localStorage.removeItem(LOCAL_STORAGE_KEYS.ACCESS_TOKEN)
-  sessionStorage.clear()
+export async function logout(): Promise<ApiResponse<void>> {
+  localStorage.removeItem(LOCAL_STORAGE_KEYS.ACCESS_TOKEN);
+  sessionStorage.clear();
 
   const response = await fetch(`${AUTH_URL}/logout`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    credentials: 'include'
-  })
-  return handleResponse<ApiResponse<void>>(response)
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+  });
+  return handleResponse<ApiResponse<void>>(response);
 }

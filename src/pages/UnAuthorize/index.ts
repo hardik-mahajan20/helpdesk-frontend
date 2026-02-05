@@ -1,1 +1,1 @@
-export { default } from './UnAuthorize'
+export { default } from "./UnAuthorize";

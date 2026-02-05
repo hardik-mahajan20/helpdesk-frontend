@@ -7,48 +7,48 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  type SelectChangeEvent
-} from '@mui/material'
-import MenuIcon from '@mui/icons-material/Menu'
-import ChatIcon from '@mui/icons-material/Chat'
-import NotificationsIcon from '@mui/icons-material/Notifications'
-import { useProjectSelectionStore } from '../../services/project-selection-service'
-import './Header.scss'
-import { useEffect } from 'react'
-import type { HeaderProps } from '../../interfaces'
+  type SelectChangeEvent,
+} from "@mui/material";
+import MenuIcon from "@mui/icons-material/Menu";
+import ChatIcon from "@mui/icons-material/Chat";
+import NotificationsIcon from "@mui/icons-material/Notifications";
+import { useProjectSelectionStore } from "../../services/project-selection-service";
+import "./Header.scss";
+import { useEffect } from "react";
+import type { HeaderProps } from "../../interfaces";
 
-export default function Header ({ onLeftToggle, onRightToggle }: HeaderProps) {
+export default function Header({ onLeftToggle, onRightToggle }: HeaderProps) {
   // For state management
   const { selectedProjectId, projectsList, setProjectId, refreshProjects } =
-    useProjectSelectionStore()
+    useProjectSelectionStore();
 
   const handleChange = (event: SelectChangeEvent<number>) => {
-    const value = Number(event.target.value)
+    const value = Number(event.target.value);
 
-    setProjectId(value)
-  }
+    setProjectId(value);
+  };
 
   useEffect(() => {
-    refreshProjects()
-  }, [refreshProjects])
+    refreshProjects();
+  }, [refreshProjects]);
 
   return (
-    <AppBar position='fixed'>
-      <Toolbar className='header d-flex justify-content-between align-items-center'>
-        <div className='header-left d-flex align-items-center gap-0'>
+    <AppBar position="fixed">
+      <Toolbar className="header d-flex justify-content-between align-items-center">
+        <div className="header-left d-flex align-items-center gap-0">
           <svg
-            version='1.0'
-            xmlns='http://www.w3.org/2000/svg'
-            viewBox='0 0 500.000000 500.000000'
-            preserveAspectRatio='xMidYMid meet'
+            version="1.0"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 500.000000 500.000000"
+            preserveAspectRatio="xMidYMid meet"
           >
             <g
-              transform='translate(0.000000,500.000000) scale(0.100000,-0.100000)'
-              className='right-hand'
-              stroke='none'
+              transform="translate(0.000000,500.000000) scale(0.100000,-0.100000)"
+              className="right-hand"
+              stroke="none"
             >
               <path
-                d='M2645 3663 c-11 -2 -69 -18 -130 -34 -60 -17 -168 -41 -240 -53 -203
+                d="M2645 3663 c-11 -2 -69 -18 -130 -34 -60 -17 -168 -41 -240 -53 -203
           -36 -183 -20 -301 -257 -119 -239 -116 -232 -104 -264 15 -39 59 -55 150 -55
           102 0 139 15 213 88 95 93 106 118 81 189 -5 12 4 7 27 -14 37 -35 60 -39 124
           -22 76 19 92 30 103 62 8 27 10 28 11 9 2 -42 22 -63 94 -98 39 -19 77 -34 84
@@ -59,17 +59,17 @@ export default function Header ({ onLeftToggle, onRightToggle }: HeaderProps) {
           82 225 182 66 67 73 78 83 133 18 94 24 395 11 530 -14 142 -41 281 -76 391
           -26 81 -131 301 -163 342 l-18 23 -75 -74 c-96 -92 -185 -140 -330 -176 -60
           -16 -112 -30 -115 -34 -3 -3 -1 -14 5 -26 10 -18 8 -21 -25 -27 -76 -14 -189
-          19 -291 85 -109 70 -282 163 -396 212 -110 48 -163 58 -232 42z'
+          19 -291 85 -109 70 -282 163 -396 212 -110 48 -163 58 -232 42z"
               />
             </g>
 
             <g
-              transform='translate(0.000000,500.000000) scale(0.100000,-0.100000)'
-              className='left-hand'
-              stroke='none'
+              transform="translate(0.000000,500.000000) scale(0.100000,-0.100000)"
+              className="left-hand"
+              stroke="none"
             >
               <path
-                d='M941 3488 c-137 -284 -198 -596 -173 -896 6 -76 18 -171 27 -211 17
+                d="M941 3488 c-137 -284 -198 -596 -173 -896 6 -76 18 -171 27 -211 17
           -72 17 -72 100 -144 98 -84 260 -188 280 -180 8 2 17 21 20 41 31 197 160 582
           250 749 31 57 34 69 -53 -197 -74 -227 -137 -448 -129 -457 3 -2 49 -22 104
           -43 l98 -38 6 63 c3 38 16 84 32 118 32 65 149 194 183 203 38 10 120 -23 154
@@ -88,62 +88,62 @@ export default function Header ({ onLeftToggle, onRightToggle }: HeaderProps) {
           -30 -83 1 -107 4 -141 22 -84 45 -96 111 -39 214 38 67 125 245 125 254 0 15
           -92 -11 -259 -74 l-84 -31 6 30 c4 16 3 30 -1 30 -4 0 -85 7 -180 15 -148 13
           -183 19 -242 44 -69 29 -148 81 -184 120 -11 12 -23 21 -27 21 -5 0 -31 -46
-          -58 -102z'
+          -58 -102z"
               />
             </g>
 
             <g
-              transform='translate(0.000000,500.000000) scale(0.100000,-0.100000)'
-              className='right-hand'
-              stroke='none'
+              transform="translate(0.000000,500.000000) scale(0.100000,-0.100000)"
+              className="right-hand"
+              stroke="none"
             >
               <path
-                d='M1650 2390 c-69 -70 -120 -177 -120 -248 0 -51 3 -58 39 -92 22 -21
+                d="M1650 2390 c-69 -70 -120 -177 -120 -248 0 -51 3 -58 39 -92 22 -21
           59 -44 83 -52 l44 -15 12 75 c8 48 22 91 39 119 16 25 38 61 50 81 42 69 22
-          138 -47 166 -22 9 -43 16 -46 16 -3 0 -27 -22 -54 -50z'
+          138 -47 166 -22 9 -43 16 -46 16 -3 0 -27 -22 -54 -50z"
               />
               <path
-                d='M2038 2413 c-19 -5 -199 -225 -234 -286 -33 -58 -49 -160 -35 -214
+                d="M2038 2413 c-19 -5 -199 -225 -234 -286 -33 -58 -49 -160 -35 -214
           16 -59 68 -124 121 -151 l45 -22 6 83 c8 116 31 172 115 279 113 144 131 193
-          99 263 -22 45 -64 62 -117 48z'
+          99 263 -22 45 -64 62 -117 48z"
               />
               <path
-                d='M2126 2108 c-94 -113 -116 -165 -123 -283 -4 -62 -2 -104 6 -123 16
+                d="M2126 2108 c-94 -113 -116 -165 -123 -283 -4 -62 -2 -104 6 -123 16
           -38 74 -70 144 -78 l57 -7 -16 32 c-13 25 -15 54 -12 124 5 101 16 130 79 210
-          48 61 58 108 34 152 -17 33 -51 55 -83 55 -10 0 -48 -37 -86 -82z'
+          48 61 58 108 34 152 -17 33 -51 55 -83 55 -10 0 -48 -37 -86 -82z"
               />
               <path
-                d='M2287 1903 c-33 -35 -57 -92 -57 -136 0 -56 39 -156 77 -193 33 -34
+                d="M2287 1903 c-33 -35 -57 -92 -57 -136 0 -56 39 -156 77 -193 33 -34
           34 -34 126 -34 51 0 102 3 115 7 23 6 22 7 -21 52 -83 85 -97 114 -97 202 0
-          74 -1 78 -31 103 -40 34 -78 33 -112 -1z'
+          74 -1 78 -31 103 -40 34 -78 33 -112 -1z"
               />
             </g>
           </svg>
 
-          <span className='app-title d-none d-sm-block'>HelpDesk</span>
-          <IconButton onClick={onLeftToggle} className='nav-icon-button'>
+          <span className="app-title d-none d-sm-block">HelpDesk</span>
+          <IconButton onClick={onLeftToggle} className="nav-icon-button">
             <MenuIcon />
           </IconButton>
         </div>
 
-        <div className='header-right-section d-flex align-items-center gap-2'>
+        <div className="header-right-section d-flex align-items-center gap-2">
           <FormControl sx={{ m: 1, width: 250 }}>
-            <InputLabel id='project-select-label'>Select Project</InputLabel>
+            <InputLabel id="project-select-label">Select Project</InputLabel>
 
             <Select
-              labelId='project-select-label'
-              id='project-select'
-              className='project-dropdown w-100'
+              labelId="project-select-label"
+              id="project-select"
+              className="project-dropdown w-100"
               value={
-                projectsList.some(p => p.id === selectedProjectId)
+                projectsList.some((p) => p.id === selectedProjectId)
                   ? selectedProjectId
                   : 0
               }
-              label='Select Project'
+              label="Select Project"
               onChange={handleChange}
             >
               <MenuItem value={0}>All Projects</MenuItem>
-              {projectsList.map(proj => (
+              {projectsList.map((proj) => (
                 <MenuItem key={proj.id} value={proj.id}>
                   {proj.name}
                 </MenuItem>
@@ -151,14 +151,14 @@ export default function Header ({ onLeftToggle, onRightToggle }: HeaderProps) {
             </Select>
           </FormControl>
 
-          <div className='header-right-section-right d-flex align-items-center gap-md-1 gap-2 me-1'>
-            <IconButton color='inherit' className='nav-icon-button'>
-              <Badge badgeContent={4} color='error'>
+          <div className="header-right-section-right d-flex align-items-center gap-md-1 gap-2 me-1">
+            <IconButton color="inherit" className="nav-icon-button">
+              <Badge badgeContent={4} color="error">
                 <NotificationsIcon />
               </Badge>
             </IconButton>
-            <IconButton color='inherit' onClick={onRightToggle}>
-              <Badge badgeContent={4} color='error'>
+            <IconButton color="inherit" onClick={onRightToggle}>
+              <Badge badgeContent={4} color="error">
                 <ChatIcon />
               </Badge>
             </IconButton>
@@ -166,5 +166,5 @@ export default function Header ({ onLeftToggle, onRightToggle }: HeaderProps) {
         </div>
       </Toolbar>
     </AppBar>
-  )
+  );
 }
