@@ -2,10 +2,6 @@
 
 A modern, scalable **HelpDesk Frontend Application** built using **React** and **Material UI**, focused on clean architecture, real-world UI patterns, and production-ready frontend practices.
 
-
-
-
-
 This project is designed for **learning, collaboration, and frontend architecture experimentation**, while closely mirroring how enterprise applications are structured.
 
 ---
