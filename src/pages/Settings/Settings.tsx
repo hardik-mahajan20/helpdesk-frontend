@@ -46,11 +46,13 @@ import {
   updateProjectDetails
 } from '../../services/settings-service'
 import type {
+  ApiResponse,
   ChatShortCutCreate,
   ChatShortCutMessages,
   ChatWidgetSettingsDto,
   ProjectDetailsRequestDTO,
   ShortCutMessage,
+  TabPanelProps,
   UpdateChatWidgetRequestDTO
 } from '../../interfaces'
 import { useProjectSelectionStore } from '../../services/project-selection-service'
@@ -64,7 +66,7 @@ import { useProfileSelectionStore } from '../../services/profile-selection-servi
 import SaveIcon from '@mui/icons-material/Save'
 import ConfirmDeleteDialog from '../../core/components/ConfirmationDialog'
 import { toast } from 'react-toastify'
-function TabPanel ({ value, index, children }: any) {
+function TabPanel ({ value, index, children }: TabPanelProps) {
   return value === index ? <Box sx={{ mt: 3 }}>{children}</Box> : null
 }
 
@@ -183,6 +185,12 @@ export default function Settings () {
     state => state.selectedProjectId
   )
 
+  const getCurrentUserId = useProfileSelectionStore(
+    state => state.getCurrentUserId
+  )
+
+  const navigate = useNavigate()
+
   useEffect(() => {
     const loadProject: () => Promise<void> = async () => {
       try {
@@ -226,13 +234,7 @@ export default function Settings () {
     } else {
       navigate('/dashboard')
     }
-  }, [selectedProjectId])
-
-  const getCurrentUserId = useProfileSelectionStore(
-    state => state.getCurrentUserId
-  )
-
-  const navigate = useNavigate()
+  }, [selectedProjectId, navigate, getCurrentUserId])
 
   const saveChatWidget = async () => {
     const formValue = widgetForm
@@ -240,7 +242,7 @@ export default function Settings () {
       projectId: selectedProjectId,
       widgetSetting: JSON.stringify(formValue)
     }
-    var result: any = await updateChatWidgetSetting(payload)
+    const result: ApiResponse<unknown> = await updateChatWidgetSetting(payload)
     toast.success(result.messages[0])
   }
   const saveProjectSettings = async () => {
@@ -269,14 +271,14 @@ export default function Settings () {
       const formData = new FormData()
       Object.entries(payload).forEach(([key, value]) => {
         if (value !== undefined && value !== null) {
-          formData.append(key, value as any)
+          formData.append(key, value as string)
         }
       })
 
-      const result: any = await updateProjectDetails(formData)
+      const result: ApiResponse<unknown> = await updateProjectDetails(formData)
       toast.success(result.messages[0])
-    } catch (error: any) {
-      toast.error(error.message || 'Something went wrong')
+    } catch  {
+      toast.error('Something went wrong')
     }
   }
   const cancelProjectSetting = () => {
@@ -368,7 +370,7 @@ export default function Settings () {
   }
 
   const toggleShortCutVisibility = async (id: number): Promise<void> => {
-    var result = await toggleChatShortCutVisibility(id)
+    const result = await toggleChatShortCutVisibility(id)
     toast.success(result.messages[0])
     setChatShortCutForm(prev =>
       prev.map(shortcut =>
