@@ -62,7 +62,7 @@ export const ThemeContextProvider = ({ children }: { children: ReactNode }) => {
         styleOverrides: {
           root: {
             fontWeight: 500,
-            textTransform: 'none',
+            // textTransform: 'none',
             borderRadius: 6
           }
         }
@@ -85,13 +85,6 @@ export const ThemeContextProvider = ({ children }: { children: ReactNode }) => {
         styleOverrides: {
           root: {
             minHeight: 48
-          }
-        }
-      },
-      MuiFormHelperText: {
-        styleOverrides: {
-          root: {
-            display: 'none'
           }
         }
       },

@@ -9,8 +9,8 @@ import './Layout.scss'
 const drawerWidth = 250
 
 export default function Layout () {
-  const [leftOpen, setLeftOpen] = useState(true)
-  const [rightOpen, setRightOpen] = useState(false)
+  const [leftOpen, setLeftOpen] = useState<boolean>(true)
+  const [rightOpen, setRightOpen] = useState<boolean>(false)
 
   return (
     <Box display='flex' flexDirection='column' height='100vh'>

@@ -6,8 +6,12 @@ import {
   Button,
   TextField
 } from '@mui/material'
-import { useState } from 'react'
-import type { AddProjectDialogProps, AddProjectRequest } from '../../interfaces'
+import { useForm, Controller } from 'react-hook-form'
+import type {
+  AddProjectDialogProps,
+  AddProjectForm,
+  AddProjectRequest
+} from '../../interfaces'
 import { addProject } from '../../services/project-service'
 import { toast } from 'react-toastify'
 
@@ -15,23 +19,28 @@ export default function AddProjectDialog ({
   open,
   onClose
 }: AddProjectDialogProps) {
-  const [name, setName] = useState('')
-  const [description, setDescription] = useState('')
-  const [liveProjectUrl, setLiveProjectUrl] = useState('')
+  const {
+    handleSubmit,
+    control,
+    reset,
+    formState: { errors }
+  } = useForm<AddProjectForm>({
+    defaultValues: {
+      name: '',
+      description: '',
+      liveProjectUrl: ''
+    }
+  })
 
-  const handleSubmit = async () => {
+  const onSubmit = async (data: AddProjectForm) => {
     try {
-      const payload: AddProjectRequest = {
-        name,
-        description,
-        liveProjectUrl
-      }
-  
-      var result: any = await addProject(payload)
+      const payload: AddProjectRequest = { ...data }
+      const result: any = await addProject(payload)
       toast.success(result.messages[0])
+      reset()
       onClose()
-    } catch (err : any) {
-      toast.error(err)
+    } catch (err: any) {
+      toast.error(err.message || 'Something went wrong')
     }
   }
 
@@ -43,37 +52,71 @@ export default function AddProjectDialog ({
         sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
         className='p-3'
       >
-        <TextField
-          label='Name'
-          type='text'
-          value={name}
-          onChange={e => setName(e.target.value)}
-          fullWidth
-          required
+        <Controller
+          name='name'
+          control={control}
+          rules={{ required: 'Name is required' }}
+          render={({ field }) => (
+            <TextField
+              {...field}
+              label='Name'
+              fullWidth
+              error={!!errors.name}
+              helperText={errors.name?.message}
+            />
+          )}
         />
-        <TextField
-          label='Description'
-          value={description}
-          onChange={e => setDescription(e.target.value)}
-          fullWidth
-          required
-          multiline
-          minRows={3}
-          maxRows={6}
+
+        <Controller
+          name='description'
+          control={control}
+          rules={{ required: 'Description is required' }}
+          render={({ field }) => (
+            <TextField
+              {...field}
+              label='Description'
+              fullWidth
+              multiline
+              minRows={3}
+              maxRows={6}
+              error={!!errors.description}
+              helperText={errors.description?.message}
+            />
+          )}
         />
-        <TextField
-          label='Live Project URL'
-          type='text'
-          value={liveProjectUrl}
-          onChange={e => setLiveProjectUrl(e.target.value)}
-          fullWidth
-          required
+
+        <Controller
+          name='liveProjectUrl'
+          control={control}
+          rules={{
+            required: 'Live Project URL is required',
+            pattern: {
+              value: /^https?:\/\/.+/,
+              message: 'Enter a valid URL starting with http or https'
+            }
+          }}
+          render={({ field }) => (
+            <TextField
+              {...field}
+              label='Live Project URL'
+              fullWidth
+              error={!!errors.liveProjectUrl}
+              helperText={errors.liveProjectUrl?.message}
+            />
+          )}
         />
       </DialogContent>
 
       <DialogActions>
-        <Button onClick={onClose}>Cancel</Button>
-        <Button variant='contained' onClick={handleSubmit}>
+        <Button
+          onClick={() => {
+            reset()
+            onClose()
+          }}
+        >
+          Cancel
+        </Button>
+        <Button variant='contained' onClick={handleSubmit(onSubmit)}>
           Save
         </Button>
       </DialogActions>

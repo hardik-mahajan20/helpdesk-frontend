@@ -28,11 +28,7 @@ interface Message {
 
 export default function ChatWidget ({ settings }: ChatWidgetProps) {
   const [isWidgetOpen, setIsWidgetOpen] = useState<boolean>(false)
-  const handleWidgetToken = () => {
-    setIsWidgetOpen(prev => !prev)
-    setIsShowHome(true)
-    setIsShowChat(false)
-  }
+
   const [isShowHome, setIsShowHome] = useState<boolean>(true)
   const [isShowChat, setIsShowChat] = useState<boolean>(false)
 
@@ -48,6 +44,12 @@ export default function ChatWidget ({ settings }: ChatWidgetProps) {
         isAgent: true
       }
     ])
+  }
+
+  const handleWidgetToken = () => {
+    setIsWidgetOpen(prev => !prev)
+    setIsShowHome(true)
+    setIsShowChat(false)
   }
 
   const sendMessage = () => {
@@ -69,7 +71,6 @@ export default function ChatWidget ({ settings }: ChatWidgetProps) {
     }
   }
 
-  // Utils (can be inside component or in a helper file)
   const lightenColor = (hex: string, percent: number): string => {
     hex = hex.replace(/^#/, '')
 

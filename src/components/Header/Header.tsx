@@ -1,42 +1,37 @@
 import {
   AppBar,
   Toolbar,
-  Typography,
   IconButton,
-  Box,
   Badge,
   FormControl,
   InputLabel,
   Select,
   MenuItem,
-  type SelectChangeEvent,
-  Button
+  type SelectChangeEvent
 } from '@mui/material'
 import MenuIcon from '@mui/icons-material/Menu'
 import ChatIcon from '@mui/icons-material/Chat'
 import NotificationsIcon from '@mui/icons-material/Notifications'
-import { useEffect } from 'react'
 import { useProjectSelectionStore } from '../../services/project-selection-service'
 import './Header.scss'
-
-type HeaderProps = {
-  onLeftToggle: () => void
-  onRightToggle: () => void
-}
+import { useEffect } from 'react'
+import type { HeaderProps } from '../../interfaces'
 
 export default function Header ({ onLeftToggle, onRightToggle }: HeaderProps) {
+  // For state management
   const { selectedProjectId, projectsList, setProjectId, refreshProjects } =
     useProjectSelectionStore()
+
+  const handleChange = (event: SelectChangeEvent<number>) => {
+    const value = Number(event.target.value)
+
+    setProjectId(value)
+  }
 
   useEffect(() => {
     refreshProjects()
   }, [refreshProjects])
 
-  const handleChange = (event: SelectChangeEvent) => {
-    const value = event.target.value as string
-
-    setProjectId(Number(value))
-  }
   return (
     <AppBar position='fixed'>
       <Toolbar className='header d-flex justify-content-between align-items-center'>
@@ -126,38 +121,30 @@ export default function Header ({ onLeftToggle, onRightToggle }: HeaderProps) {
           </svg>
 
           <span className='app-title d-none d-sm-block'>HelpDesk</span>
-          <IconButton
-            onClick={onLeftToggle}
-            className='nav-icon-button'
-          >
+          <IconButton onClick={onLeftToggle} className='nav-icon-button'>
             <MenuIcon />
           </IconButton>
         </div>
+
         <div className='header-right-section d-flex align-items-center gap-2'>
-          <FormControl
-            sx={{ minWidth: 200 }}
-            size='small'
-            className='project-dropdown'
-          >
+          <FormControl sx={{ m: 1, width: 250 }}>
             <InputLabel id='project-select-label'>Select Project</InputLabel>
 
             <Select
               labelId='project-select-label'
               id='project-select'
+              className='project-dropdown w-100'
               value={
                 projectsList.some(p => p.id === selectedProjectId)
-                  ? selectedProjectId.toString()
-                  : '0'
+                  ? selectedProjectId
+                  : 0
               }
               label='Select Project'
               onChange={handleChange}
             >
-              {/* <MenuItem value='10'>Project 1</MenuItem>
-            <MenuItem value='20'>Project 2</MenuItem>
-            <MenuItem value='30'>Project 3</MenuItem> */}
-              <MenuItem value='0'>All Projects</MenuItem>
+              <MenuItem value={0}>All Projects</MenuItem>
               {projectsList.map(proj => (
-                <MenuItem key={proj.id} value={proj.id.toString()}>
+                <MenuItem key={proj.id} value={proj.id}>
                   {proj.name}
                 </MenuItem>
               ))}
@@ -165,11 +152,7 @@ export default function Header ({ onLeftToggle, onRightToggle }: HeaderProps) {
           </FormControl>
 
           <div className='header-right-section-right d-flex align-items-center gap-md-1 gap-2 me-1'>
-            <IconButton
-              color='inherit'
-              onClick={onRightToggle}
-              className='nav-icon-button'
-            >
+            <IconButton color='inherit' className='nav-icon-button'>
               <Badge badgeContent={4} color='error'>
                 <NotificationsIcon />
               </Badge>

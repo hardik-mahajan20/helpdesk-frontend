@@ -5,7 +5,15 @@ import {
   FormControl,
   InputLabel,
   OutlinedInput,
-  InputAdornment
+  InputAdornment,
+  Paper,
+  Skeleton,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow
 } from '@mui/material'
 import { useState, useCallback, useMemo, useEffect, memo } from 'react'
 import StickyHeadTable from '../../core/components/StickyHeadTable'
@@ -64,6 +72,7 @@ export default function Departments () {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const [selectedDepartment, setSelectedDepartment] =
     useState<Department | null>(null)
+  const [loading, setLoading] = useState<boolean>(true)
 
   // CallBack Functions
   const handleDeleteDepartment = useCallback((department: Department) => {
@@ -127,9 +136,12 @@ export default function Departments () {
   useEffect(() => {
     const loadDepartments: () => Promise<void> = async () => {
       try {
+        setLoading(true)
         setDepartments((await getAllDepartments<AllDepartmentsGet[]>()).data)
       } catch (error) {
         console.error(error)
+      } finally {
+        setLoading(false)
       }
     }
     loadDepartments()
@@ -188,7 +200,11 @@ export default function Departments () {
           </FormControl>
         </div>
         <div className='table-container'>
-          <StickyHeadTable columns={columns} rows={filteredRows} />
+          {loading ? (
+            <DepartmentSkeleton />
+          ) : (
+            <StickyHeadTable columns={columns} rows={filteredRows} />
+          )}
         </div>
       </div>
 
@@ -215,5 +231,39 @@ export default function Departments () {
         />
       </div>
     </>
+  )
+}
+function DepartmentSkeleton () {
+  const rows = Array.from({ length: 10 })
+  const cols = 4
+
+  return (
+    <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+      <TableContainer sx={{ maxHeight: 440 }}>
+        <Table stickyHeader>
+          <TableHead>
+            <TableRow>
+              {Array.from({ length: cols }).map((_, i) => (
+                <TableCell key={i}>
+                  <Skeleton variant='text' width='60%' />
+                </TableCell>
+              ))}
+            </TableRow>
+          </TableHead>
+
+          <TableBody>
+            {rows.map((_, rowIndex) => (
+              <TableRow key={rowIndex}>
+                {Array.from({ length: cols }).map((_, colIndex) => (
+                  <TableCell key={colIndex}>
+                    <Skeleton variant='text' />
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Paper>
   )
 }

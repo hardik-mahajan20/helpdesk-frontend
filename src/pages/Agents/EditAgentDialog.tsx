@@ -57,8 +57,8 @@ export default function EditAgentDialog ({
       var result = await updateAgent(payload)
       toast.success(result.messages[0])
       onClose()
-    } catch (error) {
-      console.error('Failed to invite agent', error)
+    } catch (error: any) {
+      toast.error(error)
     }
   }
 

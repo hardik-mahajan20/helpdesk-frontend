@@ -108,13 +108,8 @@
   vertical-align: middle;
 }
 
-
 .subject-column {
   width: 30%;
-}
-
-.contact-column {
-  // text-align: center;
 }
 
 .updated-at-column {
@@ -287,7 +282,7 @@
   // &:hover .mat-icon {
   //   color: #1452a2;
   // }
-  // background-color: rgba(255, 254, 254, 0.95);
+  background-color: rgba(255, 254, 254, 0.95);
 }
 
 .spam-button {
@@ -298,11 +293,11 @@
   // &:hover .mat-icon {
   //   color: #e65100;
   // }
-  // background-color: rgba(255, 254, 254, 0.95);
+  background-color: rgba(255, 254, 254, 0.95);
 }
 
 .trash-button {
-  // background-color: rgba(255, 254, 254, 0.95);
+  background-color: rgba(255, 254, 254, 0.95);
 }
 
 .date-filter-card {
@@ -325,7 +320,6 @@
 //   mat-card-actions {
 //     gap: 8px;
 //   }
-
 
 @media (max-width: 1279.98px) {
   .inbox-header {
@@ -403,7 +397,6 @@
 //   }
 
 @media (max-width: 575.98px) {
-
   // .mat-mdc-outlined-button {
   //   padding: 0 10px;
   // }
@@ -457,9 +450,9 @@
       color: var(--primary-color);
     }
 
-  //   mat-icon {
-  //     font-size: 18px;
-  //   }
+    //   mat-icon {
+    //     font-size: 18px;
+    //   }
   }
 
   .filter-menu,
@@ -613,7 +606,7 @@
   }
 
   .filter-count {
-    background-color: rgba(var(--primary-color-rgb),0.15);
+    background-color: rgba(var(--primary-color-rgb), 0.15);
     color: var(--primary-color);
     border-radius: 4px;
     padding: 2px 6px;
@@ -649,7 +642,8 @@
       padding: 2px 0;
     }
 
-    .loading-spinner, .no-options {
+    .loading-spinner,
+    .no-options {
       display: flex;
       justify-content: center;
       align-items: center;
@@ -686,13 +680,13 @@
     text-decoration: underline;
   }
 
-.date-range-container {
-  padding: 1rem;
+  .date-range-container {
+    padding: 1rem;
 
-//    .mat-mdc-form-field {
-//       width: 100%;
-//     }
-}
+    //    .mat-mdc-form-field {
+    //       width: 100%;
+    //     }
+  }
 }
 
 .user-initials {

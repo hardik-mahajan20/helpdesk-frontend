@@ -1,5 +1,5 @@
 export interface EditDepartmentDialogProps {
-  id: number;
-  open: boolean;
-  onClose: () => void;
+  id: number
+  open: boolean
+  onClose: () => void
 }
