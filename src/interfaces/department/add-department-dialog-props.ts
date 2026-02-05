@@ -1,4 +1,4 @@
 export interface AddDepartmentDialogProps {
-  open: boolean
-  onClose: () => void
+  open: boolean;
+  onClose: () => void;
 }

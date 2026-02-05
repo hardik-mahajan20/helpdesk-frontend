@@ -1,6 +1,6 @@
 export interface EditProjectRequest {
-  id: number
-  name: string
-  liveProjectUrl: string
-  description: string
+  id: number;
+  name: string;
+  liveProjectUrl: string;
+  description: string;
 }

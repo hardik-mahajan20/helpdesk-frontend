@@ -1,37 +1,37 @@
-import { createTheme } from '@mui/material/styles'
-import { blue, green, purple, orange } from './palettes'
+import { createTheme } from "@mui/material/styles";
+import { blue, green, purple, orange } from "./palettes";
 
 export const lightThemes = {
   blue: createTheme({
     palette: {
-      mode: 'light',
+      mode: "light",
       primary: { main: blue.primary, dark: blue.primaryDark },
       secondary: { main: blue.accent },
-      error: { main: '#f44336' }
-    }
+      error: { main: "#f44336" },
+    },
   }),
 
   green: createTheme({
     palette: {
-      mode: 'light',
+      mode: "light",
       primary: { main: green.primary, dark: green.primaryDark },
-      secondary: { main: green.accent }
-    }
+      secondary: { main: green.accent },
+    },
   }),
 
   purple: createTheme({
     palette: {
-      mode: 'light',
+      mode: "light",
       primary: { main: purple.primary, dark: purple.primaryDark },
-      secondary: { main: purple.accent }
-    }
+      secondary: { main: purple.accent },
+    },
   }),
 
   orange: createTheme({
     palette: {
-      mode: 'light',
+      mode: "light",
       primary: { main: orange.primary, dark: orange.primaryDark },
-      secondary: { main: orange.accent }
-    }
-  })
-}
+      secondary: { main: orange.accent },
+    },
+  }),
+};
