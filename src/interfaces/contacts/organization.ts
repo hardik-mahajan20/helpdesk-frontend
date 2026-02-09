@@ -9,4 +9,5 @@ export interface Organization {
   createdAt?: string;
   updatedBy?: number | null;
   updatedAt?: string | null;
+  projectName: string;
 }

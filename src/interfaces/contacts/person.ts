@@ -16,4 +16,7 @@ export interface Person {
   cateatedAt?: string;
   updatedBy?: number | null;
   updatedAt?: string | null;
+  countryName: string;
+  organizationName: string;
+  projectName: string;
 }
