@@ -36,6 +36,7 @@ api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
+    // 401 token refresh logic
     if (error.response?.status === 401 && !originalRequest._retry) {
       if (isRefreshing) {
         // Queue all requests during refresh
@@ -53,7 +54,7 @@ api.interceptors.response.use(
       try {
         const newToken = await refreshToken();
         processQueue(null, newToken.data.accessToken);
-        originalRequest.headers.Authorization = `Bearer ${newToken}`;
+        originalRequest.headers.Authorization = `Bearer ${newToken.data.accessToken}`;
         return api(originalRequest);
       } catch (err) {
         processQueue(err, null);
@@ -63,6 +64,15 @@ api.interceptors.response.use(
         isRefreshing = false;
       }
     }
+
+
+    // --- Properly extract backend error messages ---
+    if (axios.isAxiosError(error) && error.response?.data?.messages) {
+      error.message = error.response.data.messages[0]; 
+    } else if (!error.message) {
+      error.message = "An unknown error occurred";
+    }
+
 
     return Promise.reject(error);
   },
