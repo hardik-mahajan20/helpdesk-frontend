@@ -91,7 +91,7 @@ export default function Projects() {
 
       setIsDeleteDialogOpen(false);
       setSelectedProject(null);
-    } catch  {
+    } catch {
       toast.error("Failed to delete project");
     }
   };

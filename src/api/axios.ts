@@ -65,14 +65,12 @@ api.interceptors.response.use(
       }
     }
 
-
     // --- Properly extract backend error messages ---
     if (axios.isAxiosError(error) && error.response?.data?.messages) {
-      error.message = error.response.data.messages[0]; 
+      error.message = error.response.data.messages[0];
     } else if (!error.message) {
       error.message = "An unknown error occurred";
     }
-
 
     return Promise.reject(error);
   },

@@ -40,7 +40,7 @@ export default function AddProjectDialog({
       toast.success(result.messages[0]);
       reset();
       onClose();
-    } catch(error) {
+    } catch (error) {
       if (error instanceof Error) toast.error(error.message);
     }
   };
