@@ -66,7 +66,7 @@ export default function Login() {
           <div className="image-content text-center">
             <img
               className="main-illustration"
-              src="/src/assets/images/auth-left-side-img.jpg"
+              src="assets/images/auth-left-side-img.jpg"
               alt="Login Illustration"
             />
           </div>
