@@ -6,6 +6,6 @@ export interface PersonCreate {
   lastName: string;
   email: string;
   phone: string;
-  country: Country | null;
+  countryId: number | null;
   city: string | null;
 }

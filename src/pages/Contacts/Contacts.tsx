@@ -41,6 +41,7 @@ import type {
 } from "../../interfaces/contacts";
 import type { ApiResponse } from "../../interfaces";
 import CreateContactDialog from "./CreateContact";
+import { useProjectSelectionStore } from "../../services/project-selection-service";
 
 export default function Contacts() {
   const [selectedTab, setSelectedTab] = useState(0);
@@ -58,10 +59,17 @@ export default function Contacts() {
   const [sortBy, setSortBy] = useState("id");
   const [sortDirection, setSortDirection] = useState<"ASC" | "DESC">("ASC");
 
+  const [openAddModal, setOpenAddModal] = useState<boolean>(false);
+  const [editId, setEditId] = useState<number>(0);
+
   const muiDirection = sortDirection === "ASC" ? "asc" : "desc";
 
-  const [openAddModal, setOpenAddModal] = useState<boolean>(false);
-  const [editId, setEditId] = useState<number | undefined>();
+  const selectedProjectId: number = useProjectSelectionStore(
+    (state) => state.selectedProjectId,
+  );
+
+  const isPersonTab = selectedTab === 0;
+  const rows = isPersonTab ? personRows : organizationRows;
 
   const loadContacts = useCallback(async () => {
     setIsLoading(true);
@@ -72,7 +80,7 @@ export default function Contacts() {
         search: searchText,
         sortBy,
         sortDirection,
-        projectId: 0,
+        projectId: selectedProjectId,
       };
 
       if (selectedTab === 0) {
@@ -91,10 +99,15 @@ export default function Contacts() {
     } finally {
       setIsLoading(false);
     }
-  }, [page, rowsPerPage, searchText, sortBy, sortDirection, selectedTab]);
-
-  const isPersonTab = selectedTab === 0;
-  const rows = isPersonTab ? personRows : organizationRows;
+  }, [
+    page,
+    rowsPerPage,
+    searchText,
+    sortBy,
+    sortDirection,
+    selectedTab,
+    selectedProjectId,
+  ]);
 
   const handleTabChange = (_: unknown, newValue: number) => {
     setSelectedTab(newValue);
@@ -161,7 +174,7 @@ export default function Contacts() {
               variant="contained"
               startIcon={<AddIcon />}
               onClick={() => {
-                setEditId(undefined);
+                setEditId(0);
                 setOpenAddModal(true);
               }}
             >
@@ -335,6 +348,7 @@ export default function Contacts() {
         open={openAddModal}
         onClose={(refresh) => {
           setOpenAddModal(false);
+          setEditId(0);
           if (refresh) loadContacts();
         }}
         selectedTab={selectedTab}

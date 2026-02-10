@@ -76,7 +76,7 @@ export async function getOrganizationById<T>(id: number) {
 export async function updateOrganization<T>(orgData: Organization) {
   const res = await api.post<ApiResponse<T>>(
     `${CONTACT_URL}/organizations/update`,
-    { params: orgData },
+    orgData,
   );
   return res.data;
 }
@@ -87,8 +87,9 @@ export async function getPersonById<T>(id: number) {
 }
 
 export async function updatePerson<T>(person: Person) {
-  const res = await api.post<ApiResponse<T>>(`${CONTACT_URL}/persons/update`, {
-    params: person,
-  });
+  const res = await api.post<ApiResponse<T>>(
+    `${CONTACT_URL}/persons/update`,
+    person,
+  );
   return res.data;
 }

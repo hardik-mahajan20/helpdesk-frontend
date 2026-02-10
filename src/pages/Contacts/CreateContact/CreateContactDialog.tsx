@@ -12,12 +12,18 @@ import { useProjectSelectionStore } from "../../../services/project-selection-se
 import {
   createOrganization,
   createPerson,
+  getOrganizationById,
   getOrganizationsByProjectId,
+  getPersonById,
+  updateOrganization,
+  updatePerson,
 } from "../../../services/contact-service";
 import { toast } from "react-toastify";
 import type {
+  Organization,
   OrganizationCreate,
   OrganizationDropdownList,
+  Person,
   PersonCreate,
 } from "../../../interfaces/contacts";
 
@@ -25,11 +31,15 @@ type Props = {
   open: boolean;
   onClose: (refresh?: boolean) => void;
   selectedTab: number;
-  contactId?: number;
+  contactId: number;
 };
 
-const COUNTRIES = ["India", "USA"] as const;
-type Country = (typeof COUNTRIES)[number];
+const COUNTRIES = [
+  { id: 1, name: "India" },
+  { id: 2, name: "USA" },
+];
+
+type CountryId = number;
 
 type FormState = {
   projectId: number;
@@ -38,7 +48,7 @@ type FormState = {
   lastName: string;
   email: string;
   phone: string;
-  country: Country | "";
+  countryId: CountryId;
   city: string;
   name: string;
 };
@@ -67,7 +77,7 @@ export default function CreateContactDialog({
     lastName: "",
     email: "",
     phone: "",
-    country: "",
+    countryId: 0,
     city: "",
     name: "",
   });
@@ -80,7 +90,7 @@ export default function CreateContactDialog({
       lastName: "",
       email: "",
       phone: "",
-      country: "",
+      countryId: 0,
       city: "",
       name: "",
     });
@@ -88,17 +98,64 @@ export default function CreateContactDialog({
     setOrgLoading(false);
   };
 
-  // Cancel button or backdrop
   const handleClose = () => {
     resetForm();
-    onClose(); // optionally pass refresh if needed
+    onClose(false);
   };
 
   useEffect(() => {
-    if (contactId) {
-      console.log(contactId);
+    if (contactId > 0) {
+      const loadContact = async () => {
+        try {
+          if (isPerson) {
+            const res = await getPersonById<any>(contactId);
+            const p = res.data;
+
+            setForm((prev) => ({
+              ...prev,
+              projectId: p.projectId,
+              organizationId: p.organizationId || "",
+              firstName: p.firstName,
+              lastName: p.lastName,
+              email: p.email,
+              phone: p.phone,
+              countryId: p.countryId || 0,
+              city: p.city || "",
+            }));
+
+            // load organizations for that project
+            if (p.projectId) {
+              setOrgLoading(true);
+              const orgRes = await getOrganizationsByProjectId<
+                OrganizationDropdownList[]
+              >(p.projectId);
+              setOrganizations(orgRes.data);
+              setOrgLoading(false);
+            }
+          } else {
+            // fetch organization by ID
+            const res = await getOrganizationById<any>(contactId);
+            const o = res.data;
+
+            setForm((prev) => ({
+              ...prev,
+              projectId: o.projectId,
+              name: o.name,
+              email: o.email,
+              phone: o.phone,
+            }));
+          }
+        } catch (err) {
+          console.error("Failed to load contact data", err);
+        }
+      };
+
+      loadContact();
+    } else {
+      // if no contactId (i.e., creating new), reset form
+      resetForm();
     }
-  }, [contactId]);
+  }, [contactId, isPerson]);
 
   const handleChange = (key: string, value: any) => {
     setForm((prev: any) => ({ ...prev, [key]: value }));
@@ -110,36 +167,75 @@ export default function CreateContactDialog({
       setLoading(true);
 
       if (isPerson) {
-        const personData: PersonCreate = {
+        const personCreateData: PersonCreate = {
           projectId: form.projectId,
-          organizationId: form.organizationId || null, // optional
+          organizationId: form.organizationId || null,
           firstName: form.firstName,
           lastName: form.lastName,
           email: form.email,
           phone: form.phone,
-          country: form.country || null,
+          countryId: form.countryId || null,
           city: form.city || null,
         };
+        const personUpdateData: Person = {
+          id: contactId,
+          projectId: form.projectId,
+          organizationId: form.organizationId || null,
+          firstName: form.firstName,
+          lastName: form.lastName,
+          email: form.email,
+          phone: form.phone,
+          countryId: form.countryId || null,
+          city: form.city || null,
+          countryName: "",
+          organizationName: "",
+          projectName: "",
+        };
 
-        const result = await createPerson(personData);
-        toast.success(result.messages[0]);
+        let result;
+        if (contactId > 0) {
+          // Update
+          result = await updatePerson(personUpdateData);
+          toast.success("Person updated successfully");
+        } else {
+          // Create
+          result = await createPerson(personCreateData);
+          toast.success(result.messages[0]);
+        }
       } else {
-        // Organization form submit
-        const orgData: OrganizationCreate = {
+        const organizationCreateData: OrganizationCreate = {
           projectId: form.projectId,
           name: form.name,
           email: form.email,
           phone: form.phone,
         };
 
-        const result = await createOrganization(orgData);
-        toast.success(result.messages[0]);
+        const organizationUpdateData: Organization = {
+          id: contactId || 0,
+          projectId: form.projectId,
+          name: form.name,
+          email: form.email,
+          phone: form.phone,
+          projectName: "",
+        };
+
+        let result;
+        if (contactId > 0) {
+          // Update
+          result = await updateOrganization(organizationUpdateData);
+          toast.success("Organization updated successfully");
+        } else {
+          // Create
+          result = await createOrganization(organizationCreateData);
+          toast.success(result.messages[0]);
+        }
       }
 
       resetForm();
-      onClose(true); // refresh parent
-    } catch {
-      console.error("Submit went wrong");
+      onClose(true);
+    } catch (err) {
+      console.error("Submit went wrong", err);
+      toast.error("Something went wrong");
     } finally {
       setLoading(false);
     }
@@ -274,9 +370,9 @@ export default function CreateContactDialog({
               <TextField
                 select
                 label="Country"
-                value={form.country}
+                value={form.countryId}
                 onChange={(e) =>
-                  handleChange("country", e.target.value as Country)
+                  handleChange("countryId", Number(e.target.value))
                 }
                 fullWidth
                 slotProps={{
@@ -289,8 +385,8 @@ export default function CreateContactDialog({
                 }}
               >
                 {COUNTRIES.map((c) => (
-                  <MenuItem key={c} value={c}>
-                    {c}
+                  <MenuItem key={c.id} value={c.id}>
+                    {c.name}
                   </MenuItem>
                 ))}
               </TextField>
