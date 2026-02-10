@@ -10,7 +10,7 @@ export default function App() {
   return (
     <>
       <ThemeContextProvider>
-        <BrowserRouter>
+        <BrowserRouter basename="helpdesk-frontend">
           <Router />
           <ToastContainer />
         </BrowserRouter>
