@@ -31,7 +31,7 @@ import { deleteProject, getAllProjects } from "../../services/project-service";
 import AddProjectDialog from "./AddProjectDialog";
 import SettingsIcon from "@mui/icons-material/Settings";
 import { useProjectSelectionStore } from "../../services/project-selection-service";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, type NavigateFunction } from "react-router-dom";
 import "./Projects.scss";
 import { toast } from "react-toastify";
 
@@ -61,17 +61,16 @@ const ProjectActions = memo(
 );
 
 export default function Projects() {
-  // React Hook's
-  const [projects, setProjects] = useState<AllProjectsGet[]>([]);
-  const [searchText, setSearchText] = useState<string>("");
-  const [isAddProjectOpen, setIsAddProjectOpen] = useState(false);
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  const navigate = useNavigate();
+  const navigate: NavigateFunction = useNavigate();
 
   const { setProjectId } = useProjectSelectionStore();
+
+  const [projects, setProjects] = useState<AllProjectsGet[]>([]);
+  const [searchText, setSearchText] = useState<string>("");
+  const [isAddProjectOpen, setIsAddProjectOpen] = useState<boolean>(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState<boolean>(false);
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   // CallBack Functions
   const handleDeleteProject = useCallback((projects: Project) => {
@@ -92,13 +91,13 @@ export default function Projects() {
 
       setIsDeleteDialogOpen(false);
       setSelectedProject(null);
-    } catch (error) {
-      console.error("Failed to delete project", error);
+    } catch {
+      toast.error("Failed to delete project");
     }
   };
 
-  const handleCancelDelete = () => {
-    setSelectedProject(null);
+  const handleCancelDelete = async () => {
+    setIsDeleteDialogOpen(false);
   };
 
   const handleProjectSettingsNavigation = useCallback(
@@ -110,7 +109,7 @@ export default function Projects() {
   );
 
   const handleAddProject = async () => {
-    setIsAddProjectOpen(true);
+    setIsAddProjectOpen((prev) => !prev);
   };
 
   // Table Structure
@@ -140,18 +139,18 @@ export default function Projects() {
   useEffect(() => {
     const loadProjects: () => Promise<void> = async () => {
       try {
-        setLoading(true);
+        setIsLoading(true);
         setProjects((await getAllProjects<AllProjectsGet[]>()).data);
       } catch (error) {
         console.error(error);
       } finally {
-        setLoading(false);
+        setIsLoading(false);
       }
     };
     loadProjects();
   }, []);
 
-  const filteredRows = useMemo(() => {
+  const filteredRows: AllProjectsGet[] = useMemo(() => {
     if (!searchText.trim()) return projects;
 
     const search = searchText.toLowerCase();
@@ -203,8 +202,7 @@ export default function Projects() {
           </FormControl>
         </div>
         <div className="table-container">
-          {/* <StickyHeadTable columns={columns} rows={filteredRows} /> */}
-          {loading ? (
+          {isLoading ? (
             <ProjectsSkeleton />
           ) : (
             <StickyHeadTable columns={columns} rows={filteredRows} />
@@ -215,7 +213,7 @@ export default function Projects() {
         {isAddProjectOpen && (
           <AddProjectDialog
             open={isAddProjectOpen}
-            onClose={() => setIsAddProjectOpen(false)}
+            onClose={() => setIsAddProjectOpen((prev) => !prev)}
           />
         )}
         <ConfirmDeleteDialog
