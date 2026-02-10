@@ -21,9 +21,11 @@ import {
 import { toast } from "react-toastify";
 import type {
   Organization,
+  OrganizationById,
   OrganizationCreate,
   OrganizationDropdownList,
   Person,
+  PersonById,
   PersonCreate,
 } from "../../../interfaces/contacts";
 
@@ -108,7 +110,7 @@ export default function CreateContactDialog({
       const loadContact = async () => {
         try {
           if (isPerson) {
-            const res = await getPersonById<any>(contactId);
+            const res = await getPersonById<PersonById>(contactId);
             const p = res.data;
 
             setForm((prev) => ({
@@ -134,7 +136,7 @@ export default function CreateContactDialog({
             }
           } else {
             // fetch organization by ID
-            const res = await getOrganizationById<any>(contactId);
+            const res = await getOrganizationById<OrganizationById>(contactId);
             const o = res.data;
 
             setForm((prev) => ({
@@ -157,9 +159,49 @@ export default function CreateContactDialog({
     }
   }, [contactId, isPerson]);
 
-  const handleChange = (key: string, value: any) => {
-    setForm((prev: any) => ({ ...prev, [key]: value }));
+  const handleProjectChange = (value: number) => {
+    setForm((prev) => ({
+      ...prev,
+      projectId: value,
+      organizationId: "",
+    }));
   };
+
+  const handleOrganizationChange = (value: number) => {
+    setForm((prev) => ({
+      ...prev,
+      organizationId: value,
+    }));
+  };
+
+  const handleFirstNameChange = (value: string) => {
+    setForm((prev) => ({ ...prev, firstName: value }));
+  };
+
+  const handleLastNameChange = (value: string) => {
+    setForm((prev) => ({ ...prev, lastName: value }));
+  };
+
+  const handleEmailChange = (value: string) => {
+    setForm((prev) => ({ ...prev, email: value }));
+  };
+
+  const handlePhoneChange = (value: string) => {
+    setForm((prev) => ({ ...prev, phone: value }));
+  };
+
+  const handleCountryChange = (value: CountryId) => {
+    setForm((prev) => ({ ...prev, countryId: value }));
+  };
+
+  const handleCityChange = (value: string) => {
+    setForm((prev) => ({ ...prev, city: value }));
+  };
+
+  const handleNameChange = (value: string) => {
+    setForm((prev) => ({ ...prev, name: value }));
+  };
+
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
@@ -287,10 +329,7 @@ export default function CreateContactDialog({
                 select
                 label="Project"
                 value={form.projectId}
-                onChange={(e) => {
-                  handleChange("projectId", Number(e.target.value));
-                  handleChange("organizationId", "");
-                }}
+                onChange={(e) => handleProjectChange(Number(e.target.value))}
                 fullWidth
                 slotProps={{
                   select: {
@@ -316,7 +355,7 @@ export default function CreateContactDialog({
                 label="Organization"
                 value={form.organizationId}
                 onChange={(e) =>
-                  handleChange("organizationId", Number(e.target.value))
+                  handleOrganizationChange(Number(e.target.value))
                 }
                 fullWidth
                 disabled={!form.projectId || orgLoading}
@@ -340,13 +379,13 @@ export default function CreateContactDialog({
               <TextField
                 label="First Name"
                 value={form.firstName}
-                onChange={(e) => handleChange("firstName", e.target.value)}
+                onChange={(e) => handleFirstNameChange(e.target.value)}
                 fullWidth
               />
               <TextField
                 label="Last Name"
                 value={form.lastName}
-                onChange={(e) => handleChange("lastName", e.target.value)}
+                onChange={(e) => handleLastNameChange(e.target.value)}
                 fullWidth
               />
             </div>
@@ -355,13 +394,13 @@ export default function CreateContactDialog({
               <TextField
                 label="Email"
                 value={form.email}
-                onChange={(e) => handleChange("email", e.target.value)}
+                onChange={(e) => handleEmailChange(e.target.value)}
                 fullWidth
               />
               <TextField
                 label="Phone"
                 value={form.phone}
-                onChange={(e) => handleChange("phone", e.target.value)}
+                onChange={(e) => handlePhoneChange(e.target.value)}
                 fullWidth
               />
             </div>
@@ -371,9 +410,7 @@ export default function CreateContactDialog({
                 select
                 label="Country"
                 value={form.countryId}
-                onChange={(e) =>
-                  handleChange("countryId", Number(e.target.value))
-                }
+                onChange={(e) => handleCountryChange(Number(e.target.value))}
                 fullWidth
                 slotProps={{
                   select: {
@@ -394,7 +431,7 @@ export default function CreateContactDialog({
               <TextField
                 label="City"
                 value={form.city}
-                onChange={(e) => handleChange("city", e.target.value)}
+                onChange={(e) => handleCityChange(e.target.value)}
                 fullWidth
               />
             </div>
@@ -406,10 +443,7 @@ export default function CreateContactDialog({
                 select
                 label="Project"
                 value={form.projectId}
-                onChange={(e) => {
-                  handleChange("projectId", Number(e.target.value));
-                  handleChange("organizationId", "");
-                }}
+                onChange={(e) => handleProjectChange(Number(e.target.value))}
                 fullWidth
                 slotProps={{
                   select: {
@@ -433,7 +467,7 @@ export default function CreateContactDialog({
               <TextField
                 label="Name"
                 value={form.name}
-                onChange={(e) => handleChange("name", e.target.value)}
+                onChange={(e) => handleNameChange(e.target.value)}
                 fullWidth
               />
             </div>
@@ -441,14 +475,14 @@ export default function CreateContactDialog({
               <TextField
                 label="Email"
                 value={form.email}
-                onChange={(e) => handleChange("email", e.target.value)}
+                onChange={(e) => handleEmailChange(e.target.value)}
                 fullWidth
               />
 
               <TextField
                 label="Phone"
                 value={form.phone}
-                onChange={(e) => handleChange("phone", e.target.value)}
+                onChange={(e) => handlePhoneChange(e.target.value)}
                 fullWidth
               />
             </div>

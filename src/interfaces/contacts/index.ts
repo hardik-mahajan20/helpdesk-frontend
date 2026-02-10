@@ -7,3 +7,5 @@ export * from "./organization-request";
 export * from "./person-create";
 export * from "./organization-create";
 export * from "./organization-dropdown-list";
+export * from "./person-by-id";
+export * from "./organization-by-id";
